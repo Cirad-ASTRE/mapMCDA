@@ -6,6 +6,11 @@ appTitle <- "PRODEL"
 
 acceptLayerType <- c(".shp", ".jpg", ".tif")
 
+vectorExt <- c("cpg", "dbf", "prj", "sbn", "sbx", "shp", "shx")
+
+rasterExt <- c("tif", "tiff")
+
+reExt <- "\\.\\w{1,}$" # regular expression to define file extension
 
 #### LANGUAGE ####
 

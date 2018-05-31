@@ -4,7 +4,7 @@
 
 ################### LIBRARIES ################### 
 library(shinydashboard) #to create dashboard
-library(shinyjs) #for inputs enable/disable functions
+library(shinyjs) #for inputs show/hide functions
 
 ################### UI ###################
 
@@ -13,12 +13,6 @@ sidebar <- dashboardSidebar(
   useShinyjs(),
   
   sidebarMenu(id = "tabs",
-    
-    # # To select language
-    # selectInput(inputId = "siLanguage",
-    #             label = NULL,
-    #             choices = languages,
-    #             selected = as.character(indLang)),
     
     # To upload shape and raster files
     fileInput(inputId = "fiLayer", 
@@ -33,7 +27,9 @@ sidebar <- dashboardSidebar(
     # Items list for layers (1 layer = 1 item)
     menuItemOutput(outputId = "miLayers"),
     
-    shinyjs::hidden(actionButton(inputId = "abLayerRemove", label = langLayerRemove[indLang] ,
+    # Button to remove layer
+    shinyjs::hidden(actionButton(inputId = "abLayerRemove", 
+                                 label = langLayerRemove[indLang] ,
                                  icon = NULL, width = NULL))
     
   )

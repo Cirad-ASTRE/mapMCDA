@@ -2,11 +2,11 @@ Package: riskanalyser
 Title: Produce an epidemiological risk map by weighting multiple risk factors
 Version: 0.0.1.9000
 Authors@R: c(
-  person("Elena", "Arsevska", email = "elena.arsevska@cirad.fr", role = c("ctb"),
-  person("Sylvain", "Falala", email = "sylvain.falala@cirad.fr", role = c("aut", "cre"),
-  person("Renaud", "Lancelot", email = "renaud.lancelot@cirad.fr", role = c("ctb"),
-  person("Raphaëlle", "Metras", email = "raphaelle.metras@cirad.fr", role = c("ctb"),
-  person("Facundo", "Muñoz", email = "facundo.munoz@cirad.fr", role = c("aut", "cre")
+  person("Elena", "Arsevska", email = "elena.arsevska@cirad.fr", role = c("ctb")),
+  person("Sylvain", "Falala", email = "sylvain.falala@cirad.fr", role = c("aut")),
+  person("Renaud", "Lancelot", email = "renaud.lancelot@cirad.fr", role = c("ctb")),
+  person("Raphaëlle", "Metras", email = "raphaelle.metras@cirad.fr", role = c("ctb")),
+  person("Facundo", "Muñoz", email = "facundo.munoz@cirad.fr", role = c("aut", "cre"))
   )
 Description: Use a Shiny interface to help users import multiple layers of risk
   factors, scale them and combine them using a Multi-Criteria Decision Analysis
@@ -19,7 +19,7 @@ Imports:
   classInt,
   geojsonio,
   geojsonlint,
-  ggplot2
+  ggplot2,
   maptools,
   maps,
   plyr,

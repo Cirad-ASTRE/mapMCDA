@@ -1,5 +1,5 @@
 ---
-title: "riskanalyser: package overview"
+title: "mapMCDA: package overview"
 date: "`r Sys.Date()`"
 output:
    rmarkdown::html_vignette:
@@ -11,18 +11,18 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-*riskanalyser* provides ...
+*mapMCDA* provides ...
 
 # Installing the package
 
 To install the current stable, CRAN version of the package, type:
 ```{r install, eval=FALSE}
-install.packages("riskanalyser")
+install.packages("mapMCDA")
 ```
 
 To benefit from the latest features and bug fixes, install the development, *github* version of the package using:
 ```{r install2, eval=FALSE}
-devtools::install_github("reconhub/riskanalyser")
+devtools::install_github("Cirad-ASTRE/mapMCDA")
 ```
 
 Note that this requires the package *devtools* installed.

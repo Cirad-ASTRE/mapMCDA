@@ -1,4 +1,4 @@
 library(testthat)
-library(riskanalyser)
+library(mapMCDA)
 
-test_check("riskanalyser")
+test_check("mapMCDA")

@@ -2,9 +2,9 @@
 output: github_document
 ---
 
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/riskanalyser)](https://cran.r-project.org/package=riskanalyser)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/mapMCDA)](https://cran.r-project.org/package=mapMCDA)
 
-# Welcome to the *riskanalyser* package!
+# Welcome to the *mapMCDA* package!
 
 This is just a template. Please remove, add or edit parts as you see fit.
 
@@ -13,13 +13,13 @@ This is just a template. Please remove, add or edit parts as you see fit.
 To install the current stable, CRAN version of the package, type:
 
 ```r
-install.packages("riskanalyser")
+install.packages("mapMCDA")
 ```
 
 To benefit from the latest features and bug fixes, install the development, *github* version of the package using:
 
 ```r
-devtools::install_github("reconhub/riskanalyser")
+devtools::install_github("Cirad-ASTRE/mapMCDA")
 ```
 
 Note that this requires the package *devtools* installed.
@@ -35,7 +35,7 @@ The main features of the package include:
 
 ## Vignettes
 
-An overview and examples of *riskanalyser* are provided in the vignettes:
+An overview and examples of *mapMCDA* are provided in the vignettes:
 
 ...
 
@@ -47,7 +47,7 @@ The following websites are available:
 
 ## Getting help online
 
-Bug reports and feature requests should be posted on *github* using the [*issue*](http://github.com/reconhub/riskanalyser/issues) system. All other questions should be posted on the **RECON forum**: <br>
+Bug reports and feature requests should be posted on *github* using the [*issue*](http://github.com/reconhub/mapMCDA/issues) system. All other questions should be posted on the **RECON forum**: <br>
 [http://www.repidemicsconsortium.org/forum/](http://www.repidemicsconsortium.org/forum/)
 
 Contributions are welcome via **pull requests**.

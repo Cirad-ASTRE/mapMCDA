@@ -14,7 +14,7 @@ options(shiny.maxRequestSize=30*1024^2)
 
 
 
-server <- function(input, output) {
+server <- function(input, output, session) {
   
   #### Reactive values ####
   # layerDF = data frame of layers
@@ -28,13 +28,13 @@ server <- function(input, output) {
     # If data frame is empty
     if(is.null(nrow(rv$layerDF)) || nrow(rv$layerDF)==0){
       
-      shinyjs::hide("miLayers")
-      shinyjs::hide("abLayerRemove")
+      
+      #shinyjs::hide("abLayerRemove")
       
     } else {
         
-      shinyjs::show("miLayers")
-      shinyjs::show("abLayerRemove")
+      
+      #shinyjs::show("abLayerRemove")
       
     }
     
@@ -89,57 +89,111 @@ server <- function(input, output) {
   })
   
   
-  ##### Render for the menu of layers ####
+  ##### Render for the list of vectors ####
   
-  output$miLayers <- renderMenu({
-    
-      # Retrieve short name of data frame of layers
-      if(!("shortName" %in% colnames(rv$layerDF))) return(NULL)
-    
-      allLayers <- sort(unique(rv$layerDF$shortName))
-    
-      # Create menuSubItem for each name
-      # Return a list of menuSubItems
-      allLayersItems <- lapply(allLayers, function(i){menuSubItem(i, tabName = i)})
-      
-      # Update menu
-      menuItem(langLayerItem[indLang], allLayersItems, startExpanded = TRUE)
+  output$uiVectorList <- renderUI({
 
+      # Retrieve short name of data frame of layers
+      if(!("layerType" %in% colnames(rv$layerDF))) return(NULL)
+
+      indVect <- which(rv$layerDF$layerType=="Vector")
+      
+      if(is.na(indVect[1])) return(NULL)
+      
+      shortNames <- sort(unique(rv$layerDF[indVect,"shortName"]))
+
+      radioButtons(inputId = "rbVectorLayer", label = NULL, choices = shortNames, inline = TRUE)
+
+  })
+  
+  
+  ##### Render for the list of rasters ####
+  
+  output$uiRasterList <- renderUI({
+    
+    # Retrieve short name of data frame of layers
+    if(!("layerType" %in% colnames(rv$layerDF))) return(NULL)
+    
+    indRast <- which(rv$layerDF$layerType=="Raster")
+    
+    if(is.na(indRast[1])) return(NULL)
+    
+    shortNames <- sort(unique(rv$layerDF[indRast,"shortName"]))
+    
+    radioButtons(inputId = "rbRasterLayer", label = NULL, choices = shortNames, inline = TRUE)
+    
   })
   
   
   ##### Observer on sidebarMenu ####
   
   observeEvent(input$tabs,{
-    
-    #print(input$tabs)
+
+    print(input$tabs)
     
   })
   
   
   ##### Observer on button to remove a layer ####
   
-  observeEvent(input$abLayerRemove,{
-    
+  # observeEvent(input$abLayerRemove,{
+  #   
+  #   # Retrieve name of the current tab
+  #   curLayer <- input$tabs
+  #   
+  #   if(is.null(curLayer)) return()
+  #   
+  #   # Search name in the layers data frame and remove it
+  #   indRem <- which(rv$layerDF$shortName==curLayer)
+  #   
+  #   if(!is.na(indRem[1])) rv$layerDF <- rv$layerDF[-indRem,]
+  #   
+  # })
+  # 
+  
+  ##### Render for vector display ####
+  
+  output$vectorDisplay <- renderPlot({
+
     # Retrieve name of the current tab
-    curLayer <- input$tabs
-    
-    if(is.null(curLayer)) return()
-    
-    # Search name in the layers data frame and remove it
-    indRem <- which(rv$layerDF$shortName==curLayer)
-    
-    if(!is.na(indRem[1])) rv$layerDF <- rv$layerDF[-indRem,]
-    
+    curLayer <- input$rbVectorLayer
+
+    if(is.null(curLayer)) return(NULL)
+
+    # Search name in the layers data frame
+    indLay <- which(rv$layerDF$shortName==curLayer)
+
+    if(is.na(indLay[1])) return(NULL)
+
+    curFile <- rv$layerDF[indLay,]
+
+
+    # Retrieve line of shp file
+    indShp <- grep(".shp", curFile$name)
+
+    if(is.na(indShp[1])) return(NULL)
+
+    shpFile <- curFile[indShp,]
+
+    # Retrieve path of shp file to define dsn
+    shpDir <- gsub(paste("/", shpFile$name, sep = ""),"", shpFile$datapath)
+
+    # Extract shp file name without extention to define layer name
+    shpLayer <- gsub(".shp","", shpFile$name)
+
+    finalLayer <- readOGR(dsn = shpDir, layer = shpLayer, verbose = FALSE)
+
+    plot(finalLayer)
+
   })
+
   
+  ##### Render for raster display ####
   
-  ##### Render for the plot ####
-  
-  output$layerDisplay <- renderPlot({
+  output$rasterDisplay <- renderPlot({
     
     # Retrieve name of the current tab
-    curLayer <- input$tabs
+    curLayer <- input$rbRasterLayer
     
     if(is.null(curLayer)) return(NULL)
     
@@ -150,37 +204,44 @@ server <- function(input, output) {
     
     curFile <- rv$layerDF[indLay,]
     
-    finalLayer <- NULL
-    
-    # If vector layer
-    if(unique(curFile$layerType)=="Vector"){
-      
-      # Retrieve line of shp file
-      indShp <- grep(".shp", curFile$name)
-      
-      if(is.na(indShp[1])) return(NULL)
-      
-      shpFile <- curFile[indShp,]
-      
-      # Retrieve path of shp file to define dsn
-      shpDir <- gsub(paste("/", shpFile$name, sep = ""),"", shpFile$datapath)
-      
-      # Extract shp file name without extention to define layer name
-      shpLayer <- gsub(".shp","", shpFile$name)
-      
-      finalLayer <- readOGR(dsn = shpDir, layer = shpLayer, verbose = FALSE)   
-      
-    }
-    
-    # If raster layer
-    if(unique(curFile$layerType)=="Raster"){
-      
-      finalLayer <- raster(curFile$datapath)
-      
-    }
+    finalLayer <- raster(curFile$datapath)
     
     plot(finalLayer)
     
+    
   })
+  
+  
+  ##### Render for editable table of weight ####
+  
+  output$rhWeightTable <- renderRHandsontable({
+    
+    # Retrieve short name of data frame of layers
+    if(!("shortName" %in% colnames(rv$layerDF))) return(NULL)
+    
+    layerNames <- sort(unique(rv$layerDF$shortName))
+    
+    nbLayer <- length(layerNames)
+    
+    weightDF <- data.frame(diag(nrow = nbLayer, ncol = nbLayer))
+    
+    colnames(weightDF) <- layerNames
+    
+    rownames(weightDF) <- layerNames
+    
+    rhandsontable(weightDF, rowHeaderWidth = 200)
+    
+  })
+  
+  
+  
+  ##### Render for result display ####
+  
+  output$resultDisplay <- renderPlot({
+    
+    
+    
+  })
+  
   
 }

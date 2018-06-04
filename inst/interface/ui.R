@@ -3,14 +3,15 @@
 #May 2018, by Sylvain Falala, Unit CIRAD-INRA ASTRE
 
 ################### LIBRARIES ################### 
-library(shinydashboard) #to create dashboard
-library(shinyjs) #for inputs show/hide functions
+library(shinydashboard) # to create dashboard
+#library(shinyjs) # for inputs show/hide functions
+library(rhandsontable) # editable table
 
 ################### UI ###################
 
 sidebar <- dashboardSidebar(
   
-  useShinyjs(),
+  #useShinyjs(),
   
   sidebarMenu(id = "tabs",
     
@@ -25,12 +26,16 @@ sidebar <- dashboardSidebar(
     
     
     # Items list for layers (1 layer = 1 item)
-    menuItemOutput(outputId = "miLayers"),
+    menuItem("Vecteurs", tabName = "vectorTab"),
     
-    # Button to remove layer
-    shinyjs::hidden(actionButton(inputId = "abLayerRemove", 
-                                 label = langLayerRemove[indLang] ,
-                                 icon = NULL, width = NULL))
+    # Items list for layers (1 layer = 1 item)
+    menuItem("Rasters", tabName = "rasterTab"),
+    
+    # Items list for layers (1 layer = 1 item)
+    menuItem("Poids", tabName = "weightTab"),
+    
+    # Items list for layers (1 layer = 1 item)
+    menuItem("Resultats", tabName = "resultTab")
     
   )
 )
@@ -38,7 +43,33 @@ sidebar <- dashboardSidebar(
 
 body <- dashboardBody(
   
-  plotOutput("layerDisplay")
+  tabItems(
+    
+    tabItem("vectorTab", 
+            
+            h1("Onglet vecteurs"),
+            uiOutput("uiVectorList"),
+            plotOutput("vectorDisplay")),
+    
+    tabItem("rasterTab", 
+            
+            h1("Onglet raster"),
+            uiOutput("uiRasterList"),
+            plotOutput("rasterDisplay")),
+    
+    tabItem("weightTab", 
+            
+            h1("Onglet poids"),
+            rHandsontableOutput("rhWeightTable")),
+    
+    tabItem("resultTab", 
+            
+            h1("Onglet resultats"),
+            plotOutput("resultDisplay"))
+    
+  )
+  
+  
   
 )
 

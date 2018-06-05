@@ -6,7 +6,7 @@ appTitle <- "PRODEL"
 
 acceptLayerType <- c(".shp", ".jpg", ".tif")
 
-vectorExt <- c("cpg", "dbf", "prj", "sbn", "sbx", "shp", "shx")
+vectorExt <- c("shp")
 
 rasterExt <- c("tif", "tiff")
 
@@ -19,12 +19,28 @@ indLang <- 2
 
 #languages <- c("English" = "1", "Francais" = "2")
 
+# Menu
+langMenuFile <- c("Files","Fichiers")
+
+langMenuVector <- c("Vectors","Vecteurs")
+
+langMenuRaster <- c("Rasters","Rasters")
+
+langMenuWeight <- c("Weight","Poids")
+
+langMenuResult <- c("Results","R&#233;sultats")
+
+# Type of layer
+lVect <- c("Vector","Vecteur")
+
+lRast <- c("Raster","Raster")
+
+
 langTitleFileInput <- c("Select layers",
-                        "S&#233;lectionnez les couches")
+                        "S&#233;lectionnez les fichiers de vecteurs et rasters")
 
 langButtonFileInput <- list(c("Browse...", "No file selected"), 
-                            c("Parcourir...", "Pas de fichiers s&#233;lectionn&#233;s"))
+                            c("Parcourir...", "Pas de selection"))
 
-langLayerItem <- c("Layers", "Couches")
 
 langLayerRemove <- c("Remove", "Supprimer")

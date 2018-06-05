@@ -18,7 +18,8 @@ server <- function(input, output, session) {
   
   #### Reactive values ####
   # layerDF = data frame of layers
-  rv <- reactiveValues(layerDF = NULL)
+  rv <- reactiveValues(allFiles = NULL,
+                       layerDF = NULL)
   
   
   ##### Observer on data frame of layers ####
@@ -62,6 +63,17 @@ server <- function(input, output, session) {
     file.rename(from = oldNames, to = newNames)
     layerFiles$datapath <- newNames
     
+    # Update allFiles data frame
+    if(is.null(nrow(rv$allFiles))) rv$allFiles <- layerFiles else rv$allFiles <- rbind(rv$allFiles, layerFiles)
+    
+    # Create short name for the layer based on the file name
+    # Remove file extension
+    layerFiles$shortName <- gsub(reExt, "", layerFiles$name, ignore.case = TRUE, perl = TRUE) 
+    
+    # Remove blanks  
+    #layerFiles$shortName <- gsub("\\s+", "", layerFiles$shortName, ignore.case = TRUE, perl = TRUE) 
+    
+    
     # Retrieve file extension to define type of layer: vector or raster
     fileExt <- str_extract(layerFiles$name, reExt)
     fileExt <- tolower(str_replace(fileExt, "\\.", ""))
@@ -69,24 +81,91 @@ server <- function(input, output, session) {
     layerFiles$layerType <- rep("Unknown", nrow(layerFiles))
     
     indVect <- which(fileExt %in% vectorExt)
-    if(!is.na(indVect[1])) layerFiles[indVect,"layerType"] <- "Vector"
+    if(!is.na(indVect[1])) layerFiles[indVect,"layerType"] <- lVect[indLang]
     
     indRast <- which(fileExt %in% rasterExt)
-    if(!is.na(indRast[1])) layerFiles[indRast,"layerType"] <- "Raster"
+    if(!is.na(indRast[1])) layerFiles[indRast,"layerType"] <- lRast[indLang]
     
-    # Create short name for the layer based on the file name
-    # Remove file extension
-    layerFiles$shortName <- gsub(reExt, "", layerFiles$name, ignore.case = TRUE, perl = TRUE) 
+    #Remove unknown file type
+    indRem <- which(layerFiles$layerType=="Unknown")
+    if(!is.na(indRem[1])) layerFiles <- layerFiles[-indRem,]
     
-    # Remove blanks  
-    layerFiles$shortName <- gsub("\\s+", "", layerFiles$shortName, ignore.case = TRUE, perl = TRUE) 
+    
+    
+    # Load vectors and rasters in global environment
+    for(k in 1:nrow(layerFiles)){
+      
+      #If vector
+      if(layerFiles[k,"layerType"]==lVect[indLang]){
+      
+        # Retrieve path of shp file to define dsn
+        shpDir <- gsub(paste("/", layerFiles[k,"name"], sep = ""),"", layerFiles[k,"datapath"])
+        
+        # Extract shp file name without extension to define layer name
+        shpLayer <- gsub(".shp","", layerFiles[k,"name"])
+        
+        curLay <- readOGR(dsn = shpDir, layer = shpLayer, verbose = FALSE)
+      
+      }
+      
+      
+      #If raster
+      if(layerFiles[k,"layerType"]==lRast[indLang]){
+        
+        curLay <- raster(layerFiles[k,"datapath"])
+
+      }
+      
+      
+      curLayerName <- paste("layer_", layerFiles[k,"shortName"], sep = "")
+      
+      #Save in global environment the current layer
+      assign(x = curLayerName, 
+             value = curLay, 
+             envir = .GlobalEnv)
+      
+    }
+    
 
     # Update layerDF
     if(is.null(nrow(rv$layerDF))) rv$layerDF <- layerFiles else rv$layerDF <- rbind(rv$layerDF, layerFiles)
-    
-    
+
     
   })
+  
+  ##### Render for all files table ####
+  
+  output$allFileTable <- renderTable({
+    
+    # Retrieve short name of data frame of layers
+    if(is.null(rv$allFiles)) return(NULL)
+    
+    shortLayerDF <- subset(rv$allFiles, select = "name")
+    
+    colnames(shortLayerDF) <- "Nom_fichier"
+    
+    shortLayerDF
+    
+  })
+  
+  
+  ##### Render for layers table ####
+  
+  output$rhFileTable <- renderRHandsontable({
+    
+    # Retrieve short name of data frame of layers
+    if(!("shortName" %in% colnames(rv$layerDF))) return(NULL)
+    
+    shortLayerDF <- subset(rv$layerDF, select = c( "shortName", "layerType"))
+    
+    colnames(shortLayerDF) <- c( "Nom_couche", "Type_couche")
+    
+    rhandsontable(shortLayerDF) %>%
+      hot_col("Type_couche", readOnly = TRUE)
+    
+  })
+  
+  
   
   
   ##### Render for the list of vectors ####
@@ -96,7 +175,7 @@ server <- function(input, output, session) {
       # Retrieve short name of data frame of layers
       if(!("layerType" %in% colnames(rv$layerDF))) return(NULL)
 
-      indVect <- which(rv$layerDF$layerType=="Vector")
+      indVect <- which(rv$layerDF$layerType==lVect[indLang])
       
       if(is.na(indVect[1])) return(NULL)
       
@@ -114,7 +193,7 @@ server <- function(input, output, session) {
     # Retrieve short name of data frame of layers
     if(!("layerType" %in% colnames(rv$layerDF))) return(NULL)
     
-    indRast <- which(rv$layerDF$layerType=="Raster")
+    indRast <- which(rv$layerDF$layerType==lRast[indLang])
     
     if(is.na(indRast[1])) return(NULL)
     
@@ -125,31 +204,7 @@ server <- function(input, output, session) {
   })
   
   
-  ##### Observer on sidebarMenu ####
   
-  observeEvent(input$tabs,{
-
-    print(input$tabs)
-    
-  })
-  
-  
-  ##### Observer on button to remove a layer ####
-  
-  # observeEvent(input$abLayerRemove,{
-  #   
-  #   # Retrieve name of the current tab
-  #   curLayer <- input$tabs
-  #   
-  #   if(is.null(curLayer)) return()
-  #   
-  #   # Search name in the layers data frame and remove it
-  #   indRem <- which(rv$layerDF$shortName==curLayer)
-  #   
-  #   if(!is.na(indRem[1])) rv$layerDF <- rv$layerDF[-indRem,]
-  #   
-  # })
-  # 
   
   ##### Render for vector display ####
   
@@ -160,29 +215,17 @@ server <- function(input, output, session) {
 
     if(is.null(curLayer)) return(NULL)
 
-    # Search name in the layers data frame
-    indLay <- which(rv$layerDF$shortName==curLayer)
-
-    if(is.na(indLay[1])) return(NULL)
-
-    curFile <- rv$layerDF[indLay,]
-
-
-    # Retrieve line of shp file
-    indShp <- grep(".shp", curFile$name)
-
-    if(is.na(indShp[1])) return(NULL)
-
-    shpFile <- curFile[indShp,]
-
-    # Retrieve path of shp file to define dsn
-    shpDir <- gsub(paste("/", shpFile$name, sep = ""),"", shpFile$datapath)
-
-    # Extract shp file name without extention to define layer name
-    shpLayer <- gsub(".shp","", shpFile$name)
-
-    finalLayer <- readOGR(dsn = shpDir, layer = shpLayer, verbose = FALSE)
-
+    finalLayer <- NULL
+    
+    curLayerName <- paste("layer_", curLayer, sep = "")
+    
+    #If data frame of disease is loaded in global environment
+    if(exists(curLayerName, envir = .GlobalEnv)) {
+      
+      finalLayer <- get(x = curLayerName, 
+                        envir = .GlobalEnv)
+    }
+    
     plot(finalLayer)
 
   })
@@ -197,14 +240,16 @@ server <- function(input, output, session) {
     
     if(is.null(curLayer)) return(NULL)
     
-    # Search name in the layers data frame
-    indLay <- which(rv$layerDF$shortName==curLayer)
+    finalLayer <- NULL
     
-    if(is.na(indLay[1])) return(NULL)
+    curLayerName <- paste("layer_", curLayer, sep = "")
     
-    curFile <- rv$layerDF[indLay,]
-    
-    finalLayer <- raster(curFile$datapath)
+    #If data frame of disease is loaded in global environment
+    if(exists(curLayerName, envir = .GlobalEnv)) {
+      
+      finalLayer <- get(x = curLayerName, 
+                    envir = .GlobalEnv)
+      }
     
     plot(finalLayer)
     

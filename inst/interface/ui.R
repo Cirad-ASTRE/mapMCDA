@@ -11,31 +11,22 @@ library(rhandsontable) # editable table
 
 sidebar <- dashboardSidebar(
   
-  #useShinyjs(),
-  
   sidebarMenu(id = "tabs",
     
-    # To upload shape and raster files
-    fileInput(inputId = "fiLayer", 
-              label = HTML(langTitleFileInput[indLang]),
-              multiple = TRUE, 
-              accept = acceptLayerType, 
-              width = NULL,
-              buttonLabel = HTML(langButtonFileInput[[indLang]][1]),
-              placeholder = HTML(langButtonFileInput[[indLang]][2])),
+    # Menu for input files
+    menuItem(HTML(langMenuFile[indLang]), tabName = "fileTab"),
     
+    # Menu for vectors
+    menuItem(HTML(langMenuVector[indLang]), tabName = "vectorTab"),
     
-    # Items list for layers (1 layer = 1 item)
-    menuItem("Vecteurs", tabName = "vectorTab"),
+    # Menu for rasters
+    menuItem(HTML(langMenuRaster[indLang]), tabName = "rasterTab"),
     
-    # Items list for layers (1 layer = 1 item)
-    menuItem("Rasters", tabName = "rasterTab"),
+    # Menu for weight table
+    menuItem(HTML(langMenuWeight[indLang]), tabName = "weightTab"),
     
-    # Items list for layers (1 layer = 1 item)
-    menuItem("Poids", tabName = "weightTab"),
-    
-    # Items list for layers (1 layer = 1 item)
-    menuItem("Resultats", tabName = "resultTab")
+    # Menu for results
+    menuItem(HTML(langMenuResult[indLang]), tabName = "resultTab")
     
   )
 )
@@ -44,6 +35,25 @@ sidebar <- dashboardSidebar(
 body <- dashboardBody(
   
   tabItems(
+    
+    tabItem("fileTab", 
+            
+            # To upload shape and raster files
+            fileInput(inputId = "fiLayer", 
+                      label = HTML(langTitleFileInput[indLang]),
+                      multiple = TRUE, 
+                      accept = acceptLayerType, 
+                      width = NULL,
+                      buttonLabel = HTML(langButtonFileInput[[indLang]][1]),
+                      placeholder = HTML(langButtonFileInput[[indLang]][2])),
+            
+            tableOutput("allFileTable"),
+            
+            
+            # List of upload files. Name of layer is editable
+            rHandsontableOutput("rhFileTable")),
+    
+            
     
     tabItem("vectorTab", 
             

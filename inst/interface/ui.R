@@ -38,44 +38,100 @@ body <- dashboardBody(
     
     tabItem("fileTab", 
             
-            # To upload shape and raster files
-            fileInput(inputId = "fiLayer", 
-                      label = HTML(langTitleFileInput[indLang]),
-                      multiple = TRUE, 
-                      accept = acceptLayerType, 
-                      width = NULL,
-                      buttonLabel = HTML(langButtonFileInput[[indLang]][1]),
-                      placeholder = HTML(langButtonFileInput[[indLang]][2])),
+            fluidRow(
             
-            tableOutput("allFileTable"),
+              box(title = HTML(langBoxFile[indLang]), status = "primary", width = 6, solidHeader = TRUE,
+              
+                # To upload shape and raster files
+                fileInput(inputId = "fiLayer", 
+                          label = HTML(langTitleFileInput[indLang]),
+                          multiple = TRUE, 
+                          accept = acceptLayerType, 
+                          width = NULL,
+                          buttonLabel = HTML(langButtonFileInput[[indLang]][1]),
+                          placeholder = HTML(langButtonFileInput[[indLang]][2])),
+                
+                # List of all upload files
+                tableOutput("allFileTable")
             
+                 ),
             
-            # List of upload files. Name of layer is editable
-            rHandsontableOutput("rhFileTable")),
+              
+              box(title = HTML(langBoxLayer[indLang]), status = "success", width = 6, solidHeader = TRUE,
+            
+                  # List of layers. Name is editable
+                  rHandsontableOutput("rhLayerTable")
+            
+                 )
+            
+            )
     
-            
+    ),
     
     tabItem("vectorTab", 
             
-            h1("Onglet vecteurs"),
             uiOutput("uiVectorList"),
-            plotOutput("vectorDisplay")),
+            
+           
+              
+              box(title = HTML(langBoxVMap[indLang]), status = "primary", width = 6, solidHeader = TRUE,
+                  
+                  plotOutput("vectorDisplay")
+                  
+                 ),
+              
+              
+              box(title = HTML(langBoxVDist[indLang]), status = "success", width = 6, solidHeader = TRUE,
+                  
+                  plotOutput("distanceDisplay")
+                  
+                 )
+
+            ),
     
     tabItem("rasterTab", 
             
-            h1("Onglet raster"),
             uiOutput("uiRasterList"),
-            plotOutput("rasterDisplay")),
+            
+            box(title = HTML(langBoxRawMap[indLang]), status = "primary", width = 6, solidHeader = TRUE,
+                
+                plotOutput("rawRasterDisplay")
+                
+               ),
+            
+            
+            box(title = HTML(langBoxProcMap[indLang]), status = "success", width = 6, solidHeader = TRUE,
+                
+                
+                plotOutput("processedRasterDisplay")
+                
+               ),
+            
+            actionButton(inputId = "abRasterInvert", 
+                         label = langABRasterInvert[indLang] ,
+                         icon = NULL, width = NULL)
+            
+          ),
+            
+            
+            
     
     tabItem("weightTab", 
             
-            h1("Onglet poids"),
-            rHandsontableOutput("rhWeightTable")),
+            h1("Poids"),
+            rHandsontableOutput("rhWeightTable"),
+            plotOutput("weightBarDisplay")
+            
     
+          ),
+            
     tabItem("resultTab", 
             
-            h1("Onglet resultats"),
-            plotOutput("resultDisplay"))
+            h1(HTML(langMenuResult[indLang])),
+            plotOutput("resultDisplay")
+            
+            
+            )
     
   )
   

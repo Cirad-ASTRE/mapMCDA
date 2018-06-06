@@ -17,9 +17,12 @@ options(shiny.maxRequestSize=30*1024^2)
 server <- function(input, output, session) {
   
   #### Reactive values ####
-  # layerDF = data frame of layers
-  rv <- reactiveValues(allFiles = NULL,
-                       layerDF = NULL)
+  # uploadFileDF = data frame of information on all uploaded files
+  # layerDF = data frame of information on layers
+  # weightMatrix = matrix of weight
+  rv <- reactiveValues(uploadFileDF = NULL,
+                       layerDF = NULL,
+                       weightMatrix = NULL)
   
   
   ##### Observer on data frame of layers ####
@@ -63,15 +66,20 @@ server <- function(input, output, session) {
     file.rename(from = oldNames, to = newNames)
     layerFiles$datapath <- newNames
     
-    # Update allFiles data frame
-    if(is.null(nrow(rv$allFiles))) rv$allFiles <- layerFiles else rv$allFiles <- rbind(rv$allFiles, layerFiles)
+    # Update data frame of all uploaded files
+    if(is.null(nrow(rv$uploadFileDF))) rv$uploadFileDF <- layerFiles else rv$uploadFileDF <- rbind(rv$uploadFileDF, layerFiles)
     
     # Create short name for the layer based on the file name
     # Remove file extension
-    layerFiles$shortName <- gsub(reExt, "", layerFiles$name, ignore.case = TRUE, perl = TRUE) 
+    layerFiles$shortName <- gsub(reExt, "", layerFiles$name, ignore.case = TRUE, perl = TRUE)
+    
+    # Remove special characters
+    layerFiles$shortName <- iconv(layerFiles$shortName, from = "UTF-8", to = "ASCII", sub = "")
     
     # Remove blanks  
-    #layerFiles$shortName <- gsub("\\s+", "", layerFiles$shortName, ignore.case = TRUE, perl = TRUE) 
+    layerFiles$shortName <- gsub("\\s+", "", layerFiles$shortName, ignore.case = TRUE, perl = TRUE)
+    
+    layerFiles$originalName <- layerFiles$shortName
     
     
     # Retrieve file extension to define type of layer: vector or raster
@@ -90,10 +98,11 @@ server <- function(input, output, session) {
     indRem <- which(layerFiles$layerType=="Unknown")
     if(!is.na(indRem[1])) layerFiles <- layerFiles[-indRem,]
     
-    
+    nbLayer <- nrow(layerFiles)
+    layerNames <- sort(layerFiles$shortName)
     
     # Load vectors and rasters in global environment
-    for(k in 1:nrow(layerFiles)){
+    for(k in 1:nbLayer){
       
       #If vector
       if(layerFiles[k,"layerType"]==lVect[indLang]){
@@ -129,7 +138,10 @@ server <- function(input, output, session) {
 
     # Update layerDF
     if(is.null(nrow(rv$layerDF))) rv$layerDF <- layerFiles else rv$layerDF <- rbind(rv$layerDF, layerFiles)
-
+    
+    #Initialize weight matrix
+    rv$weightMatrix <- matrix(data = 1, nrow = nbLayer, ncol = nbLayer, dimnames = list(layerNames, layerNames))
+    
     
   })
   
@@ -138,9 +150,9 @@ server <- function(input, output, session) {
   output$allFileTable <- renderTable({
     
     # Retrieve short name of data frame of layers
-    if(is.null(rv$allFiles)) return(NULL)
+    if(is.null(rv$uploadFileDF)) return(NULL)
     
-    shortLayerDF <- subset(rv$allFiles, select = "name")
+    shortLayerDF <- subset(rv$uploadFileDF, select = "name")
     
     colnames(shortLayerDF) <- "Nom_fichier"
     
@@ -149,23 +161,76 @@ server <- function(input, output, session) {
   })
   
   
-  ##### Render for layers table ####
+  ##### Render for layer editable table ####
   
-  output$rhFileTable <- renderRHandsontable({
+  output$rhLayerTable <- renderRHandsontable({
     
     # Retrieve short name of data frame of layers
     if(!("shortName" %in% colnames(rv$layerDF))) return(NULL)
     
-    shortLayerDF <- subset(rv$layerDF, select = c( "shortName", "layerType"))
+    shortLayerDF <- subset(rv$layerDF, select = c("originalName", "shortName", "layerType"))
     
-    colnames(shortLayerDF) <- c( "Nom_couche", "Type_couche")
+    colnames(shortLayerDF) <- c("Nom_orig", "Nom_modif", "Type")
+    
+    rownames(shortLayerDF) <- 1:nrow(shortLayerDF)
     
     rhandsontable(shortLayerDF) %>%
-      hot_col("Type_couche", readOnly = TRUE)
+      hot_col(c("Nom_orig", "Type"), readOnly = TRUE)
     
   })
   
   
+  ##### Observer on layer editable table ####
+  
+  observeEvent(input$rhLayerTable,{
+
+    #Retrieve data from editable table
+    editLayerDF <- hot_to_r(input$rhLayerTable)
+
+    newLayerNames <- editLayerDF$Nom_modif
+
+    if(any(nchar(newLayerNames)==0)) return()
+    
+    # Rename variables of layers in global environment
+    nbLayer <- nrow(rv$layerDF)
+    
+    for(k in 1:nbLayer){
+      
+      curLayerSN <- rv$layerDF[k, "shortName"]
+      
+      if(newLayerNames[k]!=curLayerSN){
+        
+        curLayerName <- paste("layer_", curLayerSN, sep = "")
+        
+        if(exists(curLayerName, envir = .GlobalEnv)) {
+          
+          curLay <- get(x = curLayerName, 
+                            envir = .GlobalEnv)
+        
+          rm(list=curLayerName, envir = .GlobalEnv)
+        
+        curLayerNewName <- paste("layer_", newLayerNames[k], sep = "")
+        
+        #Save in global environment the current layer with new name
+        assign(x = curLayerNewName, 
+               value = curLay, 
+               envir = .GlobalEnv)
+        }
+        
+      }
+      
+    }
+
+    # Update data frame of layers
+    rv$layerDF$shortName <- newLayerNames
+
+    
+
+    # Upadate weight matrix
+    dimnames(rv$weightMatrix) <- list(newLayerNames, newLayerNames)
+
+
+  })
   
   
   ##### Render for the list of vectors ####
@@ -181,7 +246,10 @@ server <- function(input, output, session) {
       
       shortNames <- sort(unique(rv$layerDF[indVect,"shortName"]))
 
-      radioButtons(inputId = "rbVectorLayer", label = NULL, choices = shortNames, inline = TRUE)
+      radioButtons(inputId = "rbVectorLayer", 
+                   label = HTML(langRBVector[indLang]), 
+                   choices = shortNames, 
+                   inline = TRUE)
 
   })
   
@@ -199,7 +267,10 @@ server <- function(input, output, session) {
     
     shortNames <- sort(unique(rv$layerDF[indRast,"shortName"]))
     
-    radioButtons(inputId = "rbRasterLayer", label = NULL, choices = shortNames, inline = TRUE)
+    radioButtons(inputId = "rbRasterLayer", 
+                 label = HTML(langRBRaster[indLang]), 
+                 choices = shortNames, 
+                 inline = TRUE)
     
   })
   
@@ -233,7 +304,7 @@ server <- function(input, output, session) {
   
   ##### Render for raster display ####
   
-  output$rasterDisplay <- renderPlot({
+  output$rawRasterDisplay <- renderPlot({
     
     # Retrieve name of the current tab
     curLayer <- input$rbRasterLayer
@@ -261,23 +332,32 @@ server <- function(input, output, session) {
   
   output$rhWeightTable <- renderRHandsontable({
     
-    # Retrieve short name of data frame of layers
-    if(!("shortName" %in% colnames(rv$layerDF))) return(NULL)
-    
-    layerNames <- sort(unique(rv$layerDF$shortName))
-    
-    nbLayer <- length(layerNames)
-    
-    weightDF <- data.frame(diag(nrow = nbLayer, ncol = nbLayer))
-    
-    colnames(weightDF) <- layerNames
-    
-    rownames(weightDF) <- layerNames
+    weightDF <- data.frame(rv$weightMatrix)
     
     rhandsontable(weightDF, rowHeaderWidth = 200)
     
   })
   
+  
+  ##### Observer on weight editable table ####
+  
+  observeEvent(input$rhWeightTable,{
+    
+    #Retrieve data from editable table
+    weightDF <- hot_to_r(input$rhWeightTable)
+    
+    print(weightDF)
+    
+    
+  })
+  
+  ##### Render for weight graph bar display ####
+  
+  output$weightBarDisplay <- renderPlot({
+    
+    
+    
+  })
   
   
   ##### Render for result display ####

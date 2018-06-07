@@ -30,19 +30,21 @@ server <- function(input, output, session) {
   observeEvent(rv$layerDF,{
     
     # If data frame is empty
-    if(is.null(nrow(rv$layerDF)) || nrow(rv$layerDF)==0){
-      
-      
-      #shinyjs::hide("abLayerRemove")
-      
-    } else {
-        
-      
-      #shinyjs::show("abLayerRemove")
-      
-    }
+    #if(is.null(nrow(rv$layerDF)) || nrow(rv$layerDF)==0){} else {}
     
     glLayerDF <<- rv$layerDF
+    
+  })
+  
+  
+  ##### Observer on weight matrix ####
+  
+  observeEvent(rv$weightMatrix,{
+    
+    # If data frame is empty
+    #if(is.null(nrow(rv$layerDF)) || nrow(rv$layerDF)==0){} else {}
+    
+    glWeightMatrix <<- rv$weightMatrix
     
   })
   
@@ -69,18 +71,6 @@ server <- function(input, output, session) {
     # Update data frame of all uploaded files
     if(is.null(nrow(rv$uploadFileDF))) rv$uploadFileDF <- layerFiles else rv$uploadFileDF <- rbind(rv$uploadFileDF, layerFiles)
     
-    # Create short name for the layer based on the file name
-    # Remove file extension
-    layerFiles$shortName <- gsub(reExt, "", layerFiles$name, ignore.case = TRUE, perl = TRUE)
-    
-    # Remove special characters
-    layerFiles$shortName <- iconv(layerFiles$shortName, from = "UTF-8", to = "ASCII", sub = "")
-    
-    # Remove blanks  
-    layerFiles$shortName <- gsub("\\s+", "", layerFiles$shortName, ignore.case = TRUE, perl = TRUE)
-    
-    layerFiles$originalName <- layerFiles$shortName
-    
     
     # Retrieve file extension to define type of layer: vector or raster
     fileExt <- str_extract(layerFiles$name, reExt)
@@ -98,6 +88,21 @@ server <- function(input, output, session) {
     indRem <- which(layerFiles$layerType=="Unknown")
     if(!is.na(indRem[1])) layerFiles <- layerFiles[-indRem,]
     
+    
+    
+    # Create short name for the layer based on the file name
+    # Remove file extension
+    layerFiles$shortName <- gsub(reExt, "", layerFiles$name, ignore.case = TRUE, perl = TRUE)
+    
+    # Remove special characters
+    layerFiles$shortName <- iconv(layerFiles$shortName, from = "UTF-8", to = "ASCII", sub = "")
+    
+    # Remove blanks  
+    layerFiles$shortName <- gsub("\\s+", "", layerFiles$shortName, ignore.case = TRUE, perl = TRUE)
+    
+    layerFiles$originalName <- layerFiles$shortName
+    
+    
     nbLayer <- nrow(layerFiles)
     layerNames <- sort(layerFiles$shortName)
     
@@ -106,12 +111,27 @@ server <- function(input, output, session) {
       
       #If vector
       if(layerFiles[k,"layerType"]==lVect[indLang]){
-      
-        # Retrieve path of shp file to define dsn
-        shpDir <- gsub(paste("/", layerFiles[k,"name"], sep = ""),"", layerFiles[k,"datapath"])
         
-        # Extract shp file name without extension to define layer name
-        shpLayer <- gsub(".shp","", layerFiles[k,"name"])
+        # If shape file
+        if(str_detect(layerFiles[k,"name"], ".shp")){
+      
+          # Retrieve path of shp file to define dsn
+          shpDir <- gsub(paste("/", layerFiles[k,"name"], sep = ""),"", layerFiles[k,"datapath"])
+          
+          # Extract shp file name without extension to define layer name
+          shpLayer <- gsub(".shp","", layerFiles[k,"name"])
+        }
+        
+        # If geopackage file
+        if(str_detect(layerFiles[k,"name"], ".gpkg")){
+          
+          # Retrieve path of shp file to define dsn
+          shpDir <- layerFiles[k,"datapath"]
+          
+          # Extract shp file name without extension to define layer name
+          shpLayer <- gsub(".gpkg","", layerFiles[k,"name"])
+        }
+        
         
         curLay <- readOGR(dsn = shpDir, layer = shpLayer, verbose = FALSE)
       
@@ -135,6 +155,8 @@ server <- function(input, output, session) {
       
     }
     
+    # Add column if layer is administrative units
+    layerFiles$adminUnit <- rep(FALSE, nbLayer)
 
     # Update layerDF
     if(is.null(nrow(rv$layerDF))) rv$layerDF <- layerFiles else rv$layerDF <- rbind(rv$layerDF, layerFiles)
@@ -154,7 +176,7 @@ server <- function(input, output, session) {
     
     shortLayerDF <- subset(rv$uploadFileDF, select = "name")
     
-    colnames(shortLayerDF) <- "Nom_fichier"
+    colnames(shortLayerDF) <- langFileList[indLang]
     
     shortLayerDF
     
@@ -168,14 +190,14 @@ server <- function(input, output, session) {
     # Retrieve short name of data frame of layers
     if(!("shortName" %in% colnames(rv$layerDF))) return(NULL)
     
-    shortLayerDF <- subset(rv$layerDF, select = c("originalName", "shortName", "layerType"))
+    shortLayerDF <- subset(rv$layerDF, select = toEditLayerColNames)
     
-    colnames(shortLayerDF) <- c("Nom_orig", "Nom_modif", "Type")
+    colnames(shortLayerDF) <- langLayerList[[indLang]]
     
     rownames(shortLayerDF) <- 1:nrow(shortLayerDF)
     
     rhandsontable(shortLayerDF) %>%
-      hot_col(c("Nom_orig", "Type"), readOnly = TRUE)
+      hot_col(c(lockOrigNameCol, lockTypeCol), readOnly = TRUE)
     
   })
   
@@ -186,9 +208,18 @@ server <- function(input, output, session) {
 
     #Retrieve data from editable table
     editLayerDF <- hot_to_r(input$rhLayerTable)
+    
+    # Update name of layers
 
-    newLayerNames <- editLayerDF$Nom_modif
+    newLayerNames <- editLayerDF[,newNameCol]
+    
+    # Remove special characters
+    newLayerNames <- iconv(newLayerNames, from = "UTF-8", to = "ASCII", sub = "")
+    
+    # Remove blanks  
+    newLayerNames <- gsub("\\s+", "", newLayerNames, ignore.case = TRUE, perl = TRUE)
 
+    # If at least one empty name
     if(any(nchar(newLayerNames)==0)) return()
     
     # Rename variables of layers in global environment
@@ -223,8 +254,8 @@ server <- function(input, output, session) {
 
     # Update data frame of layers
     rv$layerDF$shortName <- newLayerNames
-
     
+    rv$layerDF$adminUnit <- editLayerDF[,newAdminCol]
 
     # Upadate weight matrix
     dimnames(rv$weightMatrix) <- list(newLayerNames, newLayerNames)
@@ -346,7 +377,7 @@ server <- function(input, output, session) {
     #Retrieve data from editable table
     weightDF <- hot_to_r(input$rhWeightTable)
     
-    print(weightDF)
+    #print(weightDF)
     
     
   })

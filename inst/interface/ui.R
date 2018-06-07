@@ -40,7 +40,7 @@ body <- dashboardBody(
             
             fluidRow(
             
-              box(title = HTML(langBoxFile[indLang]), status = "primary", width = 6, solidHeader = TRUE,
+              box(title = HTML(langBoxFile[indLang]), status = "primary", width = 5, solidHeader = TRUE,
               
                 # To upload shape and raster files
                 fileInput(inputId = "fiLayer", 
@@ -57,7 +57,7 @@ body <- dashboardBody(
                  ),
             
               
-              box(title = HTML(langBoxLayer[indLang]), status = "success", width = 6, solidHeader = TRUE,
+              box(title = HTML(langBoxLayer[indLang]), status = "success", width = 7, solidHeader = TRUE,
             
                   # List of layers. Name is editable
                   rHandsontableOutput("rhLayerTable")
@@ -118,18 +118,40 @@ body <- dashboardBody(
     
     tabItem("weightTab", 
             
-            h1("Poids"),
-            rHandsontableOutput("rhWeightTable"),
-            plotOutput("weightBarDisplay")
+            fluidRow(
+              
+             
+            
+                box(title = HTML(langBoxWeightMatrix[indLang]), status = "primary", width = 12, solidHeader = TRUE,
+                    
+                    rHandsontableOutput("rhWeightTable")
+                    
+                )
+                
+            ),
+            
+            fluidRow(
+                
+                box(title = HTML(langBoxWeightBar[indLang]), status = "success", width = 12, solidHeader = TRUE,
+                    
+                    plotOutput("weightBarDisplay")
+                    
+                )
+              
+            )
+            
             
     
           ),
             
-    tabItem("resultTab", 
+    tabItem("resultTab",
             
-            h1(HTML(langMenuResult[indLang])),
-            plotOutput("resultDisplay")
-            
+              box(title = HTML(langMenuResult[indLang]), status = "success", width = 12, solidHeader = TRUE,
+                  
+                  plotOutput("resultDisplay")
+                  
+              )
+
             
             )
     

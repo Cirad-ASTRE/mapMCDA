@@ -2,15 +2,32 @@
 #Interface for PRODEL project
 #May 2018, by Sylvain Falala, Unit CIRAD-INRA ASTRE
 
-appTitle <- "PRODEL"
+appTitle <- "MapMCDA"
 
 acceptLayerType <- c(".shp", ".jpg", ".tif")
 
-vectorExt <- c("shp")
+vectorExt <- c("shp", "gpkg")
 
 rasterExt <- c("tif", "tiff")
 
 reExt <- "\\.\\w{1,}$" # regular expression to define file extension
+
+
+# Columns to retrieve in data frame of layers for editable table
+toEditLayerColNames <- c("originalName", "shortName", "layerType", "adminUnit")
+
+# Column names for editable table of layers
+langLayerList <- list(c("Name_orig", "Name_new", "Type", "Admin_unit"), 
+                      c("Nom_orig", "Nom_modif", "Type", "Unite_admin"))
+
+# Columns read only in editable table of layers
+lockOrigNameCol <- 1
+lockTypeCol <- 3
+
+# Columns editable in editable table of layers
+newNameCol <- 2
+newAdminCol <- 4
+
 
 #### LANGUAGE ####
 
@@ -24,7 +41,10 @@ langMenuFile <- c("Files","Fichiers")
 
 langBoxFile <- langMenuFile
 
+langFileList <- c("Names","Noms")
+
 langBoxLayer <- c("Layers", "Couches")
+
 
 # Vecteurs
 langMenuVector <- c("Vectors","Vecteurs")
@@ -48,6 +68,10 @@ langABRasterInvert <- c("Invert", "Inverser")
 
 # Weight
 langMenuWeight <- c("Weight","Poids")
+
+langBoxWeightMatrix <- c("Weight Matrix", "Matrice des poids")
+
+langBoxWeightBar <- c("Weight Histogram", "Histogramme des poids")
 
 # Results
 langMenuResult <- c("Results","R&#233;sultats")

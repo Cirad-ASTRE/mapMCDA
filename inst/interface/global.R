@@ -12,6 +12,8 @@ rasterExt <- c("tif", "tiff")
 
 reExt <- "\\.\\w{1,}$" # regular expression to define file extension
 
+glLayerDF <- NULL
+glWeightMatrix <- NULL
 
 # Columns to retrieve in data frame of layers for editable table
 toEditLayerColNames <- c("originalName", "shortName", "layerType", "adminUnit")

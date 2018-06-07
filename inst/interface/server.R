@@ -37,17 +37,6 @@ server <- function(input, output, session) {
   })
   
   
-  ##### Observer on weight matrix ####
-  
-  observeEvent(rv$weightMatrix,{
-    
-    # If data frame is empty
-    #if(is.null(nrow(rv$layerDF)) || nrow(rv$layerDF)==0){} else {}
-    
-    glWeightMatrix <<- rv$weightMatrix
-    
-  })
-  
   
   ##### Observer on file input ####
   
@@ -162,8 +151,20 @@ server <- function(input, output, session) {
     if(is.null(nrow(rv$layerDF))) rv$layerDF <- layerFiles else rv$layerDF <- rbind(rv$layerDF, layerFiles)
     
     #Initialize weight matrix
-    rv$weightMatrix <- matrix(data = 1, nrow = nbLayer, ncol = nbLayer, dimnames = list(layerNames, layerNames))
+    if(is.null(nrow(glWeightMatrix))){
     
+      rv$weightMatrix <- matrix(data = 1.0, nrow = nbLayer, ncol = nbLayer, dimnames = list(layerNames, layerNames))
+    
+      } else {
+      
+      nbLines <- nrow(glWeightMatrix) + nbLayer
+      newNames <- c(rownames(glWeightMatrix), layerNames) 
+      
+      rv$weightMatrix <- matrix(data = 1.0, nrow = nbLines, ncol = nbLines, 
+                                dimnames = list(newNames, newNames))
+        
+    }
+    glWeightMatrix <<- rv$weightMatrix
     
   })
   
@@ -258,6 +259,7 @@ server <- function(input, output, session) {
     rv$layerDF$adminUnit <- editLayerDF[,newAdminCol]
 
     # Upadate weight matrix
+    rv$weightMatrix <- glWeightMatrix
     dimnames(rv$weightMatrix) <- list(newLayerNames, newLayerNames)
 
 
@@ -375,9 +377,11 @@ server <- function(input, output, session) {
   observeEvent(input$rhWeightTable,{
     
     #Retrieve data from editable table
-    weightDF <- hot_to_r(input$rhWeightTable)
+    weightMat <- as.matrix(hot_to_r(input$rhWeightTable))
     
-    #print(weightDF)
+    #print(weightMat)
+    
+    glWeightMatrix <<- weightMat
     
     
   })

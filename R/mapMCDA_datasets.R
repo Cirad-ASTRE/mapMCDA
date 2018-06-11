@@ -1,5 +1,14 @@
-#' Load packaged datasets into memory
-#' @import raster, rgdal
+#' Load packaged Cameroon layers into memory
+#' 
+#' Loads a list of 4 geographical layers of Cameroon. Namely: the raster of
+#' animal density, the administrative borders at the third level, the national
+#' parks and the water bodies.
+#'
+#' Sources are the Gridded Livestock of the World database (ref?), the Global
+#' Administrative Boundaries database (gadm.org), and ???.
+#' 
+#' @import raster
+#' @import rgdal
 #'
 #' @return list of spatial layers
 #' @export

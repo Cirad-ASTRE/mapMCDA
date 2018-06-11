@@ -2,6 +2,13 @@
 #Interface for PRODEL project
 #May 2018, by Sylvain Falala, Unit CIRAD-INRA ASTRE
 
+################### LIBRARIES ################### 
+library(stringr) # to work with character strings
+library(rgdal) #to work with spatial vector
+library(raster) #to work with spatial raster
+
+
+
 appTitle <- "MapMCDA"
 
 acceptLayerType <- c(".shp", ".jpg", ".tif")
@@ -12,6 +19,12 @@ rasterExt <- c("tif", "tiff")
 
 reExt <- "\\.\\w{1,}$" # regular expression to define file extension
 
+
+preloadPath <- "preload"
+
+vectNames <- c("name", "size", "type", "datapath", "layerType", "shortName", "originalName", "adminUnit")
+
+glUploadFileDF <- NULL
 glLayerDF <- NULL
 glWeightMatrix <- NULL
 
@@ -94,4 +107,123 @@ langButtonFileInput <- list(c("Browse...", "No file selected"),
 
 
 langLayerRemove <- c("Remove", "Supprimer")
+
+
+################### MAIN PROGRAM ###################
+
+#List preload files
+outbFiles <- list.files(path = preloadPath)
+
+if(!is.na(outbFiles[1])){
+  
+  nbFiles <- length(outbFiles)
+  
+  glLayerDF <- data.frame(matrix(nrow = nbFiles, ncol = length(vectNames)), stringsAsFactors = FALSE)
+  
+  colnames(glLayerDF) <- vectNames
+  
+  glLayerDF$name <- outbFiles
+  
+  glLayerDF$datapath <- paste(preloadPath, outbFiles, sep = "/")
+  
+  glUploadFileDF <- subset(glLayerDF, select = c("name", "size", "type", "datapath"))
+  
+  
+  # Retrieve file extension to define type of layer: vector or raster
+  fileExt <- str_extract(glLayerDF$name, reExt)
+  fileExt <- tolower(str_replace(fileExt, "\\.", ""))
+  
+  glLayerDF$layerType <- rep("Unknown", nbFiles)
+  
+  indVect <- which(fileExt %in% vectorExt)
+  if(!is.na(indVect[1])) glLayerDF[indVect,"layerType"] <- lVect[indLang]
+  
+  indRast <- which(fileExt %in% rasterExt)
+  if(!is.na(indRast[1])) glLayerDF[indRast,"layerType"] <- lRast[indLang]
+  
+  #Remove unknown file type
+  indRem <- which(glLayerDF$layerType=="Unknown")
+  if(!is.na(indRem[1])) glLayerDF <- glLayerDF[-indRem,]
+  
+  
+  
+  # Create short name for the layer based on the file name
+  # Remove file extension
+  glLayerDF$shortName <- gsub(reExt, "", glLayerDF$name, ignore.case = TRUE, perl = TRUE)
+  
+  # Remove special characters
+  glLayerDF$shortName <- iconv(glLayerDF$shortName, from = "UTF-8", to = "ASCII", sub = "")
+  
+  # Remove blanks  
+  glLayerDF$shortName <- gsub("\\s+", "", glLayerDF$shortName, ignore.case = TRUE, perl = TRUE)
+  
+  glLayerDF$originalName <- glLayerDF$shortName
+  
+  nbLayer <- nrow(glLayerDF)
+  layerNames <- sort(glLayerDF$shortName)
+  
+  # If layer is administrative units
+  glLayerDF$adminUnit <- rep(FALSE, nbLayer)
+  
+  
+  
+  # Load in global environment
+  for(k in 1:nbLayer){
+    
+    #If vector
+    if(glLayerDF[k,"layerType"]==lVect[indLang]){
+      
+      # If shape file
+      if(str_detect(glLayerDF[k,"name"], ".shp")){
+        
+        # Retrieve path of shp file to define dsn
+        shpDir <- gsub(paste("/", glLayerDF[k,"name"], sep = ""),"", glLayerDF[k,"datapath"])
+        
+        # Extract shp file name without extension to define layer name
+        shpLayer <- gsub(".shp","", glLayerDF[k,"name"])
+      }
+      
+      # If geopackage file
+      if(str_detect(glLayerDF[k,"name"], ".gpkg")){
+        
+        # Retrieve path of shp file to define dsn
+        shpDir <- glLayerDF[k,"datapath"]
+        
+        # Extract shp file name without extension to define layer name
+        shpLayer <- gsub(".gpkg","", glLayerDF[k,"name"])
+      }
+      
+      
+      curLay <- readOGR(dsn = shpDir, layer = shpLayer, verbose = FALSE)
+      
+    }
+    
+    
+    #If raster
+    if(glLayerDF[k,"layerType"]==lRast[indLang]){
+      
+      curLay <- raster(glLayerDF[k,"datapath"])
+      
+    }
+    
+    
+    curLayerName <- paste("layer_", glLayerDF[k,"shortName"], sep = "")
+    
+    #Save in global environment the current layer
+    assign(x = curLayerName, 
+           value = curLay, 
+           envir = .GlobalEnv)
+    
+  }
+  
+  #Initialize weight matrix
+  glWeightMatrix <- matrix(data = 1.0, nrow = nbLayer, ncol = nbLayer, dimnames = list(layerNames, layerNames))
+    
+  
+  
+  
+  rm(nbFiles, indVect, indRast, indRem, fileExt, nbLayer, layerNames)
+  
+}
+
 

@@ -3,14 +3,13 @@
 #May 2018, by Sylvain Falala, Unit CIRAD-INRA ASTRE
 
 ################### LIBRARIES ################### 
-library(stringr) # to work with character strings
-library(rgdal) #to work with spatial vector
-library(raster) #to work with spatial raster
+
+
 
 
 # To avoid "Maximum upload size exceeded"
-# Define upload limit as 30MB
-options(shiny.maxRequestSize=30*1024^2)
+# Define upload limit as 20MB
+options(shiny.maxRequestSize=20*1024^2)
 
 
 
@@ -20,9 +19,9 @@ server <- function(input, output, session) {
   # uploadFileDF = data frame of information on all uploaded files
   # layerDF = data frame of information on layers
   # weightMatrix = matrix of weight
-  rv <- reactiveValues(uploadFileDF = NULL,
-                       layerDF = NULL,
-                       weightMatrix = NULL)
+  rv <- reactiveValues(uploadFileDF = glUploadFileDF,
+                       layerDF = glLayerDF,
+                       weightMatrix = glWeightMatrix)
   
   
   ##### Observer on data frame of layers ####
@@ -59,7 +58,7 @@ server <- function(input, output, session) {
     
     # Update data frame of all uploaded files
     if(is.null(nrow(rv$uploadFileDF))) rv$uploadFileDF <- layerFiles else rv$uploadFileDF <- rbind(rv$uploadFileDF, layerFiles)
-    
+    glUploadFileDF <<- rv$uploadFileDF
     
     # Retrieve file extension to define type of layer: vector or raster
     fileExt <- str_extract(layerFiles$name, reExt)

@@ -28,7 +28,9 @@ mapMCDA_datasets <- function() {
   layer_noext <- gsub("\\.\\w{1,}$", "", layer_name)
   layer_type <- vapply(layer_name, layer_type, character(1))
   
-  load_f <- c(vector = "readOGR", raster = "raster")
+  readOGR_silently <- function(x, ...) readOGR(x, verbose = FALSE, ...)
+  
+  load_f <- c(vector = "readOGR_silently", raster = "raster")
   
   ans <- mapply(function(x, y) do.call(x, list(y)), load_f[layer_type], pkg_files)
   names(ans) <- layer_noext

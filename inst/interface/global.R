@@ -7,6 +7,9 @@ library(stringr) # to work with character strings
 library(rgdal) #to work with spatial vector
 library(raster) #to work with spatial raster
 
+library(devtools)
+load_all()
+
 
 
 appTitle <- "MapMCDA"
@@ -18,6 +21,15 @@ vectorExt <- c("shp", "gpkg")
 rasterExt <- c("tif", "tiff")
 
 reExt <- "\\.\\w{1,}$" # regular expression to define file extension
+
+# 1 layer in global environment is a list with :
+# 1: raw layer
+# 2: scale target
+# 3: standardized layer
+indRawLay <- 1
+indScale <- 2
+indStandLay <- 3
+nbLayIndex <- 3
 
 
 preloadPath <- "preload"
@@ -209,9 +221,15 @@ if(!is.na(outbFiles[1])){
     
     curLayerName <- paste("layer_", glLayerDF[k,"shortName"], sep = "")
     
+    # Pre-allocate list for layer
+    curLayerList <- vector("list", nbLayIndex)
+    curLayerList[[indRawLay]] <- curLay
+    curLayerList[[indScale]] <- NA
+    curLayerList[[indStandLay]] <- NA
+    
     #Save in global environment the current layer
     assign(x = curLayerName, 
-           value = curLay, 
+           value = curLayerList, 
            envir = .GlobalEnv)
     
   }

@@ -26,6 +26,10 @@ Imports:
   raster,
   rgdal,
   rgeos,
+  rhandsontable,
+  shiny,
+  shinydashboard,
+  stringr,
   RColorBrewer,
   sp
 Suggests: 

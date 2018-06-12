@@ -21,7 +21,8 @@ server <- function(input, output, session) {
   # weightMatrix = matrix of weight
   rv <- reactiveValues(uploadFileDF = glUploadFileDF,
                        layerDF = glLayerDF,
-                       weightMatrix = glWeightMatrix)
+                       weightMatrix = glWeightMatrix,
+                       invert = FALSE)
   
   
   ##### Observer on data frame of layers ####
@@ -136,9 +137,15 @@ server <- function(input, output, session) {
       
       curLayerName <- paste("layer_", layerFiles[k,"shortName"], sep = "")
       
+      # Pre-allocate list for layer
+      curLayerList <- vector("list", nbLayIndex)
+      curLayerList[[indRawLay]] <- curLay
+      curLayerList[[indScale]] <- NA
+      curLayerList[[indStandLay]] <- NA
+      
       #Save in global environment the current layer
       assign(x = curLayerName, 
-             value = curLay, 
+             value = curLayerList, 
              envir = .GlobalEnv)
       
     }
@@ -329,10 +336,77 @@ server <- function(input, output, session) {
                         envir = .GlobalEnv)
     }
     
-    plot(finalLayer)
+    plot(finalLayer[[indRawLay]])
 
   })
 
+  
+  ##### Render for processed vector display ####
+  
+  output$distanceDisplay <- renderPlot({
+    
+    # Retrieve name of the current tab
+    curLayer <- input$rbVectorLayer
+    
+    if(is.null(curLayer)) return(NULL)
+    
+    finalLayer <- NULL
+    
+    curLayerName <- paste("layer_", curLayer, sep = "")
+    
+    #If data frame of disease is loaded in global environment
+    if(exists(curLayerName, envir = .GlobalEnv)) {
+      
+      finalLayer <- get(x = curLayerName, 
+                        envir = .GlobalEnv)
+    }
+    
+    
+    if(inherits(finalLayer[[indStandLay]], c("Spatial", "RasterLayer"))) {
+      
+      ansLayer <- finalLayer[[indStandLay]]
+      
+    } else {
+    
+    
+      # Retrieve admin zone
+      indAdmin <- which(glLayerDF$adminUnit==TRUE)
+      if(is.na(indAdmin[1])) return(NULL)
+      
+      shortAdminName <- glLayerDF[indAdmin, "shortName"]
+      
+      if(curLayer!=shortAdminName){
+      
+        curLayerAdminName <- paste("layer_", shortAdminName, sep = "")
+        
+        #If admin layer is loaded in global environment
+        if(exists(curLayerAdminName, envir = .GlobalEnv)) {
+          
+          adminLayer <- get(x = curLayerAdminName, 
+                            envir = .GlobalEnv)
+        }
+        
+        
+        ansLayer <- risk_layer(finalLayer[[indRawLay]], adminLayer[[indRawLay]])
+        finalLayer[[indStandLay]] <- ansLayer
+        
+        #Save in global environment the standardized layer
+        assign(x = curLayerName, 
+               value = finalLayer, 
+               envir = .GlobalEnv)
+        
+      
+      } else {
+        
+        ansLayer <- finalLayer[[indRawLay]]
+        
+      }
+    
+    }
+    plot(ansLayer)
+    
+  })
+  
   
   ##### Render for raster display ####
   
@@ -354,10 +428,94 @@ server <- function(input, output, session) {
                     envir = .GlobalEnv)
       }
     
-    plot(finalLayer)
+    plot(finalLayer[[indRawLay]])
     
     
   })
+  
+  
+  ##### Render for processed raster display ####
+  
+  output$processedRasterDisplay <- renderPlot({
+    
+    # Retrieve name of the current tab
+    curLayer <- input$rbRasterLayer
+    
+    if(is.null(curLayer)) return(NULL)
+    
+    finalLayer <- NULL
+    
+    curLayerName <- paste("layer_", curLayer, sep = "")
+    
+    #If data frame of disease is loaded in global environment
+    if(exists(curLayerName, envir = .GlobalEnv)) {
+      
+      finalLayer <- get(x = curLayerName, 
+                        envir = .GlobalEnv)
+    }
+    
+    invertScale <- rv$invert
+    
+    if(inherits(finalLayer[[indStandLay]], c("Spatial", "RasterLayer")) && invertScale==FALSE) {
+      
+      ansLayer <- finalLayer[[indStandLay]]
+      
+    } else {
+    
+      # Retrieve admin zone
+      indAdmin <- which(glLayerDF$adminUnit==TRUE)
+      if(is.na(indAdmin[1])) return(NULL)
+      
+      curLayerAdminName <- paste("layer_", glLayerDF[indAdmin, "shortName"], sep = "")
+      
+      #If admin layer is loaded in global environment
+      if(exists(curLayerAdminName, envir = .GlobalEnv)) {
+        
+        adminLayer <- get(x = curLayerAdminName, 
+                          envir = .GlobalEnv)
+      }
+      
+      scaleTarget <- c(0, 100)
+      
+      if(!is.na(finalLayer[[indScale]][1]) && invertScale==TRUE){
+      
+        curScale <- finalLayer[[indScale]]
+        
+        if(all(curScale==scaleTarget)) scaleTarget <- c(100, 0)
+      
+      } 
+      
+      
+      ansLayer <- risk_layer(finalLayer[[indRawLay]], adminLayer[[indRawLay]], scaleTarget)
+      finalLayer[[indScale]] <- scaleTarget
+      finalLayer[[indStandLay]] <- ansLayer
+      
+      
+      #Save in global environment the standardized layer with new name
+      assign(x = curLayerName, 
+             value = finalLayer, 
+             envir = .GlobalEnv)
+    
+    }
+    
+    rv$invert <- FALSE
+    
+    plot(ansLayer)
+    
+  })
+  
+  
+  ##### Observer on action button invert ####
+  
+  observeEvent(input$abInvert,{ 
+    
+    rv$invert <- TRUE
+    
+    
+    
+    
+  })
+  
   
   
   ##### Render for editable table of weight ####

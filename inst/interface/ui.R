@@ -107,9 +107,8 @@ body <- dashboardBody(
                 
                ),
             
-            actionButton(inputId = "abRasterInvert", 
-                         label = langABRasterInvert[indLang] ,
-                         icon = NULL, width = NULL)
+            actionButton(inputId = "abInvert", label = langABRasterInvert[indLang])
+            #checkboxInput(inputId = "cbInvert", label = langABRasterInvert[indLang], value = FALSE, width = NULL)
             
           ),
             

@@ -12,10 +12,10 @@
 #' @import raster
 #'
 #' @examples
-#'   cmr <- mapMCDA_datasets()
-#'   raster::plot(cmr$animal.density)
-#'   raster::plot(risk_layer(cmr$animal.density, scale_target = c(-1, 1)))
-#'   raster::plot(risk_layer(cmr$animal.density, scale_target = c(1, -1)))
+#'   ad <- mapMCDA_datasets()$animal.density
+#'   raster::plot(ad)
+#'   raster::plot(risk_layer(ad, scale_target = c(-1, 1)))
+#'   raster::plot(risk_layer(ad, scale_target = c(1, -1)))
 risk_layer <- function(x, boundaries, scale_target = c(0, 100)) {
   
   if (inherits(x, "Spatial")) {

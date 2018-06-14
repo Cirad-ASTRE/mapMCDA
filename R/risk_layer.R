@@ -22,7 +22,7 @@ risk_layer <- function(x, boundaries, scale_target = c(0, 100)) {
     r <- distance_map(x, boundaries = boundaries)
   } else {
     if (inherits(x, "RasterLayer")) {
-      r <- x
+      r <- mask(extend(crop(x, boundaries), boundaries), boundaries)
     } else {
       stop("Can't compute risk layer from a ", class(x), " object.")
     }

@@ -33,6 +33,25 @@ test_that("risk map from vector: compute distances", {
   
 })
 
-test_that("risk map from larger raster: crop to boundaries", {
-  #TODO
+test_that("risk map from larger raster: crop and mask to boundaries", {
+  
+  ## create a raster filling beyond the full extent of the boundaries
+  x <- extend(raster(cmr$cmr_admin3), 5)
+  x[] <- seq.int(ncell(x))
+  r <- risk_layer(x, cmr$cmr_admin3)
+
+  expect_identical(extent(r), extent(cmr$cmr_admin3))
+  
+  expect_identical(values(r), values(mask(r, cmr$cmr_admin3)))
+})
+
+test_that("risk map from smaller raster: extend and mask to boundaries", {
+  
+  ## create a raster filling beyond the full extent of the boundaries
+  x <- raster(cmr$cmr_admin3)
+  x <- crop(x, extent(x, 2, 8, 2, 8))
+  x[] <- seq.int(ncell(x))
+  r <- risk_layer(x, cmr$cmr_admin3)
+  
+  expect_equal(extent(r), extent(cmr$cmr_admin3))
 })

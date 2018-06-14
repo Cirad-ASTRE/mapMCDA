@@ -7,7 +7,6 @@
 #' @export
 #' @import raster
 #'
-#' @examples
 wlc <- function(x, w) {
   cmr <- mapMCDA_datasets()
   x <- lapply(cmr[-2], risk_layer, boundaries = cmr$cmr_admin3)
@@ -39,7 +38,6 @@ wlc <- function(x, w) {
 #' @return Another list of RasterLayer objects
 #' @export
 #'
-#' @examples
 align_layers <- function(x) {
   
   ## Projection

@@ -8,8 +8,8 @@ test_that("risk re-scaling of a raster", {
   # raster::plot(dist_wb)
   
   st <- c(-7, 33)
-  risk_ad <- risk_layer(cmr$animal.density, scale_target = st)
-  risk_da <- risk_layer(cmr$animal.density, scale_target = rev(st))  # Inverse scale!!
+  risk_ad <- risk_layer(cmr$animal.density, boundaries = cmr$cmr_admin3, scale_target = st)
+  risk_da <- risk_layer(cmr$animal.density, boundaries = cmr$cmr_admin3, scale_target = rev(st))  # Inverse scale!!
   # raster::plot(risk_ad)
   # raster::plot(risk_da)
   

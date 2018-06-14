@@ -21,8 +21,8 @@ Rescale a raster with a linear relationship.
 If you need an inverse relationship, just reverse the target scale.
 }
 \examples{
-  cmr <- mapMCDA_datasets()
-  raster::plot(cmr$animal.density)
-  raster::plot(risk_layer(cmr$animal.density, scale_target = c(-1, 1)))
-  raster::plot(risk_layer(cmr$animal.density, scale_target = c(1, -1)))
+  ad <- mapMCDA_datasets()$animal.density
+  raster::plot(ad)
+  raster::plot(risk_layer(ad, scale_target = c(-1, 1)))
+  raster::plot(risk_layer(ad, scale_target = c(1, -1)))
 }

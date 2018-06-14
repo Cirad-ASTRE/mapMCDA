@@ -16,11 +16,11 @@ sidebar <- dashboardSidebar(
     # Menu for input files
     menuItem(HTML(langMenuFile[indLang]), tabName = "fileTab"),
     
-    # Menu for vectors
-    menuItem(HTML(langMenuVector[indLang]), tabName = "vectorTab"),
+    # Menu for epidemiological unit
+    menuItem(HTML(langMenuUnit[indLang]), tabName = "unitTab"),
     
-    # Menu for rasters
-    menuItem(HTML(langMenuRaster[indLang]), tabName = "rasterTab"),
+    # Menu for risk factors
+    menuItem(HTML(langMenuRisk[indLang]), tabName = "riskTab"),
     
     # Menu for weight table
     menuItem(HTML(langMenuWeight[indLang]), tabName = "weightTab"),
@@ -68,53 +68,49 @@ body <- dashboardBody(
     
     ),
     
-    tabItem("vectorTab", 
+    tabItem("unitTab", 
             
-            uiOutput("uiVectorList"),
+            uiOutput("unitNameText"),
             
-           
-              
-              box(title = HTML(langBoxVMap[indLang]), status = "primary", width = 6, solidHeader = TRUE,
-                  
-                  plotOutput("vectorDisplay")
-                  
-                 ),
-              
-              
-              box(title = HTML(langBoxVDist[indLang]), status = "success", width = 6, solidHeader = TRUE,
-                  
-                  plotOutput("distanceDisplay")
-                  
-                 )
-
+            box(title = HTML(langBoxUnitMap[indLang]), status = "primary", width = 6, solidHeader = TRUE,
+                
+                plotOutput("unitMapDisplay")
+                
             ),
+            
+            
+            box(title = HTML(langBoxUnitStat[indLang]), status = "success", width = 6, solidHeader = TRUE,
+                
+                plotOutput("unitStatDisplay")
+                
+            )
+            
+    ),
     
-    tabItem("rasterTab", 
-            
-            uiOutput("uiRasterList"),
-            
-            box(title = HTML(langBoxRawMap[indLang]), status = "primary", width = 6, solidHeader = TRUE,
-                
-                plotOutput("rawRasterDisplay")
-                
-               ),
-            
-            
-            box(title = HTML(langBoxProcMap[indLang]), status = "success", width = 6, solidHeader = TRUE,
-                
-                
-                plotOutput("processedRasterDisplay")
-                
-               ),
-            
-            actionButton(inputId = "abInvert", label = langABRasterInvert[indLang])
-            #checkboxInput(inputId = "cbInvert", label = langABRasterInvert[indLang], value = FALSE, width = NULL)
-            
-          ),
-            
-            
-            
     
+    tabItem("riskTab", 
+            
+            uiOutput("uiRiskLayerList"),
+            
+            box(title = HTML(langBoxRiskRawMap[indLang]), status = "primary", width = 6, solidHeader = TRUE,
+                
+                plotOutput("rawLayerDisplay")
+                
+            ),
+            
+            
+            box(title = HTML(langBoxRiskStandRaster[indLang]), status = "success", width = 6, solidHeader = TRUE,
+                
+                
+                plotOutput("standRasterDisplay")
+                
+            ),
+            
+            actionButton(inputId = "abInvert", label = langABRiskRasterInvert[indLang])
+            
+    ),
+    
+
     tabItem("weightTab", 
             
             fluidRow(

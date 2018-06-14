@@ -3,7 +3,7 @@
 #May 2018, by Sylvain Falala, Unit CIRAD-INRA ASTRE
 
 ################### LIBRARIES ################### 
-
+library(ggplot2)
 
 
 
@@ -22,6 +22,7 @@ server <- function(input, output, session) {
   rv <- reactiveValues(uploadFileDF = glUploadFileDF,
                        layerDF = glLayerDF,
                        weightMatrix = glWeightMatrix,
+                       weightVect = NULL,
                        invert = FALSE)
   
   
@@ -272,238 +273,295 @@ server <- function(input, output, session) {
   })
   
   
-  ##### Render for the list of vectors ####
+  ##### reactive function to return name of epid. unit layer ####
   
-  output$uiVectorList <- renderUI({
-
-      # Retrieve short name of data frame of layers
-      if(!("layerType" %in% colnames(rv$layerDF))) return(NULL)
-
-      indVect <- which(rv$layerDF$layerType==lVect[indLang])
+  epidUnitName <- reactive({
+    
+    curLayerDF <- rv$layerDF
+    
+    if(!("adminUnit" %in% colnames(curLayerDF))) return(NULL)
+    
+    indAdmin <- which(curLayerDF$adminUnit==TRUE)
+    if(is.na(indAdmin[1])) return(NULL)
+    
+    if(length(indAdmin)>1){
       
-      if(is.na(indVect[1])) return(NULL)
+      print("Nb of epidemiological unit > 1")
+      return(NULL)
       
-      shortNames <- sort(unique(rv$layerDF[indVect,"shortName"]))
-
-      radioButtons(inputId = "rbVectorLayer", 
-                   label = HTML(langRBVector[indLang]), 
-                   choices = shortNames, 
-                   inline = TRUE)
-
+    }
+    
+    curLayerDF[indAdmin, "shortName"]
+    
+    
   })
   
   
-  ##### Render for the list of rasters ####
+  ##### reactive function to return epid. unit layer ####
   
-  output$uiRasterList <- renderUI({
+  curEpidUnitLayer <- reactive({
     
+    curEpidUnitName <- epidUnitName()
+    
+    if(is.null(curEpidUnitName)) return(NULL)
+    
+    curLayerEpidUnitName <- paste("layer_", curEpidUnitName, sep = "")
+    
+    epidUnitLayer <- NULL
+    
+    #If admin layer is loaded in global environment
+    if(exists(curLayerEpidUnitName, envir = .GlobalEnv)) {
+      
+      epidUnitLayer <- get(x = curLayerEpidUnitName, 
+                           envir = .GlobalEnv)
+    }
+    
+    epidUnitLayer
+    
+    
+  })
+  
+  
+  ##### Render for the layer name of epid. unit ####
+  
+  output$unitNameText <- renderUI({
+    
+    curEpidUnitName <- epidUnitName()
+    
+    if(is.null(curEpidUnitName)) return(NULL)
+    
+    h3(curEpidUnitName)
+    
+    
+  })
+  
+  
+  ##### Render for the map of epid. unit ####
+  
+  output$unitMapDisplay <- renderPlot({
+    
+    epidUnitLayer <- curEpidUnitLayer()
+    
+    if(is.null(epidUnitLayer)) return(NULL)
+
+    
+    plot(epidUnitLayer[[indRawLay]])
+    
+    
+  })
+  
+  
+  ##### Render for the list of layers in risk tab ####
+  
+  output$uiRiskLayerList <- renderUI({
+
+    curLayerDF <- rv$layerDF
+
     # Retrieve short name of data frame of layers
-    if(!("layerType" %in% colnames(rv$layerDF))) return(NULL)
-    
-    indRast <- which(rv$layerDF$layerType==lRast[indLang])
-    
-    if(is.na(indRast[1])) return(NULL)
-    
-    shortNames <- sort(unique(rv$layerDF[indRast,"shortName"]))
-    
-    radioButtons(inputId = "rbRasterLayer", 
-                 label = HTML(langRBRaster[indLang]), 
-                 choices = shortNames, 
+    if(!("shortName" %in% colnames(curLayerDF))) return(NULL)
+
+    shortNames <- sort(unique(curLayerDF$shortName))
+
+    #Remove epid. unit
+    indRem <- which(shortNames==isolate(epidUnitName()))
+    if(!is.na(indRem[1])) shortNames <- shortNames[-indRem]
+
+    radioButtons(inputId = "rbRiskLayer",
+                 label = HTML(langRBRiskLayer[indLang]),
+                 choices = shortNames,
                  inline = TRUE)
-    
+
   })
   
   
+  ##### reactive function to return selected layer in risk tab ####
   
-  
-  ##### Render for vector display ####
-  
-  output$vectorDisplay <- renderPlot({
-
+  curRiskLayer <- reactive({
+    
     # Retrieve name of the current tab
-    curLayer <- input$rbVectorLayer
-
-    if(is.null(curLayer)) return(NULL)
-
+    curLayerSN <- input$rbRiskLayer
+    
+    if(is.null(curLayerSN)) return(NULL)
+    
     finalLayer <- NULL
     
-    curLayerName <- paste("layer_", curLayer, sep = "")
+    curLayerName <- paste("layer_", curLayerSN, sep = "")
     
     #If data frame of disease is loaded in global environment
     if(exists(curLayerName, envir = .GlobalEnv)) {
       
-      finalLayer <- get(x = curLayerName, 
+      finalLayer <- get(x = curLayerName,
                         envir = .GlobalEnv)
+      
     }
     
-    plot(finalLayer[[indRawLay]])
+    finalLayer
+    
+  })
+  
+  
+  ##### Render for raw layer display in risk tab ####
+  
+  output$rawLayerDisplay <- renderPlot({
+
+    myLayer <- curRiskLayer()
+    
+    if(is.null(myLayer)) return(NULL)
+
+    plot(myLayer[[indRawLay]])
+
 
   })
-
   
-  ##### Render for processed vector display ####
   
-  output$distanceDisplay <- renderPlot({
+  
+  ##### observer to compute standardized raster ####
+  
+  curStandRaster <- reactive({
     
-    # Retrieve name of the current tab
-    curLayer <- input$rbVectorLayer
+    myLayer <- curRiskLayer()
     
-    if(is.null(curLayer)) return(NULL)
+    if(is.null(myLayer)) return(NULL)
     
-    finalLayer <- NULL
+    standRaster <- NULL
     
-    curLayerName <- paste("layer_", curLayer, sep = "")
+    #invertScale <- rv$invert
     
-    #If data frame of disease is loaded in global environment
-    if(exists(curLayerName, envir = .GlobalEnv)) {
+    invertScale <- FALSE
+    
+    if(inherits(myLayer[[indStandLay]], c("Spatial", "RasterLayer")) && invertScale==FALSE) {
       
-      finalLayer <- get(x = curLayerName, 
-                        envir = .GlobalEnv)
-    }
-    
-    
-    if(inherits(finalLayer[[indStandLay]], c("Spatial", "RasterLayer"))) {
-      
-      ansLayer <- finalLayer[[indStandLay]]
+      standRaster <- myLayer[[indStandLay]]
       
     } else {
-    
-    
-      # Retrieve admin zone
-      indAdmin <- which(glLayerDF$adminUnit==TRUE)
-      if(is.na(indAdmin[1])) return(NULL)
       
-      shortAdminName <- glLayerDF[indAdmin, "shortName"]
+      epidUnitLayer <- isolate(curEpidUnitLayer())
       
-      if(curLayer!=shortAdminName){
-      
-        curLayerAdminName <- paste("layer_", shortAdminName, sep = "")
-        
-        #If admin layer is loaded in global environment
-        if(exists(curLayerAdminName, envir = .GlobalEnv)) {
-          
-          adminLayer <- get(x = curLayerAdminName, 
-                            envir = .GlobalEnv)
-        }
-        
-        
-        ansLayer <- risk_layer(finalLayer[[indRawLay]], adminLayer[[indRawLay]])
-        finalLayer[[indStandLay]] <- ansLayer
-        
-        #Save in global environment the standardized layer
-        assign(x = curLayerName, 
-               value = finalLayer, 
-               envir = .GlobalEnv)
-        
-      
-      } else {
-        
-        ansLayer <- finalLayer[[indRawLay]]
-        
-      }
-    
-    }
-    plot(ansLayer)
-    
-  })
-  
-  
-  ##### Render for raster display ####
-  
-  output$rawRasterDisplay <- renderPlot({
-    
-    # Retrieve name of the current tab
-    curLayer <- input$rbRasterLayer
-    
-    if(is.null(curLayer)) return(NULL)
-    
-    finalLayer <- NULL
-    
-    curLayerName <- paste("layer_", curLayer, sep = "")
-    
-    #If data frame of disease is loaded in global environment
-    if(exists(curLayerName, envir = .GlobalEnv)) {
-      
-      finalLayer <- get(x = curLayerName, 
-                    envir = .GlobalEnv)
-      }
-    
-    plot(finalLayer[[indRawLay]])
-    
-    
-  })
-  
-  
-  ##### Render for processed raster display ####
-  
-  output$processedRasterDisplay <- renderPlot({
-    
-    # Retrieve name of the current tab
-    curLayer <- input$rbRasterLayer
-    
-    if(is.null(curLayer)) return(NULL)
-    
-    finalLayer <- NULL
-    
-    curLayerName <- paste("layer_", curLayer, sep = "")
-    
-    #If data frame of disease is loaded in global environment
-    if(exists(curLayerName, envir = .GlobalEnv)) {
-      
-      finalLayer <- get(x = curLayerName, 
-                        envir = .GlobalEnv)
-    }
-    
-    invertScale <- rv$invert
-    
-    if(inherits(finalLayer[[indStandLay]], c("Spatial", "RasterLayer")) && invertScale==FALSE) {
-      
-      ansLayer <- finalLayer[[indStandLay]]
-      
-    } else {
-    
-      # Retrieve admin zone
-      indAdmin <- which(glLayerDF$adminUnit==TRUE)
-      if(is.na(indAdmin[1])) return(NULL)
-      
-      curLayerAdminName <- paste("layer_", glLayerDF[indAdmin, "shortName"], sep = "")
-      
-      #If admin layer is loaded in global environment
-      if(exists(curLayerAdminName, envir = .GlobalEnv)) {
-        
-        adminLayer <- get(x = curLayerAdminName, 
-                          envir = .GlobalEnv)
-      }
+      if(is.null(epidUnitLayer)) return(NULL)
       
       scaleTarget <- c(0, 100)
       
-      if(!is.na(finalLayer[[indScale]][1]) && invertScale==TRUE){
-      
-        curScale <- finalLayer[[indScale]]
+      if(!is.na(myLayer[[indScale]][1]) && invertScale==TRUE){
+        
+        curScale <- myLayer[[indScale]]
         
         if(all(curScale==scaleTarget)) scaleTarget <- c(100, 0)
+        
+      }
       
-      } 
+      standRaster <- risk_layer(myLayer[[indRawLay]], epidUnitLayer[[indRawLay]], scaleTarget)
+      myLayer[[indScale]] <- scaleTarget
+      myLayer[[indStandLay]] <- standRaster
       
-      
-      ansLayer <- risk_layer(finalLayer[[indRawLay]], adminLayer[[indRawLay]], scaleTarget)
-      finalLayer[[indScale]] <- scaleTarget
-      finalLayer[[indStandLay]] <- ansLayer
+      curLayerName <- paste("layer_", isolate(input$rbRiskLayer), sep = "")
       
       
       #Save in global environment the standardized layer with new name
-      assign(x = curLayerName, 
-             value = finalLayer, 
+      assign(x = curLayerName,
+             value = myLayer,
              envir = .GlobalEnv)
-    
+      
     }
     
-    rv$invert <- FALSE
+    #isolate(rv$invert <- FALSE)
     
-    plot(ansLayer)
+    standRaster
+    
     
   })
   
+  
+  ##### Render for standardized raster in risk tab ####
+  
+  output$standRasterDisplay <- renderPlot({
+    
+    myStandRaster <- curStandRaster()
+    
+    if(is.null(myStandRaster)) return(NULL)
+    
+    plot(myStandRaster)
+    
+    
+  })
+  
+  
+  
+  
+  
+  
+   
+
+  # 
+  # ##### Render for processed raster display ####
+  # 
+  # output$processedRasterDisplay <- renderPlot({
+  #   
+  #   # Retrieve name of the current tab
+  #   curLayer <- input$rbRasterLayer
+  #   
+  #   if(is.null(curLayer)) return(NULL)
+  #   
+  #   finalLayer <- NULL
+  #   
+  #   curLayerName <- paste("layer_", curLayer, sep = "")
+  #   
+  #   #If data frame of disease is loaded in global environment
+  #   if(exists(curLayerName, envir = .GlobalEnv)) {
+  #     
+  #     finalLayer <- get(x = curLayerName, 
+  #                       envir = .GlobalEnv)
+  #   }
+  #   
+  #   invertScale <- rv$invert
+  #   
+  #   if(inherits(finalLayer[[indStandLay]], c("Spatial", "RasterLayer")) && invertScale==FALSE) {
+  #     
+  #     ansLayer <- finalLayer[[indStandLay]]
+  #     
+  #   } else {
+  #   
+  #     # Retrieve admin zone
+  #     indAdmin <- which(glLayerDF$adminUnit==TRUE)
+  #     if(is.na(indAdmin[1])) return(NULL)
+  #     
+  #     curLayerEpidUnitName <- paste("layer_", glLayerDF[indAdmin, "shortName"], sep = "")
+  #     
+  #     #If admin layer is loaded in global environment
+  #     if(exists(curLayerEpidUnitName, envir = .GlobalEnv)) {
+  #       
+  #       epidUnitLayer <- get(x = curLayerEpidUnitName, 
+  #                         envir = .GlobalEnv)
+  #     }
+  #     
+  #     scaleTarget <- c(0, 100)
+  #     
+  #     if(!is.na(finalLayer[[indScale]][1]) && invertScale==TRUE){
+  #     
+  #       curScale <- finalLayer[[indScale]]
+  #       
+  #       if(all(curScale==scaleTarget)) scaleTarget <- c(100, 0)
+  #     
+  #     } 
+  #     
+  #     
+  #     ansLayer <- risk_layer(finalLayer[[indRawLay]], epidUnitLayer[[indRawLay]], scaleTarget)
+  #     finalLayer[[indScale]] <- scaleTarget
+  #     finalLayer[[indStandLay]] <- ansLayer
+  #     
+  #     
+  #     #Save in global environment the standardized layer with new name
+  #     assign(x = curLayerName, 
+  #            value = finalLayer, 
+  #            envir = .GlobalEnv)
+  #   
+  #   }
+  #   
+  #   rv$invert <- FALSE
+  #   
+  #   plot(ansLayer)
+  #   
+  # })
+  # 
   
   ##### Observer on action button invert ####
   
@@ -524,6 +582,11 @@ server <- function(input, output, session) {
     
     weightDF <- data.frame(rv$weightMatrix)
     
+    #Remove epid. unit
+    indRem <- which(colnames(weightDF)==isolate(epidUnitName()))
+    if(!is.na(indRem[1])) weightDF <- weightDF[-indRem, -indRem]
+    
+    
     rhandsontable(weightDF, rowHeaderWidth = 200)
     
   })
@@ -536,9 +599,11 @@ server <- function(input, output, session) {
     #Retrieve data from editable table
     weightMat <- as.matrix(hot_to_r(input$rhWeightTable))
     
-    #print(weightMat)
+    
     
     glWeightMatrix <<- weightMat
+    
+    rv$weightVect <- compute_weights(weightMat)
     
     
   })
@@ -547,15 +612,45 @@ server <- function(input, output, session) {
   
   output$weightBarDisplay <- renderPlot({
     
+
+    # riskFactors <- colnames(glWeightMatrix)
+    # 
+    # plot_weights(rv$weightVect, riskFactors)
     
     
   })
+  
+
   
   
   ##### Render for result display ####
   
   output$resultDisplay <- renderPlot({
     
+    curWeightVect <- rv$weightVect
+    
+    if(is.null(curWeightVect)) return(NULL)
+    
+    riskFactors <- colnames(glWeightMatrix)
+    
+    standRasterList <- list()
+    
+    for(k in 1:length(riskFactors)){
+      
+      curLayerName <- paste("layer_", riskFactors[k], sep = "")
+  
+        
+        curLayer <- get(x = curLayerName,
+                          envir = .GlobalEnv)
+        
+        
+        standRasterList[[k]] <- curLayer[[indStandLay]]
+        
+ 
+      
+    }
+    
+    plot(wlc(standRasterList, curWeightVect))
     
     
   })

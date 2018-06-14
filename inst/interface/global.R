@@ -72,26 +72,28 @@ langFileList <- c("Names","Noms")
 
 langBoxLayer <- c("Layers", "Couches")
 
+# Epidemiological unit
+langMenuUnit <- c("Epidemiological units","Unit&#233;s &#233;pid&#233;miologiques")
 
-# Vecteurs
-langMenuVector <- c("Vectors","Vecteurs")
+langBoxUnitMap <- c("Map", "Carte")
 
-langBoxVMap <- c("Map", "Carte")
+langBoxUnitStat <- c("Statistics", "Statistiques")
 
-langBoxVDist <- c("Distances", "Distances")
 
-langRBVector <- c("Select vector:", "S&#233;lectionnez le vecteur :")
+# Risk factors
+langMenuRisk <- c("Risk factors","Facteurs de risque")
 
-# Rasters
-langMenuRaster <- c("Rasters","Rasters")
+langBoxRiskRawMap <- c("Raw", "Brut")
 
-langBoxRawMap <- c("Raw", "Brut")
+langBoxRiskStandRaster <- c("Standardized raster", "Raster standardis&#233;")
 
-langBoxProcMap <- c("Standardized", "Standardis&#233;")
+langRBRiskLayer <- c("Select layer to compute standardized raster:", 
+                     "S&#233;lectionnez la couche pour calculer le raster :")
 
-langRBRaster <- c("Select raster:", "S&#233;lectionnez le raster :")
+langABRiskRasterInvert <- c("Invert", "Inverser")
 
-langABRasterInvert <- c("Invert", "Inverser")
+
+
 
 # Weight
 langMenuWeight <- c("Weight","Poids")

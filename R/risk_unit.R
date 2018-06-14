@@ -18,7 +18,7 @@
 #' @examples
 #'   cmr <- mapMCDA_datasets()
 #'   cmr$cmr_admin3$rv <- risk_unit(cmr$animal.density, cmr$cmr_admin3)
-#'   spplot(cmr$cmr_admin3[, "rv"])
+#'   spplot(cmr$cmr_admin3[, "rv"], cuts = 3)
 risk_unit <- function(r, eu, fun = mean) {
   rgrid <- as(r, "SpatialGridDataFrame")  # needed for overlay methods
   funrisk_poly <- over(eu, rgrid, fn = fun)[[1]]
@@ -41,3 +41,24 @@ risk_unit <- function(r, eu, fun = mean) {
   return(funrisk_poly)
 }
 
+
+#' Produce final plot of risk
+#' 
+#' Represent the value of risk by epidemiological unit
+#' categorised into n risk-levels
+#'
+#' @param x SpatialPolygons*. Epidemiological units.
+#' @param v Numeric. Risk values.
+#' @param n Number of risk levels.
+#'
+#' @return spplot
+#' @export
+#' @import sp
+#'
+#' @examples
+#'   epi_units <- mapMCDA_datasets()$cmr_admin3
+#'   risk_plot(epi_units, seq_along(epi_units), n = 4)
+risk_plot <- function(x, v, n) {
+  x$risk <- v
+  spplot(x[, "risk"], cuts = n - 1)
+}

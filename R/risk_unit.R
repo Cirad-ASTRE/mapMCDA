@@ -17,7 +17,8 @@
 #'
 #' @examples
 #'   cmr <- mapMCDA_datasets()
-#'   summary(risk_unit(cmr$animal.density, cmr$cmr_admin3))
+#'   cmr$cmr_admin3$rv <- risk_unit(cmr$animal.density, cmr$cmr_admin3)
+#'   spplot(cmr$cmr_admin3[, "rv"])
 risk_unit <- function(r, eu, fun = mean) {
   rgrid <- as(r, "SpatialGridDataFrame")  # needed for overlay methods
   funrisk_poly <- over(eu, rgrid, fn = fun)[[1]]

@@ -40,14 +40,36 @@ compute_weights <- function(x) {
   # w_len <- dim(x)[1]
   # w_hat <- rep(1/w_len, w_len) 
   
+  ## Algorithm from Malczewski, 1999:
   ## normalized pairwise comparison matrix
-  npcm <- scale(x, center = FALSE, scale = apply(x, 2, sum))
+  # npcm <- scale(x, center = FALSE, scale = apply(x, 2, sum))
+  # 
+  # ## average of the elements in each row of the normalized matrix
+  # w_hat <- apply(npcm, 1, mean)
 
-  ## average of the elements in each row of the normalized matrix
-  w_hat <- apply(npcm, 1, mean)
-
-  ## What about the first eigenvector:
-  # eigen(x)$vectors[,1]
+  ## What about the first eigenvector (mentioned before in the book)?
+  ev1 <-  eigen(x)$vectors[,1]
+  w_hat <- Re(ev1)/sum(Re(ev1))
+  
+  ## MCDA::AHP uses the following iterative algorithm for the weights instead
+  ## It gives the same results as the first normalised eigenvector
+  # pairwisematrix <- x %*% x
+  # sumrows <- rowSums(x)
+  # sumtotal <- sum(sumrows)
+  # normalisedsumrows <- sumrows/sumtotal
+  # previous <- vector()
+  # while (!identical(round(previous, digits = 10),
+  #                   round(normalisedsumrows, digits = 10))) {
+  #   previous <- normalisedsumrows
+  #   pairwisematrix <- pairwisematrix %*% pairwisematrix
+  #   sumrows <- rowSums(pairwisematrix)
+  #   sumtotal <- sum(sumrows)
+  #   normalisedsumrows <- sumrows/sumtotal
+  # }
+  # weights <- normalisedsumrows
+  
+  ## Looks like MCDA package is consistent with the normalised first
+  ## eigenvector. So we are using it.
   
   ## TODO: compute consistency index (see Malczewski 1999, p. 199)
   

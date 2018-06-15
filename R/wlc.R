@@ -37,6 +37,8 @@ wlc <- function(x, w) {
 #'
 #' @return Another list of RasterLayer objects
 #' @export
+#' @import sp
+#' @import raster
 #'
 align_layers <- function(x) {
   

@@ -25,7 +25,8 @@ If you need an inverse relationship, just reverse the target scale.
 }
 \examples{
   ad <- mapMCDA_datasets()$animal.density
+  bd <- mapMCDA_datasets()$cmr_admin3
   raster::plot(ad)
-  raster::plot(risk_layer(ad, scale_target = c(-1, 1)))
-  raster::plot(risk_layer(ad, scale_target = c(1, -1)))
+  raster::plot(risk_layer(ad, bd, scale_target = c(-1, 1)))
+  raster::plot(risk_layer(ad, bd, scale_target = c(1, -1)))
 }

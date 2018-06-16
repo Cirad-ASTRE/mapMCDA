@@ -15,9 +15,10 @@
 #'
 #' @examples
 #'   ad <- mapMCDA_datasets()$animal.density
+#'   bd <- mapMCDA_datasets()$cmr_admin3
 #'   raster::plot(ad)
-#'   raster::plot(risk_layer(ad, scale_target = c(-1, 1)))
-#'   raster::plot(risk_layer(ad, scale_target = c(1, -1)))
+#'   raster::plot(risk_layer(ad, bd, scale_target = c(-1, 1)))
+#'   raster::plot(risk_layer(ad, bd, scale_target = c(1, -1)))
 risk_layer <- function(x, boundaries, scale_target = c(0, 100)) {
   
   if (inherits(x, "Spatial")) {

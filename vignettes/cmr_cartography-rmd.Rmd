@@ -42,7 +42,7 @@ cmr_admin3 <- getData('GADM', country = "CMR", level=3)
 
 ```
 
-```{r water-bodies}
+```{r water-bodies, eval = FALSE}
 
 ## This only works locally.
 prodel_path <- "/home/facu/CmisSync/Cirad/Sites/PRODEL/documentLibrary/carto"
@@ -50,7 +50,7 @@ water_bodies <- readOGR(prodel_path, layer = "wb_cam.shp")
 
 ```
 
-```{r national-parks}
+```{r national-parks, eval = FALSE}
 national_parks <- readOGR(
   file.path(prodel_path, "WDPA_Mar2018_CMR-shapefile"),
   "WDPA_Mar2018_CMR-shapefile-polygons"
@@ -65,7 +65,7 @@ ps_cam <- raster("ps_cam.tif")
 
 ```
 
-```{r animal-density}
+```{r animal-density, eval = FALSE}
 animal_density_world <- raster(file.path(prodel_path, "glw", "WdCt8k_vf_Mn_Rw_To.tif"))
 animal_density <- mask(crop(animal_density_world, extent(cmr_admin3)), cmr_admin3)
 
@@ -79,7 +79,7 @@ animal_density <- mask(crop(animal_density_world, extent(cmr_admin3)), cmr_admin
 Prefer standard and modern Open Geospatial Consortium ([OGC](http://www.opengeospatial.org/))
 formats: GeoPackage for vector maps and GeoTiff for raster images.
 
-```{r save-package-carto}
+```{r save-package-carto, eval = FALSE}
 cmr_dir <- "./inst/cartography/CMR"
 dir.create(cmr_dir, recursive = TRUE)
 

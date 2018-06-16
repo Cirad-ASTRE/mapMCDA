@@ -2,7 +2,7 @@ context("weights")
 
 test_that("compute weights", {
   x <- matrix(1, 10, 10)
-  expect_identical(
+  expect_equal(
     compute_weights(x),
     rep(1/nrow(x), nrow(x))
   )

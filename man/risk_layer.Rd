@@ -9,6 +9,9 @@ risk_layer(x, boundaries, scale_target = c(0, 100))
 \arguments{
 \item{x}{a RasterLayer object}
 
+\item{boundaries}{a Spatial* object, used to determine the boundaries of the
+computed risk layer.}
+
 \item{scale_target}{numeric vector of length 2. New scale.}
 }
 \value{

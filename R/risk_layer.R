@@ -5,6 +5,8 @@
 #' If you need an inverse relationship, just reverse the target scale.
 #'
 #' @param x a RasterLayer object
+#' @param boundaries a Spatial* object, used to determine the boundaries of the
+#'   computed risk layer.
 #' @param scale_target numeric vector of length 2. New scale.
 #'
 #' @return A RasterLayer object in the new scale.

@@ -20,6 +20,7 @@ Imports:
   geojsonio,
   geojsonlint,
   ggplot2,
+  methods,
   maptools,
   maps,
   plyr,

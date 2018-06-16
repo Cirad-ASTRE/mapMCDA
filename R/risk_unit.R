@@ -14,6 +14,7 @@
 #' 
 #' @export
 #' @import sp
+#' @import methods
 #'
 #' @examples
 #'   cmr <- mapMCDA_datasets()

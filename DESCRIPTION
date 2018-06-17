@@ -21,18 +21,18 @@ Imports:
   geojsonlint,
   ggplot2,
   methods,
-  maptools,
   maps,
+  maptools,
   plyr,
   raster,
+  RColorBrewer,
   rgdal,
   rgeos,
   rhandsontable,
   shiny,
   shinydashboard,
-  stringr,
-  RColorBrewer,
-  sp
+  sp,
+  stringr
 Suggests: 
     knitr,
     mapview,

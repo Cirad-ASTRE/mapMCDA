@@ -14,11 +14,21 @@ matrix:
     - os: osx
       osx_image: xcode8.3
 
+r_binary_packages: 
+  - MASS
+  - testthat
 
 r_github_packages:
   - jimhester/covr
 
 warnings_are_errors: true
+sudo: required
+
+before_install:
+  # system requirements
+  - sudo apt-get install -qq --force-yes libv8-3.14-dev libjq-dev libprotobuf-dev protobuf-compiler libgdal-dev libproj-dev libudunits2-dev
+
+
 
 notifications:
   email:

@@ -27,5 +27,5 @@ value across the epidemiological unit.
 \examples{
   cmr <- mapMCDA_datasets()
   cmr$cmr_admin3$rv <- risk_unit(cmr$animal.density, cmr$cmr_admin3)
-  spplot(cmr$cmr_admin3[, "rv"], cuts = 3)
+  sp::spplot(cmr$cmr_admin3[, "rv"], cuts = 3)
 }

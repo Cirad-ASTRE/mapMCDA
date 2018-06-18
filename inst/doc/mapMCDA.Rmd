@@ -176,7 +176,7 @@ ces valorations par paires, avec la fonction `compute_weights()`.
 
 ```{r compute-weights, fig.width=4, echo = 1, fig.cap = "Pondération des facteurs de risque."}
 w <- compute_weights(M)
-mapMCDA:::plot_weights(w, rownames(M))
+plot_weights(w, rownames(M))
 ```
 
 

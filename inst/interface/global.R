@@ -7,8 +7,8 @@ library(stringr) # to work with character strings
 library(rgdal) #to work with spatial vector
 library(raster) #to work with spatial raster
 
-library(devtools)
-load_all()
+# library(devtools)
+# load_all()
 
 
 

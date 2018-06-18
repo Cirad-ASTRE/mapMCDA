@@ -3,7 +3,7 @@
 #May 2018, by Sylvain Falala, Unit CIRAD-INRA ASTRE
 
 ################### LIBRARIES ################### 
-library(ggplot2)
+# library(ggplot2)
 
 
 

@@ -36,7 +36,7 @@ risk_unit <- function(r, eu, fun = mean) {
     )
     funrisk_poly[idx] <- over(centroids, rgrid)[[1]]
     
-    stopifnot(!anyNA(funrisk_poly))
+    # stopifnot(!anyNA(funrisk_poly))
   }
   
   return(funrisk_poly)

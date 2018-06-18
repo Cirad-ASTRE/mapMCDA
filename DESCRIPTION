@@ -25,6 +25,7 @@ Imports:
   maptools,
   plyr,
   raster,
+  rasterVis,
   RColorBrewer,
   rgdal,
   rgeos,

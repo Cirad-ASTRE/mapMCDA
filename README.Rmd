@@ -3,6 +3,7 @@ output: github_document
 ---
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/mapMCDA)](https://cran.r-project.org/package=mapMCDA)
+[![Build Status](https://travis-ci.org/Cirad-ASTRE/mapMCDA.svg?branch=master)](https://travis-ci.org/Cirad-ASTRE/mapMCDA)
 
 # Welcome to the *mapMCDA* package!
 

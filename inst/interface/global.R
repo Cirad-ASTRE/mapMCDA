@@ -14,11 +14,11 @@ library(raster) #to work with spatial raster
 
 appTitle <- "MapMCDA"
 
-acceptLayerType <- c(".shp", ".jpg", ".tif")
-
 vectorExt <- c("shp", "gpkg")
 
 rasterExt <- c("tif", "tiff")
+
+acceptLayerType <- paste0(".", c(vectorExt, rasterExt))
 
 reExt <- "\\.\\w{1,}$" # regular expression to define file extension
 

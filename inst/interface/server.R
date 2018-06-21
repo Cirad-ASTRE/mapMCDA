@@ -22,7 +22,7 @@ server <- function(input, output, session) {
                        invert = FALSE,
                        matrixOK = FALSE,
                        finalRaster = NULL,
-                       finalUnitRaster = NULL)
+                       finalVector = NULL)
   
   
   ##### Observer on data frame of layers ####
@@ -665,10 +665,13 @@ server <- function(input, output, session) {
     
     if(is.null(epidUnitLayer)) return(NULL)
     
-    rv$finalUnitRaster <- risk_plot(epidUnitLayer[[indRawLay]], risk_unit(rv$finalRaster, epidUnitLayer[[indRawLay]]), 
-              n = as.numeric(input$siLevelRisk))
+    rv$finalVector <- risk_plot(
+      epidUnitLayer[[indRawLay]],
+      risk_unit(rv$finalRaster, epidUnitLayer[[indRawLay]]), 
+      n = as.numeric(input$siLevelRisk)
+    )
     
-    rv$finalUnitRaster
+    rv$finalVector
     
   })
   
@@ -680,45 +683,29 @@ server <- function(input, output, session) {
   
   output$exportResultRaster <- downloadHandler(
     
-    filename = function() {
-          paste(Sys.Date(), '_RasterFinal.png', sep='')
-        },
+    filename = paste0(Sys.Date(), 'final_risk.tif'),
     
     content = function(con) {
-      
-      png(filename = con,
-          width = wImage, height = hImage, units = "px")
-      
-      plot(isolate(rv$finalRaster))
-      
-      
-      dev.off()
-      
+      isolate(
+        raster::writeRaster(rv$finalRaster, con)
+      )
     }
     
   )
   
   
-  ##### To export raster 2 with epid unit #####
+  ##### To export vector 2 with epid unit #####
   
-  output$exportResultUnitRaster <- downloadHandler(
-    
-    filename = function() {
-      paste(Sys.Date(), '_UnitRasterFinal.png', sep='')
-    },
-    
+  output$exportResultVector <- downloadHandler(
+    filename = paste0(Sys.Date(), '_final_risk_by_unit.gpkg'),
     content = function(con) {
-      
-      png(filename = con,
-          width = wImage, height = hImage, units = "px")
-      
-      plot(isolate(rv$finalUnitRaster))
-      
-      
-      dev.off()
-      
-    }
-    
+      epidUnitLayer <- isolate(curEpidUnitLayer())
+      if(is.null(epidUnitLayer)) return(NULL)
+      ev <- epidUnitLayer[[indRawLay]]
+        ev$mapMCDA_risk <- risk_unit(rv$finalRaster, ev)
+        rgdal::writeOGR(ev, con, layer = "risk", driver = "GPKG")
+    },
+    contentType = "application/vnd.opengeospatial.geopackage+sqlite3"
   )
   
   

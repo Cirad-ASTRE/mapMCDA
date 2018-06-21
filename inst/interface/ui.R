@@ -160,12 +160,13 @@ body <- dashboardBody(
                   
                   selectInput(inputId = "siLevelRisk", 
                               label = "Niveau de risque :",
-                              choices = 2:12),
+                              choices = 1:12,
+                              selected = 4),
                   
                   plotOutput("resultUnitDisplay"),
                   
                   #Button to generate and download raster
-                  downloadButton(outputId = "exportResultUnitRaster", 
+                  downloadButton(outputId = "exportResultVector", 
                                  label = "Exporter")
                   
               )

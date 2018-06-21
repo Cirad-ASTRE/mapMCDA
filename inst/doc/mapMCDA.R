@@ -73,7 +73,7 @@ knitr::kable(M, digits = 2)
 
 ## ----compute-weights, fig.width=4, echo = 1, fig.cap = "Pondération des facteurs de risque."----
 w <- compute_weights(M)
-plot_weights(w, rownames(M))
+mapMCDA:::plot_weights(w, rownames(M))
 
 ## ----wlc, fig.width = 6, fig.height = 6, fig.cap = "Carte de risque combiné."----
 risque_combine <- wlc(risques, w)

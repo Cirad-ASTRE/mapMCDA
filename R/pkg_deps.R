@@ -6,17 +6,13 @@
 #'
 #' @return character vector of package names
 #'
-pkg_deps <- function() {
+pkg_deps <- function(which = c('Depends', 'Imports')) {
 
-  ## stored packages
-  depsfile <- system.file(file.path("doc", "mapMCDA_deps"), package = "mapMCDA")
-  deps <- readLines(depsfile)
-
-  available <- available.packages()
-  inst <- installed.packages()
-
-  direct_deps <- dev_package_deps(dependencies = NA)$package
-
+  direct_deps <- devtools::dev_package_deps()$package
+  inst <- utils::installed.packages()
+  base <- unname(inst[inst[, "Priority"] %in% c("base", "recommended"), 
+                      "Package"])
+  
   indirect_deps <- tools::package_dependencies(direct_deps, db = available.packages(), recursive = TRUE)
 
   deps <- Reduce(union, c(list(mapMCDA = direct_deps), indirect_deps))
@@ -41,7 +37,7 @@ download_deps <- function(dir, type = 'all', pkgs = pkg_deps()) {
   for (t in type) {
     dest <- file.path(dir, t)
     dir.create(dest)
-    download.packages(pkgs, destdir = dest, type = t)
+    utils::download.packages(pkgs, destdir = dest, type = t)
   }
   
   message('Done. ',
@@ -62,19 +58,14 @@ download_deps <- function(dir, type = 'all', pkgs = pkg_deps()) {
 # # in order to open it with yEd
 # system(paste("sed -i 's/name/label/g'", fname))
 deps_graph <- function(which = c('Depends', 'Imports')) {
-  if (!require(igraph))
-    stop('This requires installing igraph.')
-  
-  inst <- installed.packages()
-  base <- unname(inst[inst[, "Priority"] %in% c("base", "recommended"), 
+
+  direct_deps <- devtools::dev_package_deps()$package
+  available <- utils::available.packages()
+
+  base <- unname(available[available[, "Priority"] %in% c("base", "recommended"), 
                       "Package"])
   
-  direct_deps <- dev_package_deps(dependencies = NA)$package
-  
   deps <- setdiff(direct_deps, base)
-  
-  # available = available.packages()
-  available = inst
   
   dep_list <- list(mapMCDA = deps)
   new_deps <- deps
@@ -98,7 +89,7 @@ deps_graph <- function(which = c('Depends', 'Imports')) {
       )
     )
   
-  return(make_graph(dep_full))
+  return(igraph::make_graph(dep_full))
 }
 
 # require(visNetwork)

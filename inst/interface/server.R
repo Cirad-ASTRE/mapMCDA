@@ -612,7 +612,7 @@ server <- function(input, output, session) {
 
     riskFactors <- colnames(glWeightMatrix)
 
-    plot_weights(rv$weightVect, riskFactors)
+    mapMCDA:::plot_weights(rv$weightVect, riskFactors)
     
     
   })

@@ -21,7 +21,7 @@
 #'   cmr$cmr_admin3$rv <- risk_unit(cmr$animal.density, cmr$cmr_admin3)
 #'   sp::spplot(cmr$cmr_admin3[, "rv"], cuts = 3)
 risk_unit <- function(r, eu, fun = mean) {
-  rgrid <- as(r, "SpatialGridDataFrame")  # needed for overlay methods
+  rgrid <- methods::as(r, "SpatialGridDataFrame")  # needed for overlay methods
   funrisk_poly <- over(eu, rgrid, fn = fun)[[1]]
   
   ## Small-polygon correction

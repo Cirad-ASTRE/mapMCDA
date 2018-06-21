@@ -9,5 +9,6 @@
 ^codecov\.yml$
 ^cran-comments\.md$
 ^docs/
+^R/pkg_deps.R
 
 ^CONDUCT\.md$

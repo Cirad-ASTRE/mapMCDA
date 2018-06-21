@@ -8,16 +8,13 @@
 #' @import raster
 #'
 wlc <- function(x, w) {
-  cmr <- mapMCDA_datasets()
-  x <- lapply(cmr[-2], risk_layer, boundaries = cmr$cmr_admin3)
-  w <- c(.5, .2, .3)
-  
+
   stopifnot(
-    sum(w) == 1,
+    all.equal(sum(w), 1),
     length(w) == length(x)
   )
   
-  xc <- stack(align_layers(x))
+  xc <- raster::stack(align_layers(x))
   
   ans <- raster::weighted.mean(xc, w = w)
   return(ans)

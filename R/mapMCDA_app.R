@@ -1,6 +1,10 @@
 #' mapMCDA Shiny web interface
+#' 
+#' Launches the graphical interface (GUI) of the package.
+#' 
+#' @param bg Logical. If TRUE, the GUI is launched in the background, leaving
+#'   available the current session.
 #' @export
-#' @noRd
 mapMCDA_app <- function (bg = FALSE) {
   
   code_launch <- "shiny::runApp(system.file(\"interface\", package = \"mapMCDA\"))"

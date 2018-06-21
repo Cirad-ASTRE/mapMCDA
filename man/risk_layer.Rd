@@ -9,6 +9,9 @@ risk_layer(x, boundaries, scale_target = c(0, 100))
 \arguments{
 \item{x}{a RasterLayer object}
 
+\item{boundaries}{a Spatial* object, used to determine the boundaries of the
+computed risk layer.}
+
 \item{scale_target}{numeric vector of length 2. New scale.}
 }
 \value{
@@ -22,7 +25,8 @@ If you need an inverse relationship, just reverse the target scale.
 }
 \examples{
   ad <- mapMCDA_datasets()$animal.density
+  bd <- mapMCDA_datasets()$cmr_admin3
   raster::plot(ad)
-  raster::plot(risk_layer(ad, scale_target = c(-1, 1)))
-  raster::plot(risk_layer(ad, scale_target = c(1, -1)))
+  raster::plot(risk_layer(ad, bd, scale_target = c(-1, 1)))
+  raster::plot(risk_layer(ad, bd, scale_target = c(1, -1)))
 }

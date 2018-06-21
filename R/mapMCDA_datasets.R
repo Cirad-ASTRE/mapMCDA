@@ -7,9 +7,6 @@
 #' Sources are the Gridded Livestock of the World database (ref?), the Global
 #' Administrative Boundaries database (gadm.org), and ???.
 #' 
-#' @import raster
-#' @import rgdal
-#'
 #' @return list of spatial layers
 #' @export
 #'
@@ -24,16 +21,12 @@ mapMCDA_datasets <- function() {
     full.names = TRUE
   )
   
-  layer_name <- basename(pkg_files)
-  layer_noext <- gsub("\\.\\w{1,}$", "", layer_name)
-  layer_type <- vapply(layer_name, layer_type, character(1))
-  
-  readOGR_silently <- function(x, ...) readOGR(x, verbose = FALSE, ...)
-  
-  load_f <- c(vector = "readOGR_silently", raster = "raster")
-  
-  ans <- mapply(function(x, y) do.call(x, list(y)), load_f[layer_type], pkg_files)
-  names(ans) <- layer_noext
+  layer_name <- gsub("\\.\\w{1,}$", "", basename(pkg_files))
+
+  ans <- structure(
+    lapply(pkg_files, load_layer),
+    names = layer_name
+  )
   
   return(ans)
 }

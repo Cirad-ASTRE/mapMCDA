@@ -1,6 +1,6 @@
 Package: mapMCDA
 Title: Produce an epidemiological risk map by weighting multiple risk factors
-Version: 0.0.1.9000
+Version: 0.1.1.9000
 Authors@R: c(
   person("Elena", "Arsevska", email = "elena.arsevska@cirad.fr", role = c("ctb")),
   person("Sylvain", "Falala", email = "sylvain.falala@cirad.fr", role = c("aut")),
@@ -15,24 +15,26 @@ Depends: R (>= 3.2)
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports: 
+Imports:
   classInt,
   geojsonio,
   geojsonlint,
   ggplot2,
-  maptools,
+  methods,
   maps,
+  maptools,
   plyr,
   raster,
+  rasterVis,
+  RColorBrewer,
   rgdal,
   rgeos,
   rhandsontable,
   shiny,
   shinydashboard,
-  stringr,
-  RColorBrewer,
-  sp
-Suggests: 
+  sp,
+  stringr
+Suggests:
     knitr,
     mapview,
     rmarkdown,

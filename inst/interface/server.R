@@ -713,21 +713,53 @@ server <- function(input, output, session) {
   })
   
   
-  ##### Observer on export button ####
   
-  observeEvent(input$abExport,{
+  
+  
+  ##### To export raster 1 #####
+  
+  output$exportResultRaster <- downloadHandler(
     
-    if(is.null(rv$finalRaster)) return()
+    filename = function() {
+          paste(Sys.Date(), '_RasterFinal.png', sep='')
+        },
     
-    png(filename = "Carte_finale.png",
-        width = wImage, height = hImage, units = "px")
+    content = function(con) {
+      
+      png(filename = con,
+          width = wImage, height = hImage, units = "px")
+      
+      plot(isolate(rv$finalRaster))
+      
+      
+      dev.off()
+      
+    }
     
-    plot(rv$finalRaster)
+  )
+  
+  
+  ##### To export raster 2 with epid unit #####
+  
+  output$exportResultUnitRaster <- downloadHandler(
     
+    filename = function() {
+      paste(Sys.Date(), '_UnitRasterFinal.png', sep='')
+    },
     
-    dev.off()
+    content = function(con) {
+      
+      png(filename = con,
+          width = wImage, height = hImage, units = "px")
+      
+      plot(isolate(rv$finalUnitRaster))
+      
+      
+      dev.off()
+      
+    }
     
-  })
+  )
   
   
 }

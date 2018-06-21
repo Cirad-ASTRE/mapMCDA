@@ -148,7 +148,11 @@ body <- dashboardBody(
             
               box(title = HTML(langMenuResult[indLang]), status = "primary", width = 6, solidHeader = TRUE,
                   
-                  plotOutput("resultDisplay")
+                  plotOutput("resultDisplay"),
+                  
+                  #Button to generate and download raster
+                  downloadButton(outputId = "exportResultRaster", 
+                                 label = "Exporter")
                   
               ),
             
@@ -158,11 +162,13 @@ body <- dashboardBody(
                               label = "Niveau de risque :",
                               choices = 2:12),
                   
-                  plotOutput("resultUnitDisplay")
+                  plotOutput("resultUnitDisplay"),
                   
-              ),
-            
-            actionButton(inputId = "abExport", label = "Exporter")
+                  #Button to generate and download raster
+                  downloadButton(outputId = "exportResultUnitRaster", 
+                                 label = "Exporter")
+                  
+              )
 
             
             )

@@ -2,10 +2,7 @@
 #Interface for PRODEL project
 #May 2018, by Sylvain Falala, Unit CIRAD-INRA ASTRE
 
-################### LIBRARIES ################### 
-library(shinydashboard) # to create dashboard
-#library(shinyjs) # for inputs show/hide functions
-library(rhandsontable) # editable table
+
 
 ################### UI ###################
 
@@ -119,7 +116,9 @@ body <- dashboardBody(
             
                 box(title = HTML(langBoxWeightMatrix[indLang]), status = "primary", width = 12, solidHeader = TRUE,
                     
-                    rHandsontableOutput("rhWeightTable")
+                    rHandsontableOutput("rhWeightTable"),
+                    actionButton(inputId = "abWMatrixOK", label = "Valider")
+                    
                     
                 )
                 

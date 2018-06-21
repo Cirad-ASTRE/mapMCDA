@@ -7,9 +7,14 @@ library(stringr) # to work with character strings
 library(rgdal) #to work with spatial vector
 library(raster) #to work with spatial raster
 
-#library(mapMCDA)
-library(devtools)
-load_all()
+library(shinydashboard) # to create dashboard
+library(rhandsontable) # editable table
+
+library(ggplot2)
+
+library(mapMCDA)
+# library(devtools)
+# load_all()
 
 
 

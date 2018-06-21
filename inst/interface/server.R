@@ -2,10 +2,6 @@
 #Interface for PRODEL project
 #May 2018, by Sylvain Falala, Unit CIRAD-INRA ASTRE
 
-################### LIBRARIES ################### 
-library(ggplot2)
-
-
 
 # To avoid "Maximum upload size exceeded"
 # Define upload limit as 20MB
@@ -594,12 +590,12 @@ server <- function(input, output, session) {
   
   ##### Observer on weight editable table ####
   
-  observeEvent(input$rhWeightTable,{
+  observeEvent(input$abWMatrixOK,{
     
     #Retrieve data from editable table
     weightMat <- as.matrix(hot_to_r(input$rhWeightTable))
     
-    
+    #print(is.matrix(weightMat))
     
     glWeightMatrix <<- weightMat
     

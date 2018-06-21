@@ -19,7 +19,10 @@ server <- function(input, output, session) {
                        layerDF = glLayerDF,
                        weightMatrix = glWeightMatrix,
                        weightVect = NULL,
-                       invert = FALSE)
+                       invert = FALSE,
+                       matrixOK = FALSE,
+                       finalRaster = NULL,
+                       finalUnitRaster = NULL)
   
   
   ##### Observer on data frame of layers ####
@@ -169,7 +172,23 @@ server <- function(input, output, session) {
     }
     glWeightMatrix <<- rv$weightMatrix
     
+    resmat <- try(compute_weights(glWeightMatrix))
+    
+    if (!inherits(resmat, 'try-error')) {
+      
+      rv$weightVect <- resmat
+      rv$matrixOK <- TRUE
+      
+    } else {
+        
+      rv$matrixOK <- FALSE
+      
+      }
+    
   })
+  
+  
+  
   
   ##### Render for all files table ####
   
@@ -599,19 +618,41 @@ server <- function(input, output, session) {
     
     glWeightMatrix <<- weightMat
     
-    rv$weightVect <- compute_weights(weightMat)
+    resmat <- try(compute_weights(weightMat))
+    
+    if (!inherits(resmat, 'try-error')) {
+      
+      rv$weightVect <- resmat
+      rv$matrixOK <- TRUE
+      
+    } else {
+      
+      rv$matrixOK <- FALSE
+      
+    }
     
     
   })
+  
+  
+  output$isMatrixOKText <- renderText({
+    
+    if(rv$matrixOK) mess <- "Matrice OK" else mess <- "Rapports de poids incorrects !"
+    
+    mess
+    
+  })
+  
   
   ##### Render for weight graph bar display ####
   
   output$weightBarDisplay <- renderPlot({
     
+    if(is.null(glWeightMatrix[1])) return(NULL)
 
-    # riskFactors <- colnames(glWeightMatrix)
-    # 
-    # plot_weights(rv$weightVect, riskFactors)
+    riskFactors <- colnames(glWeightMatrix)
+
+    plot_weights(rv$weightVect, riskFactors)
     
     
   })
@@ -646,8 +687,45 @@ server <- function(input, output, session) {
       
     }
     
-    plot(wlc(standRasterList, curWeightVect))
+    finRast <- wlc(standRasterList, curWeightVect)
+      
+    rv$finalRaster <- finRast
     
+    plot(finRast)
+    
+    
+  })
+  
+  
+  ##### Render for result display ####
+  
+  output$resultUnitDisplay <- renderPlot({
+    
+    epidUnitLayer <- isolate(curEpidUnitLayer())
+    
+    if(is.null(epidUnitLayer)) return(NULL)
+    
+    rv$finalUnitRaster <- risk_plot(epidUnitLayer[[indRawLay]], risk_unit(rv$finalRaster, epidUnitLayer[[indRawLay]]), 
+              n = as.numeric(input$siLevelRisk))
+    
+    rv$finalUnitRaster
+    
+  })
+  
+  
+  ##### Observer on export button ####
+  
+  observeEvent(input$abExport,{
+    
+    if(is.null(rv$finalRaster)) return()
+    
+    png(filename = "Carte_finale.png",
+        width = wImage, height = hImage, units = "px")
+    
+    plot(rv$finalRaster)
+    
+    
+    dev.off()
     
   })
   

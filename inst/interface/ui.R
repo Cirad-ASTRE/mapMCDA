@@ -116,11 +116,17 @@ body <- dashboardBody(
             
                 box(title = HTML(langBoxWeightMatrix[indLang]), status = "primary", width = 12, solidHeader = TRUE,
                     
+                    
                     rHandsontableOutput("rhWeightTable"),
-                    actionButton(inputId = "abWMatrixOK", label = "Valider")
+
+                    actionButton(inputId = "abWMatrixOK", label = "Valider"),
+                      
+                    textOutput("isMatrixOKText")
+                           
+                         
+                    )
                     
-                    
-                )
+                
                 
             ),
             
@@ -140,11 +146,23 @@ body <- dashboardBody(
             
     tabItem("resultTab",
             
-              box(title = HTML(langMenuResult[indLang]), status = "success", width = 12, solidHeader = TRUE,
+              box(title = HTML(langMenuResult[indLang]), status = "primary", width = 6, solidHeader = TRUE,
                   
                   plotOutput("resultDisplay")
                   
-              )
+              ),
+            
+              box(title = "Par unite", status = "success", width = 6, solidHeader = TRUE,
+                  
+                  selectInput(inputId = "siLevelRisk", 
+                              label = "Niveau de risque :",
+                              choices = 2:12),
+                  
+                  plotOutput("resultUnitDisplay")
+                  
+              ),
+            
+            actionButton(inputId = "abExport", label = "Exporter")
 
             
             )

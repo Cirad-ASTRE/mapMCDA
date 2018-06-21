@@ -7,16 +7,12 @@ library(stringr) # to work with character strings
 library(rgdal) #to work with spatial vector
 library(raster) #to work with spatial raster
 
+library(shiny)
 library(shinydashboard) # to create dashboard
 library(rhandsontable) # editable table
 
-library(ggplot2)
-
-library(mapMCDA)
-# library(devtools)
-# load_all()
-
-
+wImage <- 1024
+hImage <- 768
 
 appTitle <- "MapMCDA"
 

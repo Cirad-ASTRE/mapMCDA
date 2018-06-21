@@ -586,8 +586,8 @@ server <- function(input, output, session) {
     indRem <- which(colnames(weightDF)==isolate(epidUnitName()))
     if(!is.na(indRem[1])) weightDF <- weightDF[-indRem, -indRem]
     
-    
     rhandsontable(weightDF, rowHeaderWidth = 200)
+    
     
   })
   

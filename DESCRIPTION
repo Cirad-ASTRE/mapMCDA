@@ -19,7 +19,6 @@ Imports:
   classInt,
   geojsonio,
   geojsonlint,
-  ggplot2,
   methods,
   maps,
   maptools,

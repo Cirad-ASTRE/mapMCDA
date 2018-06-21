@@ -160,7 +160,9 @@ body <- dashboardBody(
                   
                   plotOutput("resultUnitDisplay")
                   
-              )
+              ),
+            
+            actionButton(inputId = "abExport", label = "Exporter")
 
             
             )

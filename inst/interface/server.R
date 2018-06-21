@@ -21,7 +21,8 @@ server <- function(input, output, session) {
                        weightVect = NULL,
                        invert = FALSE,
                        matrixOK = FALSE,
-                       finalRaster = NULL)
+                       finalRaster = NULL,
+                       finalUnitRaster = NULL)
   
   
   ##### Observer on data frame of layers ####
@@ -704,8 +705,27 @@ server <- function(input, output, session) {
     
     if(is.null(epidUnitLayer)) return(NULL)
     
-    risk_plot(epidUnitLayer[[indRawLay]], risk_unit(rv$finalRaster, epidUnitLayer[[indRawLay]]), 
+    rv$finalUnitRaster <- risk_plot(epidUnitLayer[[indRawLay]], risk_unit(rv$finalRaster, epidUnitLayer[[indRawLay]]), 
               n = as.numeric(input$siLevelRisk))
+    
+    rv$finalUnitRaster
+    
+  })
+  
+  
+  ##### Observer on export button ####
+  
+  observeEvent(input$abExport,{
+    
+    if(is.null(rv$finalRaster)) return()
+    
+    png(filename = "Carte_finale.png",
+        width = wImage, height = hImage, units = "px")
+    
+    plot(rv$finalRaster)
+    
+    
+    dev.off()
     
   })
   

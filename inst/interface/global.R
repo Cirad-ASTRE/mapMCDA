@@ -11,6 +11,8 @@ library(shiny)
 library(shinydashboard) # to create dashboard
 library(rhandsontable) # editable table
 
+wImage <- 1024
+hImage <- 768
 
 appTitle <- "MapMCDA"
 

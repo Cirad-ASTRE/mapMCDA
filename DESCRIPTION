@@ -4,6 +4,7 @@ Version: 0.1.3.9000
 Authors@R: c(
   person("Elena", "Arsevska", email = "elena.arsevska@cirad.fr", role = c("ctb")),
   person("Sylvain", "Falala", email = "sylvain.falala@cirad.fr", role = c("aut")),
+  person("Jean Marc", "Feussom", email = "Jean Marc FEUSSOM", role = c("ctb")),
   person("Renaud", "Lancelot", email = "renaud.lancelot@cirad.fr", role = c("ctb")),
   person("Raphaëlle", "Metras", email = "raphaelle.metras@cirad.fr", role = c("ctb")),
   person("Facundo", "Muñoz", email = "facundo.munoz@cirad.fr", role = c("aut", "cre"))

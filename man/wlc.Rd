@@ -4,16 +4,25 @@
 \alias{wlc}
 \title{Weighted Linear Combination of risk factors}
 \usage{
-wlc(x, w)
+wlc(x, w, na.rm = TRUE)
 }
 \arguments{
 \item{x}{list of risk factors (RaterLayer objects)}
 
 \item{w}{vector of weights}
+
+\item{na.rm}{logical.}
 }
 \value{
 A RasterLayer object.
 }
 \description{
-Weighted Linear Combination of risk factors
+Combine a list of risk layers using a weighted linear approach:
+\deqn{w_1 x_1 + w_2 x_2 + \cdots}
+}
+\details{
+Missing values are by default removed from the combination, yielding a result
+that relies on the available factors in each place. If \code{na.rm = FALSE},
+then all pixels where at least one risk factor is missing get a missing value
+as the result.
 }

@@ -48,7 +48,7 @@ load_layer <- function(x) {
 load_dir <- function(path) {
   
   filenames <- list.files(path, full.names = TRUE)
-  names(filenames) <- gsub("\\.\\w{1,}$", "", basename(filenames))
+  names(filenames) <- rmext(basename(filenames))
   layers <- lapply(filenames, load_layer)
   
   ## remove unknown (NULL) layers

@@ -24,7 +24,14 @@ load_layer <- function(x) {
   lt <- layer_type(basename(x))
   if (is.na(lt)) return(invisible(NULL))
   
-  readOGR_silently <- function(x, ...) readOGR(x, verbose = FALSE, ...)
+  readOGR_silently <- function(x, ...) {
+    if (grepl("\\.shp$", x)) {
+      readOGR(dirname(x), rmext(basename(x)), verbose = FALSE, ...)
+    } else {
+      readOGR(x, verbose = FALSE, ...)
+    }
+      
+  }
   
   load_f <- c(vector = "readOGR_silently", raster = "raster")
   

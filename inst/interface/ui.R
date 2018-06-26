@@ -43,7 +43,7 @@ body <- dashboardBody(
                 fileInput(inputId = "fiLayer", 
                           label = HTML(langTitleFileInput[indLang]),
                           multiple = TRUE, 
-                          accept = acceptLayerType, 
+                          accept = NULL, #acceptLayerType, 
                           width = NULL,
                           buttonLabel = HTML(langButtonFileInput[[indLang]][1]),
                           placeholder = HTML(langButtonFileInput[[indLang]][2])),

@@ -13,20 +13,13 @@
 #' @examples
 #'   cmr <- mapMCDA_datasets()
 mapMCDA_datasets <- function() {
-  pkg_files <- list.files(
-    system.file(
-      "cartography/CMR/",
-      package = "mapMCDA"
-    ),
-    full.names = TRUE
+
+  pkg_layers <- system.file(
+    "cartography/CMR/",
+    package = "mapMCDA"
   )
   
-  layer_name <- gsub("\\.\\w{1,}$", "", basename(pkg_files))
-
-  ans <- structure(
-    lapply(pkg_files, load_layer),
-    names = layer_name
-  )
+  ans <- load_dir(pkg_layers)
   
   return(ans)
 }

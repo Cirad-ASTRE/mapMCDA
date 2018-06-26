@@ -22,10 +22,36 @@
 load_layer <- function(x) {
 
   lt <- layer_type(basename(x))
+  if (is.na(lt)) return(invisible(NULL))
   
   readOGR_silently <- function(x, ...) readOGR(x, verbose = FALSE, ...)
   
   load_f <- c(vector = "readOGR_silently", raster = "raster")
   
   return(do.call(load_f[lt], list(x)))
+}
+
+
+#' Load all layers within a directory
+#' 
+#' Load all recognised vector and raster files within a given directory.
+#'
+#' @param path String. The path to the directory where spatial layers are
+#'   stored.
+#'   
+#' @return list of layers in the form of Spatial* or RasterLayer objects
+#' @export
+#'
+#' @examples
+#'    pkg_layers <- system.file("cartography/CMR/", package = "mapMCDA")
+#'    cmr <- load_dir(pkg_layers)
+load_dir <- function(path) {
+  
+  filenames <- list.files(path, full.names = TRUE)
+  names(filenames) <- gsub("\\.\\w{1,}$", "", basename(filenames))
+  layers <- lapply(filenames, load_layer)
+  
+  ## remove unknown (NULL) layers
+  return(layers[!vapply(layers, is.null, TRUE)])
+  
 }

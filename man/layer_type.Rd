@@ -10,7 +10,7 @@ layer_type(x)
 \item{x}{string. A file name.}
 }
 \value{
-character. Either "vector" or "raster
+character. Either "vector" or "raster. NA for unknown formats.
 }
 \description{
 Either "vector" or "raster" depending on the file extension

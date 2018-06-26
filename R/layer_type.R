@@ -4,7 +4,7 @@
 #'
 #' @param x string. A file name.
 #'
-#' @return character. Either "vector" or "raster
+#' @return character. Either "vector" or "raster. NA for unknown formats.
 #' @export
 #'
 #' @examples
@@ -19,7 +19,7 @@ layer_type <- function(x) {
   
   ## It should be either vector or raster, but not both
   if (!any(isvec, isras))
-    stop("File format unknown for ", x)
+    return(NA)
   
   if (all(isvec, isras))
     stop("This is a bug and should not happen.")

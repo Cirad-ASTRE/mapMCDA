@@ -12,7 +12,7 @@ cmr <- mapMCDA_datasets()
 #   full.names = TRUE
 # )
 # cmr <- lapply(layers, load_layer)
-# names(cmr) <- gsub("\\.\\w{1,}$", "", basename(layers))
+# names(cmr) <- rmext(basename(layers)))
 
 
 ## ----unite-epidemiologique, fig.cap = "Unités épidémiologiques d'exemple pour le Cameroun."----

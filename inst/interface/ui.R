@@ -117,11 +117,11 @@ body <- dashboardBody(
                 box(title = HTML(langBoxWeightMatrix[indLang]), status = "primary", width = 12, solidHeader = TRUE,
                     
                     
-                    rHandsontableOutput("rhWeightTable"),
+                    rHandsontableOutput("rhWeightTable")#,
 
-                    actionButton(inputId = "abWMatrixOK", label = "Valider"),
-                      
-                    textOutput("isMatrixOKText")
+                    # actionButton(inputId = "abWMatrixOK", label = "Valider"),
+                    #   
+                    # textOutput("isMatrixOKText")
                            
                          
                     )

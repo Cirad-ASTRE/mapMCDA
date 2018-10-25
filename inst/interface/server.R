@@ -496,7 +496,7 @@ server <- function(input, output, session) {
         
       }
       
-      print(scaleTarget)
+      #print(scaleTarget)
       
       standRaster <- risk_layer(myLayer[[indRawLay]], epidUnitLayer[[indRawLay]], scaleTarget)
       myLayer[[indScale]] <- scaleTarget
@@ -561,20 +561,43 @@ server <- function(input, output, session) {
     indRem <- which(colnames(weightDF)==isolate(epidUnitName()))
     if(!is.na(indRem[1])) weightDF <- weightDF[-indRem, -indRem]
     
-    rhandsontable(weightDF, rowHeaderWidth = 200)
+    nbCol <- ncol(weightDF)
     
+    rht <- rhandsontable(weightDF, rowHeaderWidth = 200)
+    
+    rht<- hot_col(rht, c(1:nbCol), format = "0.00")
+    
+    for(k in 1:nbCol){
+      
+      rht <- hot_cell(rht, k, k, readOnly = TRUE)
+      
+    }
+    
+    rht
     
   })
   
   
   ##### Observer on weight editable table ####
   
-  observeEvent(input$abWMatrixOK,{
+  observeEvent(input$rhWeightTable$changes$changes,{
     
-    #Retrieve data from editable table
+    # Row index with change. First Row start to index 0
+    indRow <- input$rhWeightTable$changes$changes[[1]][[1]] + 1
+    
+    # Column index with change. First column start to index 0
+    indCol <- input$rhWeightTable$changes$changes[[1]][[2]] + 1
+    
+    # Old value
+    oldVal <- input$rhWeightTable$changes$changes[[1]][[3]]
+    
+    # New value
+    newVal <- input$rhWeightTable$changes$changes[[1]][[4]]
+    
+    
     weightMat <- as.matrix(hot_to_r(input$rhWeightTable))
     
-    #print(is.matrix(weightMat))
+    weightMat[indCol,indRow] <- 1.0/weightMat[indRow,indCol]
     
     glWeightMatrix <<- weightMat
     
@@ -582,26 +605,50 @@ server <- function(input, output, session) {
     
     if (!inherits(resmat, 'try-error')) {
       
-      rv$weightVect <- resmat
-      rv$matrixOK <- TRUE
-      
-    } else {
-      
-      rv$matrixOK <- FALSE
-      
-    }
+      rv$weightVect <- resmat}
     
+    rv$weightMatrix <- weightMat
     
   })
   
   
-  output$isMatrixOKText <- renderText({
-    
-    if(rv$matrixOK) mess <- "Matrice OK" else mess <- "Rapports de poids incorrects !"
-    
-    mess
-    
-  })
+  
+  
+  
+  
+  # observeEvent(input$abWMatrixOK,{
+  #   
+  #   #Retrieve data from editable table
+  #   weightMat <- as.matrix(hot_to_r(input$rhWeightTable))
+  #   
+  #   #print(is.matrix(weightMat))
+  #   
+  #   glWeightMatrix <<- weightMat
+  #   
+  #   resmat <- try(compute_weights(weightMat))
+  #   
+  #   if (!inherits(resmat, 'try-error')) {
+  #     
+  #     rv$weightVect <- resmat
+  #     rv$matrixOK <- TRUE
+  #     
+  #   } else {
+  #     
+  #     rv$matrixOK <- FALSE
+  #     
+  #   }
+  #   
+  #   
+  # })
+  # 
+  # 
+  # output$isMatrixOKText <- renderText({
+  #   
+  #   if(rv$matrixOK) mess <- "Matrice OK" else mess <- "Rapports de poids incorrects !"
+  #   
+  #   mess
+  #   
+  # })
   
   
   ##### Render for weight graph bar display ####

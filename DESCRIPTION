@@ -21,6 +21,7 @@ Imports:
   classInt,
   geojsonio,
   geojsonlint,
+  igraph,
   methods,
   maps,
   maptools,
@@ -43,7 +44,7 @@ Suggests:
     rmarkdown,
     roxygen2,
     testthat
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 URL: https://github.com/Cirad-ASTRE/mapMCDA
 BugReports: https://github.com/Cirad-ASTRE/mapMCDA/issues
 VignetteBuilder: knitr

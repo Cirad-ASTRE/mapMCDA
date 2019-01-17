@@ -33,7 +33,7 @@ load_layer <- function(x) {
       
   }
   
-  load_f <- c(vector = "readOGR_silently", raster = "raster")
+  load_f <- c(vector = "readOGR_silently", raster = "raster", network = "read_network")
   
   return(do.call(load_f[lt], list(x)))
 }

@@ -1,28 +1,31 @@
 #' Detect type of geographic information
 #' 
-#' Either "vector" or "raster" depending on the file extension
+#' Either "vector", "raster" or "network" depending on the file extension.
 #'
 #' @param x string. A file name.
 #'
-#' @return character. Either "vector" or "raster. NA for unknown formats.
+#' @return character. Either "vector", "raster" or "network". NA for unknown formats.
 #' @export
 #'
 #' @examples
 #'   layer_type("myfile.tif")
 layer_type <- function(x) {
   
-  vectorExt <- c("\\.gpkg$", "\\.shp$")
-  rasterExt <- c("\\.tif$", "\\.tiff$")
+  known_extensions <- list(
+    vector  = c("\\.gpkg$", "\\.shp$"),
+    raster  = c("\\.tif$", "\\.tiff$"),
+    network = c("\\.csv$")
+  )
   
-  isvec <- any(vapply(vectorExt, function(.) grepl(., x), TRUE))
-  isras <- any(vapply(rasterExt, function(.) grepl(., x), TRUE))
+  is_type <- 
+    vapply(
+      known_extensions,
+      function(type) any(vapply(type, function(.) grepl(., x), TRUE)),
+      TRUE
+    )
   
-  ## It should be either vector or raster, but not both
-  if (!any(isvec, isras))
-    return(NA)
+  ## Check at most one layer-type is identified
+  stopifnot( sum(is_type) < 2 )
   
-  if (all(isvec, isras))
-    stop("This is a bug and should not happen.")
-  
-  if (isvec) return("vector") else return("raster")
+  return(ifelse(any(is_type), names(is_type)[is_type], NA))
 }

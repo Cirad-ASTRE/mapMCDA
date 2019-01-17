@@ -1,7 +1,30 @@
-## Fake animal mobility data
-## For testing network data
+## Fake vector, raster and network data
+## For testing lading
 
-if (!file.exists(system.file("testdata", "mobility.csv", package = "mapMCDA"))) {
+if (!file.exists(file.path(testdata, "points.shp"))) {
+  vector <- SpatialPointsDataFrame(
+    cbind(1:5, 1:5),
+    data.frame(a = 1:5)
+  )
+
+  
+  writeOGR(vector, testdata, "points", driver = "ESRI Shapefile")
+}
+
+if (!file.exists(vf <- file.path(testdata, "points.gpkg"))) {
+  vector <- SpatialPointsDataFrame(
+    cbind(1:5, 1:5),
+    data.frame(a = 1:5)
+  )
+
+  writeOGR(vector, vf, layer = "points", driver = "GPKG")
+}
+
+if (!file.exists(rf <- file.path(testdata, "raster.tif"))) {
+  writeRaster(raster(matrix(1:4, 2, 2)), rf)
+}
+
+if (!file.exists(nf <- file.path(testdata, "mobility.csv"))) {
   set.seed(20190115)
   n_markets <- 5
   markets <- spsample(rgeos::gUnaryUnion(admin), n_markets, type = "random")
@@ -31,8 +54,5 @@ if (!file.exists(system.file("testdata", "mobility.csv", package = "mapMCDA"))) 
   
   rownames(mobility) <- NULL
   
-  if (!file.exists(tdp <- file.path(system.file(package = "mapMCDA"), "testdata"))) {
-    dir.create(tdp)
-  }
-  write.csv(mobility, file.path(tdp, "mobility.csv"), row.names = FALSE, quote = FALSE)
+  write.csv(mobility, nf, row.names = FALSE, quote = FALSE)
 }

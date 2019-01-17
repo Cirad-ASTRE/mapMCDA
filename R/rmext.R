@@ -5,7 +5,7 @@
 #' 
 #' @param x Character
 #'
-#' @return
+#' @return character.
 #' @export
 #'
 #' @examples

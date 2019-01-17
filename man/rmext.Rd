@@ -9,6 +9,9 @@ rmext(x)
 \arguments{
 \item{x}{Character}
 }
+\value{
+character.
+}
 \description{
 Removes the trailing characters after and including the last point in a
 string.

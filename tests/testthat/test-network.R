@@ -1,6 +1,5 @@
 context("Network data")
 
-admin <- mapMCDA_datasets()$cmr_admin3
 
 ## Input data format (assumed)
 ## variable names can be different, but the order and types

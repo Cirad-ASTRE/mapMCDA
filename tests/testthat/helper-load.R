@@ -25,6 +25,7 @@ if (!file.exists(rf <- file.path(testdata, "raster.tif"))) {
 }
 
 if (!file.exists(nf <- file.path(testdata, "mobility.csv"))) {
+  admin <- mapMCDA_datasets()$cmr_admin3
   set.seed(20190115)
   n_markets <- 5
   markets <- spsample(rgeos::gUnaryUnion(admin), n_markets, type = "random")

@@ -112,5 +112,12 @@ must be respected:",
   
   ans <- igraph::graph_from_data_frame(e_list, vertices = v_coord, directed = TRUE)
   
+  ## If there are edge attributes, it must be only one, and must be
+  ## the weight.
+  if((natt <- length(edge_attr_names(ans))) > 0) {
+    stopifnot(identical(natt, 1L))
+    names(edge.attributes(ans)) <- "weight"
+  }
+
   return(ans)
 }

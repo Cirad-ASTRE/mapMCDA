@@ -23,7 +23,8 @@
 #' @param x character. Path of csv file
 #'
 #' @return object of class \code{igraph}
-#' @importFrom igraph graph_from_data_frame
+#' @importFrom igraph graph_from_data_frame edge_attr_names
+#'   edge.attributes edge.attributes<-
 #' @export
 #'
 #' @examples
@@ -121,3 +122,150 @@ must be respected:",
 
   return(ans)
 }
+
+
+#' Compute the Epidemic Threshold of a graph
+#' 
+#' Weighted and unweighted Epidemic Threshold \eqn{q} of a graph.
+#' 
+#' The Epidemic Threshold \eqn{q} quantifies the minimal expeced transmission
+#' coefficient necessary for diffusing an epidemy in a network.
+#' It is computed as the inverse of the \emph{Potential for transmission} of 
+#' the network: a measure of the expected
+#'   number of nodes affected by an infectious node, which is a generalisation
+#'   of the Basic Reproduction Number \eqn{R_0}{R₀} of an epidemy to
+#'   the context of a network. It thus quantifies the potential for
+#'   transmission of an infection throughout the contact network.
+#'   It is computed in terms of the incoming-outgoing rates from
+#'   the network's nodes:
+#'   \deqn{R_0 = \beta \frac{\hat{k_\text{in} k_\text{out}}}{\hat{k_\text{in}}},}{R₀ = \beta〈k_in*k_out〉/〈k_in〉,}
+#'   where \eqn{\beta} is the transmission coefficient among animals,
+#'   \eqn{k_\text{in/out}}{k_in/out} are the in/out-degrees of a node and the
+#'   \eqn{\hat{\cdot}}{〈·〉} symbol represents the average value across all nodes
+#'   in the graph.
+#'   
+#' The unweighted value computed above is most appropriate for a highly
+#' infectious epidemy with high animal-prevalence on nodes, as it assumes that
+#' any contact is potentially infectious.
+#' 
+#' In the weighted formulation, \eqn{k_\text{in/out}}{k_in/out} are
+#' the weight values for the incoming/outgoing edges in each node.
+#' It is more appropriate for low-prevalence diseases, where the transmission
+#' probability is assumed proportional to the number of contacts.
+#' Compute the Epidemic Threshold of a graph
+#' 
+#' Weighted and unweighted Epidemic Threshold \eqn{q} of a graph.
+#'
+#' The Epidemic Threshold \eqn{q} quantifies the minimal expeced
+#' transmission coefficient necessary for diffusing an epidemy in a
+#' network. It is computed as the inverse of the \emph{Potential for
+#' transmission} of the network: a measure of the expected number of
+#' nodes affected by an infectious node, which is a generalisation of
+#' the Basic Reproduction Number \eqn{R_0}{R₀} of an epidemy to the
+#' context of a network. It thus quantifies the potential for
+#' transmission of an infection throughout the contact network. It is
+#' computed in terms of the incoming-outgoing rates from the network's
+#' nodes: \deqn{R_0 = \beta \frac{\hat{k_\text{in}
+#' k_\text{out}}}{\hat{k_\text{in}}},}{R₀ = \beta〈k_in*k_out〉/〈k_in〉,}
+#' where \eqn{\beta} is the transmission coefficient among animals,
+#' \eqn{k_\text{in/out}}{k_in/out} are the in/out-degrees of a node
+#' and the \eqn{\hat{\cdot}}{〈·〉} symbol represents the average value
+#' across all nodes in the graph.
+#'
+#' The unweighted value computed above is most appropriate for a
+#' highly infectious epidemy with high animal-prevalence on nodes, as
+#' it assumes that any contact is potentially infectious.
+#'
+#' In the weighted formulation, \eqn{k_\text{in/out}}{k_in/out} are
+#' the weight values for the incoming/outgoing edges in each node. It
+#' is more appropriate for low-prevalence diseases, where the
+#' transmission probability is assumed proportional to the number of
+#' contacts.
+#'
+#' The default value of 1 for the probability of transmission
+#' \code{beta} implies that every infectious contact leads to
+#' transmission.
+#'
+#' @param x an \code{igraph} object
+#' @param beta numeric, between 0 and 1. Probability of transmission.
+#'
+#' @return a list the weighted and unweighted Potential for
+#'   Transmission \eqn{R_0}{R₀} and its inverse, the Epidemic
+#'   Threshold \eqn{q}. As an attribute named "sna", a data.frame with
+#'   the in/out-degrees of each node and their individual contribution
+#'   to R0.
+#' 
+#' If the input graph is unweighted, the weighted component is NULL.
+#' 
+#' @importFrom igraph decompose.graph degree gorder is.weighted
+#'   as_data_frame
+#'   
+#' @references 
+#'   Volkova VV, Howey R, Savill NJ, Woolhouse MEJ (2010) Sheep
+#'   Movement Networks and the Transmission of Infectious Diseases.
+#'   PLoS ONE 5(6): e11185.
+#'   https://doi.org/10.1371/journal.pone.0011185
+#' @examples
+#'   g <- igraph::graph_from_literal(A --+ B --+C, A --+C, B --+D)
+#'   epidemic_threshold(g)
+#'   
+#'   ## weighted graph
+#'   igraph::E(g)$weight <- c(10, 1, 2, 5)
+#'   epidemic_threshold(g)
+epidemic_threshold <- function(x, beta = 1) {
+  UseMethod("epidemic_threshold")
+}
+
+epidemic_threshold.igraph <- function(x, beta = 1) {
+  sc <- decompose.graph(x)
+  n_v <- lapply(sc, gorder)
+
+  ## work only with the largest network
+  ## (in terms of number of nodes)  
+  largest_x <- sc[[which.max(n_v)]]
+  
+  sna <- 
+    data.frame(
+      indeg = degree(largest_x, mode = "in"),
+      outdeg = degree(largest_x, mode = "out")
+    )
+  sna <- cbind(
+    node = rownames(sna),
+    sna
+  )
+  rownames(sna) <- NULL
+  sna[is.na(sna)] <- 0
+  
+  R0_contrib <- epidemic_threshold(sna[, c("indeg", "outdeg")])
+  epidata <- setNames(sum(R0_contrib)^c(1, -1), c("R0", "q"))
+  attr(epidata, "sna") <- cbind(sna, R0k = R0_contrib)
+  
+  epidataw <- NULL
+  if (is.weighted(largest_x)) {
+    
+    lxdf <- as_data_frame(largest_x)
+    in_w <- setNames(
+      aggregate(lxdf$weight, by = list(lxdf$to), sum),
+      c("node", "in_w")
+    )
+    out_w <- setNames(
+      aggregate(lxdf$weight, by = list(lxdf$from), sum),
+      c("node", "out_w")
+    )
+    snaw <- merge(in_w, out_w, by = "node", all=TRUE)
+    snaw[is.na(snaw)] <- 0
+    
+    R0w_contrib <- epidemic_threshold(snaw[, c("in_w", "out_w")])
+    epidataw <- setNames(sum(R0w_contrib)^c(1, -1), c("R0", "q"))
+    attr(epidataw, "sna") <- cbind(snaw, R0k_w = R0w_contrib)
+    }
+
+  return(list(unweighted = epidata, weighted = epidataw))
+}
+
+epidemic_threshold.data.frame <- function(x, beta) {
+  stopifnot(ncol(x) == 2)
+  ## Individual contributions to R0
+  return( x[,1]*x[,2]/sum(x[,1]) )
+}
+

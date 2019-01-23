@@ -27,7 +27,11 @@ risk_layer <- function(x, boundaries, scale_target = c(0, 100)) {
     if (inherits(x, "RasterLayer")) {
       r <- mask(extend(crop(x, boundaries), boundaries), boundaries)
     } else {
-      stop("Can't compute risk layer from a ", class(x), " object.")
+      if (inherits(x, "igraph")) {
+        r <- rasterize(x, boundaries)
+      } else {
+        stop("Can't compute risk layer from a ", class(x), " object.")
+      }
     }
   }
   

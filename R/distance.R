@@ -6,7 +6,8 @@
 #' 
 #'
 #' @param x Spatial* object with relevant spatial features.
-#' @param boundaries SpatialPolygon* object with administrative borders.
+#' @param boundaries SpatialPolygon* object with administrative
+#'   borders, or Raster* object from where to pick the resoltion.
 #' @param res numeric. Resolution for the outcome distance map. The default divides
 #'   the smallest dimension into 100 cells.
 #'

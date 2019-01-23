@@ -19,8 +19,13 @@
 #'   raster::plot(distance_map(cmr$water_bodies, boundaries = cmr$cmr_admin3))
 distance_map <- function(x, boundaries, res = resolution(boundaries, min_ncells = 100)) {
   
-  ext_grid <- raster::raster(raster::extent(boundaries), resolution = res)
-  msk <- raster::rasterize(boundaries, ext_grid, field = 1, background = NA, fun = "mean")
+  if (inherits(boundaries, "Spatial")) {
+    ext_grid <- raster::raster(raster::extent(boundaries), resolution = res)
+    msk <- raster::rasterize(boundaries, ext_grid, field = 1, background = NA, fun = "mean")
+  } else if (inherits(boundaries, "Raster")) {
+    msk <- boundaries
+  } else stop(paste(substitute(boundaries), "must be either a SpatialPolygon* or a Raster* object."))
+  
   ans <- distance_to_vector(x, msk)
   return(ans)
 }

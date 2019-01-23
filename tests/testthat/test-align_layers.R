@@ -24,5 +24,20 @@ test_that("harmonise rasters with different projections", {
 })
 
 test_that("harmonise resolution and extents", {
-  ## TODO
+  
+  #' All rasters are resampled to the same extent and resolution as the \emph{first}
+  #' raster in the list.
+  
+  risk_layer(waterb, cmr$cmr_admin3, scale_target = c(0, 100))
+  
+  tr <- list(
+    raster(nrows = 10, ncols = 10, xmn = 0, xmx = 9, ymn = 0, ymx = 9),
+    raster(nrows = 11, ncols = 11, xmn = 1, xmx = 10, ymn = 1, ymx = 10)
+  )
+  
+  expect_error(ar <- align_layers(tr), NA)
+  expect_identical(resolution(ar[[1]]), resolution(ar[[2]]))
+  expect_identical(resolution(tr[[1]]), resolution(ar[[2]]))
+  expect_identical(extent(ar[[1]]), extent(ar[[2]]))
+  expect_identical(extent(tr[[1]]), extent(ar[[2]]))
 })

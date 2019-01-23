@@ -123,35 +123,74 @@ must be respected:",
   return(ans)
 }
 
+# ' @import igraph
+setOldClass("igraph")
 
-#' Compute the Epidemic Threshold of a graph
+#' Rasterize a geographic network
 #' 
-#' Weighted and unweighted Epidemic Threshold \eqn{q} of a graph.
+#' Copmute a raster with the importance of the nearest network node.
 #' 
-#' The Epidemic Threshold \eqn{q} quantifies the minimal expeced transmission
-#' coefficient necessary for diffusing an epidemy in a network.
-#' It is computed as the inverse of the \emph{Potential for transmission} of 
-#' the network: a measure of the expected
-#'   number of nodes affected by an infectious node, which is a generalisation
-#'   of the Basic Reproduction Number \eqn{R_0}{R₀} of an epidemy to
-#'   the context of a network. It thus quantifies the potential for
-#'   transmission of an infection throughout the contact network.
-#'   It is computed in terms of the incoming-outgoing rates from
-#'   the network's nodes:
-#'   \deqn{R_0 = \beta \frac{\hat{k_\text{in} k_\text{out}}}{\hat{k_\text{in}}},}{R₀ = \beta〈k_in*k_out〉/〈k_in〉,}
-#'   where \eqn{\beta} is the transmission coefficient among animals,
-#'   \eqn{k_\text{in/out}}{k_in/out} are the in/out-degrees of a node and the
-#'   \eqn{\hat{\cdot}}{〈·〉} symbol represents the average value across all nodes
-#'   in the graph.
-#'   
-#' The unweighted value computed above is most appropriate for a highly
-#' infectious epidemy with high animal-prevalence on nodes, as it assumes that
-#' any contact is potentially infectious.
+#' This assumes that the network object has node attributes "Lon" "Lat"
+#' in the WGS84 reference system.
 #' 
-#' In the weighted formulation, \eqn{k_\text{in/out}}{k_in/out} are
-#' the weight values for the incoming/outgoing edges in each node.
-#' It is more appropriate for low-prevalence diseases, where the transmission
-#' probability is assumed proportional to the number of contacts.
+#' @export
+setMethod(
+  rasterize, c("igraph", "Raster"),
+  {
+    function(
+      x, y, field = "importance", ...) {
+      
+      etx <- epidemic_threshold(x, beta = 1)
+      
+      ## If the graph is weighted, use weights
+      if (is.null(epiR0 <- etx$weighted)) {
+        epiR0 <- etx$unweighted
+      }
+      
+      sna <- attr(epiR0, "sna")
+
+      node_importance <- setNames(
+        data.frame(sna[, 1], 100 * sna$R0k / epiR0["R0"]),
+        c("name", "importance")
+      )
+      
+      nodes <- as.data.frame(igraph::vertex.attributes(x))
+      
+      nodes <- merge(nodes, node_importance, by = "name", all.y=FALSE)
+      
+      ## Cast to SpatialPointsDataFrame
+      ## Assume CRS WGS84
+      coordinates(nodes) <- ~ Lon + Lat
+      proj4string(nodes) <- CRS("+proj=longlat +datum=WGS84")
+      
+      vor <- voronoi(nodes, ext = extent(y))
+    
+      ans <- raster::mask(raster::rasterize(vor, y, field = field, ...), y)
+      return(ans)
+    }
+  }
+)
+
+#' Rasterize a geographic network
+#' 
+#' Copmute a raster with the importance of the nearest network node.
+#' 
+#' This assumes that the network object has node attributes "Lon" "Lat"
+#' in the WGS84 reference system.
+#' 
+#' @export
+setMethod(
+  rasterize, c("igraph", "SpatialPolygons"),
+  {
+    function (x, y, res = resolution(y, min_ncells = 100), ...) {
+      
+      ext_grid <- raster::raster(raster::extent(y), resolution = res)
+      msk <- raster::rasterize(y, ext_grid, field = 1, background = NA, fun = "mean")
+      rasterize(x, msk, ...)
+    }
+  }
+)
+
 #' Compute the Epidemic Threshold of a graph
 #' 
 #' Weighted and unweighted Epidemic Threshold \eqn{q} of a graph.

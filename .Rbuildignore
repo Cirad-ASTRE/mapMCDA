@@ -12,3 +12,4 @@
 ^R/pkg_deps.R
 
 ^CONDUCT\.md$
+^inst/Example

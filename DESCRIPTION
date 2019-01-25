@@ -39,7 +39,6 @@ Imports:
   stringr
 Suggests:
     devtools,
-    igraph,
     knitr,
     mapview,
     rmarkdown,

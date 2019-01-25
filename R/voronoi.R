@@ -15,7 +15,12 @@
 #' @importFrom raster intersect
 #' @importFrom rgeos gUnaryUnion
 #'
+#' @export
 #' @examples
+#'   pts <- data.frame(x = c(1:2, 2), y = c(1, 1:2))
+#'   region <- raster::extent(c(0, 3, 0, 3))
+#'   sp::plot(voronoi(pts, region))
+#'   points(pts)
 voronoi <- function(x, ext, eps = 1e-09) {
   if (!requireNamespace("deldir")) {
     stop("you need to first install the deldir libary")

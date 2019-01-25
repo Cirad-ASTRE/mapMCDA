@@ -25,6 +25,8 @@
 #' @return object of class \code{igraph}
 #' @importFrom igraph graph_from_data_frame edge_attr_names
 #'   edge.attributes edge.attributes<-
+#' @importFrom stats setNames
+#' @importFrom utils read.csv
 #' @export
 #'
 #' @examples
@@ -126,6 +128,7 @@ must be respected:",
 # ' @import igraph
 setOldClass("igraph")
 
+
 #' Rasterize a geographic network
 #' 
 #' Copmute a raster with the importance of the nearest network node.
@@ -133,7 +136,27 @@ setOldClass("igraph")
 #' This assumes that the network object has node attributes "Lon" "Lat"
 #' in the WGS84 reference system.
 #' 
+#' If the graph is weighted, the weighted importance will be computed.
+#' If you want the unweighted importance, remove the weight attribute
+#' from the graph with \code{igraph::delete_edge_attr(x, "weight")}.
+#' 
+#' @param x a geographic network (a igraph object with node attributes
+#'   "Lon" and "Lat" in the WGS84 reference system)
+#' @param y a Raster* or a SpatialPolygons* object.
+#' @param field character. The attribute of the network nodes to be
+#'   assigned to the voronoi polygon associated with each node. By
+#'   default it computes the \emph{importance} of each node in the
+#'   network. But you can manually compute any other measure of
+#'   interest, and pass it as a vertex attribute (see
+#'   \code{?igraph::`vertex_attr<-`}).
+#' @param ... Other arguments passed on to
+#'   \code{\link[raster]{rasterize}}.
+#' @importMethodsFrom raster rasterize
+#' @importFrom stats setNames
 #' @export
+#' @name rasterize_geonetwork
+#' @rdname rasterize_geonetwork
+#' @aliases rasterize,igraph,Raster-method
 setMethod(
   rasterize, c("igraph", "Raster"),
   {
@@ -171,13 +194,11 @@ setMethod(
   }
 )
 
-#' Rasterize a geographic network
-#' 
-#' Copmute a raster with the importance of the nearest network node.
-#' 
-#' This assumes that the network object has node attributes "Lon" "Lat"
-#' in the WGS84 reference system.
-#' 
+#' @importMethodsFrom raster rasterize
+#' @param res numeric vector of length 2. Resolution in Lon/Lat of
+#'   rasterisation.
+#' @rdname rasterize_geonetwork
+#' @aliases rasterize,igraph,SpatialPolygons-method
 #' @export
 setMethod(
   rasterize, c("igraph", "SpatialPolygons"),
@@ -238,12 +259,14 @@ setMethod(
 #' 
 #' @importFrom igraph decompose.graph degree gorder is.weighted
 #'   as_data_frame
+#' @importFrom stats setNames
 #'   
 #' @references 
 #'   Volkova VV, Howey R, Savill NJ, Woolhouse MEJ (2010) Sheep
 #'   Movement Networks and the Transmission of Infectious Diseases.
 #'   PLoS ONE 5(6): e11185.
 #'   https://doi.org/10.1371/journal.pone.0011185
+#' @export
 #' @examples
 #'   g <- igraph::graph_from_literal(A --+ B --+C, A --+C, B --+D)
 #'   epidemic_threshold(g)
@@ -255,6 +278,7 @@ epidemic_threshold <- function(x, beta = 1) {
   UseMethod("epidemic_threshold")
 }
 
+#' @export
 epidemic_threshold.igraph <- function(x, beta = 1) {
   sc <- decompose.graph(x)
   n_v <- lapply(sc, gorder)
@@ -302,6 +326,7 @@ epidemic_threshold.igraph <- function(x, beta = 1) {
   return(list(unweighted = epidata, weighted = epidataw))
 }
 
+#' @export
 epidemic_threshold.data.frame <- function(x, beta) {
   stopifnot(ncol(x) == 2)
   ## Individual contributions to R0

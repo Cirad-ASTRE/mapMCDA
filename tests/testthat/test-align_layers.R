@@ -27,9 +27,7 @@ test_that("harmonise resolution and extents", {
   
   #' All rasters are resampled to the same extent and resolution as the \emph{first}
   #' raster in the list.
-  
-  risk_layer(waterb, cmr$cmr_admin3, scale_target = c(0, 100))
-  
+
   tr <- list(
     raster(nrows = 10, ncols = 10, xmn = 0, xmx = 9, ymn = 0, ymx = 9),
     raster(nrows = 11, ncols = 11, xmn = 1, xmx = 10, ymn = 1, ymx = 10)

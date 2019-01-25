@@ -19,6 +19,12 @@ SpatialPolygonsDataFrame.
 \description{
 Compute a vornoi tesselation of a map for a set of points.
 }
+\examples{
+  pts <- data.frame(x = c(1:2, 2), y = c(1, 1:2))
+  region <- raster::extent(c(0, 3, 0, 3))
+  sp::plot(voronoi(pts, region))
+  points(pts)
+}
 \author{
 Borrowed from function \code{\link[dismo]{voronoi}} from
   package \code{dismo} by R. Hijmans et al., which ultimately

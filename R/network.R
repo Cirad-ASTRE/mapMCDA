@@ -225,10 +225,10 @@ setMethod(
 #' context of a network. It thus quantifies the potential for
 #' transmission of an infection throughout the contact network. It is
 #' computed in terms of the incoming-outgoing rates from the network's
-#' nodes: \deqn{R_0 = \beta \frac{\hat{k_\text{in}
-#' k_\text{out}}}{\hat{k_\text{in}}},}{R₀ = \beta〈k_in*k_out〉/〈k_in〉,}
+#' nodes: \deqn{R_0 = \beta \frac{\hat{k_\mathrm{in}
+#' k_\mathrm{out}}}{\hat{k_\mathrm{in}}},}{R₀ = \beta〈k_in*k_out〉/〈k_in〉,}
 #' where \eqn{\beta} is the transmission coefficient among animals,
-#' \eqn{k_\text{in/out}}{k_in/out} are the in/out-degrees of a node
+#' \eqn{k_\mathrm{in/out}}{k_in/out} are the in/out-degrees of a node
 #' and the \eqn{\hat{\cdot}}{〈·〉} symbol represents the average value
 #' across all nodes in the graph.
 #'
@@ -236,7 +236,7 @@ setMethod(
 #' highly infectious epidemy with high animal-prevalence on nodes, as
 #' it assumes that any contact is potentially infectious.
 #'
-#' In the weighted formulation, \eqn{k_\text{in/out}}{k_in/out} are
+#' In the weighted formulation, \eqn{k_\mathrm{in/out}}{k_in/out} are
 #' the weight values for the incoming/outgoing edges in each node. It
 #' is more appropriate for low-prevalence diseases, where the
 #' transmission probability is assumed proportional to the number of

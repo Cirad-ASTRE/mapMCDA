@@ -63,7 +63,7 @@ newAdminCol <- 4
 #### LANGUAGE ####
 
 # Language to use: 1 = english, 2 = french
-indLang <- 2
+indLang <- 1
 
 #languages <- c("English" = "1", "Francais" = "2")
 
@@ -108,6 +108,10 @@ langBoxWeightBar <- c("Weight Histogram", "Histogramme des poids")
 
 # Results
 langMenuResult <- c("Results","R&#233;sultats")
+
+langAdminUnitResult <- c("Per Epidemiological unit","Par unité épidémiologique ")
+
+langLevelResult <- c("Risk level:", "Niveau de risque :")
 
 
 
@@ -160,6 +164,9 @@ if(!is.na(outbFiles[1])){
   
   indRast <- which(fileExt %in% rasterExt)
   if(!is.na(indRast[1])) glLayerDF[indRast,"layerType"] <- lRast[indLang]
+  
+  indMob <- which(fileExt %in% mobExt)
+  if(!is.na(indMob[1])) layerFiles[indMob,"layerType"] <- lMob[indLang]
   
   #Remove unknown file type
   indRem <- which(glLayerDF$layerType=="Unknown")
@@ -223,6 +230,13 @@ if(!is.na(outbFiles[1])){
     if(glLayerDF[k,"layerType"]==lRast[indLang]){
       
       curLay <- raster(glLayerDF[k,"datapath"])
+      
+    }
+    
+    # If csv mobility file
+    if(layerFiles[k,"layerType"]==lMob[indLang]){
+      
+      curLay <- read_network(layerFiles[k,"datapath"])
       
     }
     

@@ -152,14 +152,14 @@ body <- dashboardBody(
                   
                   #Button to generate and download raster
                   downloadButton(outputId = "exportResultRaster", 
-                                 label = "Exporter")
+                                 label = "Export")
                   
               ),
             
-              box(title = "Par unite", status = "success", width = 6, solidHeader = TRUE,
+              box(title = HTML(langAdminUnitResult[indLang]), status = "success", width = 6, solidHeader = TRUE,
                   
                   selectInput(inputId = "siLevelRisk", 
-                              label = "Niveau de risque :",
+                              label = HTML(langLevelResult[indLang]),
                               choices = 1:12,
                               selected = 4),
                   
@@ -167,7 +167,7 @@ body <- dashboardBody(
                   
                   #Button to generate and download raster
                   downloadButton(outputId = "exportResultVector", 
-                                 label = "Exporter")
+                                 label = "Export")
                   
               )
 

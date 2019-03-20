@@ -62,6 +62,7 @@ server <- function(input, output, session) {
     glUploadFileDF <<- rv$uploadFileDF
     
     # Retrieve file extension to define type of layer: vector or raster
+    # or mobility file with csv extension
     fileExt <- str_extract(layerFiles$name, reExt)
     fileExt <- tolower(str_replace(fileExt, "\\.", ""))
     
@@ -72,6 +73,9 @@ server <- function(input, output, session) {
     
     indRast <- which(fileExt %in% rasterExt)
     if(!is.na(indRast[1])) layerFiles[indRast,"layerType"] <- lRast[indLang]
+    
+    indMob <- which(fileExt %in% mobExt)
+    if(!is.na(indMob[1])) layerFiles[indMob,"layerType"] <- lMob[indLang]
     
     #Remove unknown file type
     indRem <- which(layerFiles$layerType=="Unknown")
@@ -95,7 +99,7 @@ server <- function(input, output, session) {
     nbLayer <- nrow(layerFiles)
     layerNames <- sort(layerFiles$shortName)
     
-    # Load vectors and rasters in global environment
+    # Load vectors, rasters and mobility file in global environment
     for(k in 1:nbLayer){
       
       #If vector
@@ -132,6 +136,13 @@ server <- function(input, output, session) {
         
         curLay <- raster(layerFiles[k,"datapath"])
 
+      }
+      
+      # If csv mobility file
+      if(layerFiles[k,"layerType"]==lMob[indLang]){
+        
+        curLay <- read_network(layerFiles[k,"datapath"])
+        
       }
       
       
@@ -475,7 +486,7 @@ server <- function(input, output, session) {
     
     #invertScale <- FALSE
     
-    if(inherits(myLayer[[indStandLay]], c("Spatial", "RasterLayer")) && invertScale==FALSE) {
+    if(inherits(myLayer[[indStandLay]], c("Spatial", "RasterLayer", "igraph")) && invertScale==FALSE) {
       
       standRaster <- myLayer[[indStandLay]]
       

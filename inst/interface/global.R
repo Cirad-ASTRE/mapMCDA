@@ -20,6 +20,8 @@ vectorExt <- c("shp", "gpkg")
 
 rasterExt <- c("tif", "tiff")
 
+mobExt <- "csv"
+
 acceptLayerType <- paste0(".", c(vectorExt, rasterExt))
 
 reExt <- "\\.\\w{1,}$" # regular expression to define file extension
@@ -114,9 +116,11 @@ lVect <- c("Vector","Vecteur")
 
 lRast <- c("Raster","Raster")
 
+lMob <- c("MobGraph","MobGraph")
+
 
 langTitleFileInput <- c("Select layers",
-                        "S&#233;lectionnez les fichiers de vecteurs et rasters")
+                        "S&#233;lectionnez les fichiers de vecteurs - rasters - mobilite")
 
 langButtonFileInput <- list(c("Browse...", "No file selected"), 
                             c("Parcourir...", "Pas de selection"))

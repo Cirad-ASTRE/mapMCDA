@@ -80,10 +80,10 @@ risk_plot <- function(x, v, n) {
 #' @examples
 #'   epi_units <- mapMCDA_datasets()$cmr_admin3
 #'   risk <- runif(nrow(epi_units), 0, 100)
-#'   risk_unit_table(epi_units, risk, n = 4)
+#'   risk_table(epi_units, risk, n = 4)
 risk_table<- function(x, v, n) {
   x$risk <- v
-  x$risk_cat <- cut(v, n)
+  x$risk_cat <- cut(v, n, labels = FALSE)
   
   return(data.frame(x))
 }

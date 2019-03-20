@@ -23,5 +23,5 @@ categorised into n risk-levels
 \examples{
   epi_units <- mapMCDA_datasets()$cmr_admin3
   risk <- runif(nrow(epi_units), 0, 100)
-  risk_unit_table(epi_units, risk, n = 4)
+  risk_table(epi_units, risk, n = 4)
 }

@@ -152,7 +152,7 @@ body <- dashboardBody(
                   
                   #Button to generate and download raster
                   downloadButton(outputId = "exportResultRaster", 
-                                 label = "Export")
+                                 label = "Export raster")
                   
               ),
             
@@ -165,9 +165,13 @@ body <- dashboardBody(
                   
                   plotOutput("resultUnitDisplay"),
                   
-                  #Button to generate and download raster
+                  #Button to generate and download vector
                   downloadButton(outputId = "exportResultVector", 
-                                 label = "Export")
+                                 label = "Export vector"),
+                  
+                  #Button to generate and download csv table
+                  downloadButton(outputId = "exportResultCSV", 
+                                 label = "Export table")
                   
               )
 

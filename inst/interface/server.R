@@ -741,7 +741,7 @@ server <- function(input, output, session) {
   
   output$exportResultRaster <- downloadHandler(
     
-    filename = paste0(Sys.Date(), 'final_risk.tif'),
+    filename = paste0(Sys.Date(), '_final_risk.tif'),
     
     content = function(con) {
       isolate(
@@ -760,11 +760,27 @@ server <- function(input, output, session) {
       epidUnitLayer <- isolate(curEpidUnitLayer())
       if(is.null(epidUnitLayer)) return(NULL)
       ev <- epidUnitLayer[[indRawLay]]
-        ev$mapMCDA_risk <- risk_unit(rv$finalRaster, ev)
-        rgdal::writeOGR(ev, con, layer = "risk", driver = "GPKG")
+      ev$mapMCDA_risk <- risk_unit(rv$finalRaster, ev)
+      rgdal::writeOGR(ev, con, layer = "risk", driver = "GPKG")
     },
     contentType = "application/vnd.opengeospatial.geopackage+sqlite3"
   )
   
+  ##### To export csv with risk levels by epid unit #####
+  
+  output$exportResultCSV <- downloadHandler(
+    filename = paste0(Sys.Date(), '_final_risk_category_by_unit.csv'),
+    content = function(con) {
+      epidUnitLayer <- isolate(curEpidUnitLayer())
+      if(is.null(epidUnitLayer)) return(NULL)
+      ev <- epidUnitLayer[[indRawLay]]
+      rt <- risk_table(
+        ev,
+        risk_unit(rv$finalRaster, ev), 
+        n = as.numeric(input$siLevelRisk)
+      )
+      write.csv(rt, con, row.names = FALSE)
+    }
+  )
   
 }

@@ -61,7 +61,15 @@ risk_unit <- function(r, eu, fun = mean) {
 #'   risk_plot(epi_units, seq_along(epi_units), n = 4)
 risk_plot <- function(x, v, n) {
   x$risk <- v
-  spplot(x[, "risk"], cuts = n - 1)
+  
+  ## Compute risk categories manually, as the default cuts
+  ## in spplot extend beyond the range too much
+  rv <- range(v)
+  ## extend the range 0.1 % each side (same as "cut")
+  rv <- (rv - mean(rv)) * 1.002 + mean(rv)
+  breaks <- seq(from = rv[1], to = rv[2], length = n + 1)
+  
+  spplot(x[, "risk"], at = breaks)
 }
 
 #' Produce final table of risk levels by epidemiological unit

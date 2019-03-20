@@ -26,7 +26,10 @@
 compute_weights <- function(x) {
   
   is.reciprocal <- function(x) {
-    all(diag(x) == 1) && (!any(lower.tri(x)) || x[lower.tri(x)]*x[upper.tri(x)] == 1)
+    all(diag(x) == 1) && (
+      !any(lower.tri(x)) ||  # case dim(x) = (1, 1)
+        all(x[lower.tri(x)]*x[upper.tri(x)] == 1)
+    )
   }
   
   stopifnot(

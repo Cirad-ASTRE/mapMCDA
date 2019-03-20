@@ -11,7 +11,7 @@ Authors@R: c(
   person("Facundo", "Muñoz", email = "facundo.munoz@cirad.fr", role = c("aut", "cre"))
   )
 Description: Use a Shiny interface to help users import multiple layers of risk
-  factors, scale them and combine them using a Multi-Criteria Decision Analysis
+  factors, scale and combine them using a Multi-Criteria Decision Analysis
   approach to produce a risk map as an outcome.
 Depends: R (>= 3.2)
 License: GPL-3 + file LICENSE

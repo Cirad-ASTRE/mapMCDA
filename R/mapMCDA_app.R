@@ -7,7 +7,7 @@
 #' @export
 mapMCDA_app <- function (bg = FALSE) {
   
-  code_launch <- "shiny::runApp(system.file(\"interface\", package = \"mapMCDA\"), launch.browser = interactive())"
+  code_launch <- "shiny::runApp(system.file(\"interface\", package = \"mapMCDA\"), launch.browser = TRUE)"
   
   if (bg) {
     system(paste("Rscript -e '", code_launch, "' &"))

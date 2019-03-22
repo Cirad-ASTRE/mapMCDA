@@ -37,3 +37,28 @@ test_that("compute weights", {
   # expect_equal(compute_weights(x), exp_w, tol = .001)
 
 })
+
+
+test_that("is.reciprocal() works as expected", {
+
+  # Non-reciprocal matrix  
+  Xf <- matrix(1:16, 4, 4)
+  
+  # Reciprocal matrix
+  Xr <- Xf
+  Xr[upper.tri(Xf)] <- 1/t(Xf)[upper.tri(Xf)]
+  diag(Xr) <- 1
+  
+  expect_false(is.reciprocal(Xf))
+  expect_true(is.reciprocal(Xr))
+
+  ## -1 is also a valid value in the diagonal
+  ## and negative values are also valid as long as they are reciprocal
+  expect_true(is.reciprocal(replace(Xr, 1, -1)))
+  expect_true(is.reciprocal(replace(Xr, c(2, 5), c(-2, -1/2))))
+  
+  ## Single numbers are reciprocal if 1 or -1
+  expect_true(is.reciprocal(1))
+  expect_true(is.reciprocal(-1))
+  expect_false(is.reciprocal(2))
+})

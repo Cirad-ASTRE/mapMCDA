@@ -25,15 +25,12 @@
 #'   compute_weights(matrix(1, 5, 5))
 compute_weights <- function(x) {
   
-  is.reciprocal <- function(x) {
-    all(diag(x) == 1) && all(x[lower.tri(x)]*x[upper.tri(x)] == 1)
-  }
-  
   stopifnot(
     is.numeric(x),
     is.matrix(x),
     diff(dim(x)) == 0,
-    is.reciprocal(x)
+    is.reciprocal(x),
+    all(x > 0)
   )
   
   # ## Dummy outcome

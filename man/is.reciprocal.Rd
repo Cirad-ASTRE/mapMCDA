@@ -22,6 +22,6 @@ is 1 for all its elements.
   Xr <- Xf
   Xr[upper.tri(Xf)] <- 1/t(Xf)[upper.tri(Xf)]
   diag(Xr) <- 1
-  is.reciprocal(Xf)  # FALSE
-  is.reciprocal(Xr)  # TRUE
+  mapMCDA:::is.reciprocal(Xf)  # FALSE
+  mapMCDA:::is.reciprocal(Xr)  # TRUE
 }

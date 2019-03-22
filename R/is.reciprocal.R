@@ -7,14 +7,13 @@
 #' @param x square numeric matrix or number
 #'
 #' @return logical
-#'
 #' @examples
 #'   Xf <- matrix(1:16, 4, 4)
 #'   Xr <- Xf
 #'   Xr[upper.tri(Xf)] <- 1/t(Xf)[upper.tri(Xf)]
 #'   diag(Xr) <- 1
-#'   is.reciprocal(Xf)  # FALSE
-#'   is.reciprocal(Xr)  # TRUE
+#'   mapMCDA:::is.reciprocal(Xf)  # FALSE
+#'   mapMCDA:::is.reciprocal(Xr)  # TRUE
 is.reciprocal <- function(x) {
   all(x * t(x) == 1)
 }

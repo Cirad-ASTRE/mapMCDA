@@ -1,5 +1,7 @@
 # mapMCDA 0.3.0.9000
 
+* Plot geographic networks (#13)
+
 * Export CSV with units and risk categories (#10)
 
 * Animal mobility data as a specific input type (#9)

@@ -35,17 +35,12 @@ test_that("load_dir() skips unknnown file formats", {
   res <- load_dir(testdata)
   
   test_files <- c("mobility", "points", "points", "raster")
+  exp_classes <- c("geonetwork",  "SpatialPointsDataFrame", "SpatialPointsDataFrame", "RasterLayer")
   
   expect_is(res, "list")
   expect_identical(names(res), test_files)
   
-  expect_identical(
-    vapply(res, class, "char")[test_files],
-    setNames(
-      c("igraph",  "SpatialPointsDataFrame", "SpatialPointsDataFrame", "RasterLayer"),
-      test_files
-    )
-  )
+  expect_true(all(mapply(inherits, res, exp_classes)))
   
 })
 

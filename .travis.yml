@@ -20,6 +20,7 @@ r_binary_packages:
 
 r_github_packages:
   - jimhester/covr
+  - Cirad-ASTRE/geonetwork
 
 warnings_are_errors: true
 sudo: required

@@ -26,7 +26,7 @@ Compute a vornoi tesselation of a map for a set of points.
   points(pts)
 }
 \author{
-Borrowed from function \code{\link[dismo]{voronoi}} from
+Borrowed from function \code{voronoi} from
   package \code{dismo} by R. Hijmans et al., which ultimately
   uses the \code{\link[deldir]{deldir}} function by Rolf Turner.
 }

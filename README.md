@@ -1,50 +1,55 @@
 
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/mapMCDA)](https://cran.r-project.org/package=mapMCDA) [![Travis Build Status](https://travis-ci.org/Cirad-ASTRE/mapMCDA.svg?branch=master)](https://travis-ci.org/Cirad-ASTRE/mapMCDA) [![Appveyor Build status](https://ci.appveyor.com/api/projects/status/nuo6t1hddibxxusd?svg=true)](https://ci.appveyor.com/project/famuvie/mapmcda)
 
-Welcome to the *mapMCDA* package!
-=================================
+mapMCDA
+=======
 
-This is just a template. Please remove, add or edit parts as you see fit.
+![](man/figures/mapMCDA_overview.png)
+
+`mapMCDA` helps producing **risk maps** by weighting **risk factors** using **expert knowledge**.
+
+The typical use case is the lack of (reliable) data about the epidemics of a disease, but available information about well known **risk factors** (e.g. animal density, proximity to border, proximity to water courses, etc.).
+
+In order to design a **stratified sampling** or a **surveillance campaign**, a preliminar risk map based on expert judgement is required.
+
+This package (and method) provides a systematic and guided approach to build such maps.
+
+![](man/figures/plot-risk-unit-1.png)
+
+The package include a Graphical User Interface (Shiny) that helps in processing and weighting risk factors.
+
+``` r
+library(mapMCDA)
+mapMCDA_app()
+```
+
+![](man/figures/interface.png)
 
 Installing the package
 ----------------------
 
-To install the current stable, CRAN version of the package, type:
+`mapMCDA` is on its way to CRAN. In the meanwhile, install from GitHub as follows.
 
+<!-- To install the current stable, CRAN version of the package, type: -->
+<!-- ```{r install, eval = FALSE} -->
+<!-- install.packages("mapMCDA") -->
+<!-- ``` -->
+<!-- To benefit from the latest features and bug fixes, install the development, *github* version of the package using: -->
 ``` r
-install.packages("mapMCDA")
+if (!require("remotes")) {
+  install.packages("remotes")
+}
+remotes::install_github("Cirad-ASTRE/geonetwork")
+remotes::install_github("Cirad-ASTRE/mapMCDA")
 ```
 
-To benefit from the latest features and bug fixes, install the development, *github* version of the package using:
-
-``` r
-devtools::install_github("Cirad-ASTRE/mapMCDA")
-```
-
-Note that this requires the package *devtools* installed.
-
-What does it do?
-================
-
-The main features of the package include:
-
-Resources
-=========
-
-Vignettes
----------
-
-An overview and examples of *mapMCDA* are provided in the vignettes:
-
-...
-
-Websites
---------
-
-The following websites are available:
-
-...
-
+<!-- # Resources -->
+<!-- ## Vignettes -->
+<!-- An overview and examples of *mapMCDA* are provided in the vignettes: -->
+<!-- ... -->
+<!-- ## Websites -->
+<!-- The following websites are available: -->
+<!-- ... -->
 Getting help online
 -------------------
 

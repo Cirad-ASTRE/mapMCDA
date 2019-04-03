@@ -3,17 +3,17 @@
 \docType{methods}
 \name{rasterize_geonetwork}
 \alias{rasterize_geonetwork}
-\alias{rasterize,igraph,Raster-method}
-\alias{rasterize,igraph,SpatialPolygons-method}
+\alias{rasterize,geonetwork,Raster-method}
+\alias{rasterize,geonetwork,SpatialPolygons-method}
 \title{Rasterize a geographic network}
 \usage{
-\S4method{rasterize}{igraph,Raster}(x, y, field = "importance", ...)
+\S4method{rasterize}{geonetwork,Raster}(x, y, field = "importance", ...)
 
-\S4method{rasterize}{igraph,SpatialPolygons}(x, y, res = resolution(y,
-  min_ncells = 100), ...)
+\S4method{rasterize}{geonetwork,SpatialPolygons}(x, y,
+  res = resolution(y, min_ncells = 100), ...)
 }
 \arguments{
-\item{x}{a geographic network (a igraph object with node attributes
+\item{x}{a geographic network (a geonetwork object with node attributes
 "Lon" and "Lat" in the WGS84 reference system)}
 
 \item{y}{a Raster* or a SpatialPolygons* object.}

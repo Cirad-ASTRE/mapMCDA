@@ -113,7 +113,7 @@ must be respected:",
     stop("Node(s) ", idx.nodes, " have inconsistent coordinates in the dataset.")
   }
   
-  ans <- igraph::graph_from_data_frame(e_list, vertices = v_coord, directed = TRUE)
+  ans <- geonetwork::geonetwork(e_list, v_coord, directed = TRUE)
   
   ## If there are edge attributes, it must be only one, and must be
   ## the weight.
@@ -125,8 +125,8 @@ must be respected:",
   return(ans)
 }
 
-# ' @import igraph
-setOldClass("igraph")
+# ' @import geonetwork
+setOldClass("geonetwork")
 
 
 #' Rasterize a geographic network
@@ -140,7 +140,7 @@ setOldClass("igraph")
 #' If you want the unweighted importance, remove the weight attribute
 #' from the graph with \code{igraph::delete_edge_attr(x, "weight")}.
 #' 
-#' @param x a geographic network (a igraph object with node attributes
+#' @param x a geographic network (a geonetwork object with node attributes
 #'   "Lon" and "Lat" in the WGS84 reference system)
 #' @param y a Raster* or a SpatialPolygons* object.
 #' @param field character. The attribute of the network nodes to be
@@ -152,13 +152,14 @@ setOldClass("igraph")
 #' @param ... Other arguments passed on to
 #'   \code{\link[raster]{rasterize}}.
 #' @importMethodsFrom raster rasterize
+#' @importFrom igraph vertex.attributes
 #' @importFrom stats setNames
 #' @export
 #' @name rasterize_geonetwork
 #' @rdname rasterize_geonetwork
-#' @aliases rasterize,igraph,Raster-method
+#' @aliases rasterize,geonetwork,Raster-method
 setMethod(
-  rasterize, c("igraph", "Raster"),
+  rasterize, c("geonetwork", "Raster"),
   {
     function(
       x, y, field = "importance", ...) {
@@ -177,7 +178,13 @@ setMethod(
         c("name", "importance")
       )
       
-      nodes <- as.data.frame(igraph::vertex.attributes(x))
+      nodes <- cbind(
+        as.data.frame(igraph::vertex.attributes(x)),
+        setNames(
+          data.frame(sf::st_coordinates(attr(x, "geom_node"))),
+          c("Lon", "Lat")
+        )
+      )
       
       nodes <- merge(nodes, node_importance, by = "name", all.y=FALSE)
       
@@ -198,10 +205,10 @@ setMethod(
 #' @param res numeric vector of length 2. Resolution in Lon/Lat of
 #'   rasterisation.
 #' @rdname rasterize_geonetwork
-#' @aliases rasterize,igraph,SpatialPolygons-method
+#' @aliases rasterize,geonetwork,SpatialPolygons-method
 #' @export
 setMethod(
-  rasterize, c("igraph", "SpatialPolygons"),
+  rasterize, c("geonetwork", "SpatialPolygons"),
   {
     function (x, y, res = resolution(y, min_ncells = 100), ...) {
       

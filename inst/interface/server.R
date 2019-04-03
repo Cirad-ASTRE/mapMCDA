@@ -447,8 +447,17 @@ server <- function(input, output, session) {
       
     }
     
-    plot(finalLayer[[indRawLay]])
-
+    ## Plot the epidemiological units lightly in the background
+    epidUnitLayer <- isolate(curEpidUnitLayer())
+    
+    if(is.null(epidUnitLayer)) {
+      addsetting = FALSE
+    } else {
+      plot(epidUnitLayer[[indRawLay]], border = "lightgray")
+      addsetting = TRUE
+    }
+    
+    plot(finalLayer[[indRawLay]], add = addsetting)
 
   })
   
@@ -715,7 +724,7 @@ server <- function(input, output, session) {
   })
   
   
-  ##### Render for display of final unit raster ####
+  ##### Render for display of final unit vector ####
   
   output$resultUnitDisplay <- renderPlot({
     

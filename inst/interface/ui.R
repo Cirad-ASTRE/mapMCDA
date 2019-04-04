@@ -36,114 +36,161 @@ body <- dashboardBody(
     tabItem("fileTab", 
             
             fluidRow(
-            
-              box(title = HTML(langBoxFile[indLang]), status = "primary", width = 5, solidHeader = TRUE,
-              
+              ## File load
+              box(
+                title = HTML(langBoxFile[indLang]),
+                status = "primary",
+                width = 5,
+                solidHeader = TRUE,
+                footer = langHelpFiles[indLang],
+                
                 # To upload shape and raster files
-                fileInput(inputId = "fiLayer", 
-                          label = HTML(langTitleFileInput[indLang]),
-                          multiple = TRUE, 
-                          accept = NULL, #acceptLayerType, 
-                          width = NULL,
-                          buttonLabel = HTML(langButtonFileInput[[indLang]][1]),
-                          placeholder = HTML(langButtonFileInput[[indLang]][2])),
+                fileInput(
+                  inputId = "fiLayer",
+                  label = HTML(langTitleFileInput[indLang]),
+                  multiple = TRUE,
+                  accept = NULL,
+                  #acceptLayerType,
+                  width = NULL,
+                  buttonLabel = HTML(langButtonFileInput[[indLang]][1]),
+                  placeholder = HTML(langButtonFileInput[[indLang]][2])
+                ),
                 
                 # List of all upload files
                 tableOutput("allFileTable")
-            
-                 ),
-            
+                
+              ),
               
-              box(title = HTML(langBoxLayer[indLang]), status = "success", width = 7, solidHeader = TRUE,
-            
-                  # List of layers. Name is editable
-                  rHandsontableOutput("rhLayerTable")
-            
-                 )
-            
-            )
-    
-    ),
-    
-    tabItem("unitTab", 
-            
-            uiOutput("unitNameText"),
-            
-            box(title = HTML(langBoxUnitMap[indLang]), status = "primary", width = 6, solidHeader = TRUE,
+              ## Layer table
+              box(
+                title = HTML(langBoxLayer[indLang]),
+                status = "success",
+                width = 7,
+                solidHeader = TRUE,
+                footer = langHelpLayers[indLang],
                 
-                plotOutput("unitMapDisplay")
+                # List of layers. Name is editable
+                rHandsontableOutput("rhLayerTable")
                 
-            ),
-            
-            
-            box(title = HTML(langBoxUnitStat[indLang]), status = "success", width = 6, solidHeader = TRUE,
-                
-                plotOutput("unitStatDisplay")
-                
+              )
+              
             )
             
     ),
     
-    
-    tabItem("riskTab", 
-            
-            uiOutput("uiRiskLayerList"),
-            
-            box(title = HTML(langBoxRiskRawMap[indLang]), status = "primary", width = 6, solidHeader = TRUE,
-                
-                plotOutput("rawLayerDisplay")
-                
-            ),
-            
-            
-            box(title = HTML(langBoxRiskStandRaster[indLang]), status = "success", width = 6, solidHeader = TRUE,
-                
-                
-                plotOutput("standRasterDisplay")
-                
-            ),
-            
-            actionButton(inputId = "abInvert", label = langABRiskRasterInvert[indLang])
-            
+    tabItem(
+      "unitTab",
+      
+      uiOutput("unitNameText"),
+      
+      box(
+        title = HTML(langBoxUnitMap[indLang]),
+        status = "primary",
+        width = 6,
+        solidHeader = TRUE,
+        
+        plotOutput("unitMapDisplay")
+      ),
+      
+      
+      box(
+        title = HTML(langBoxUnitStat[indLang]),
+        status = "success",
+        width = 6,
+        solidHeader = TRUE,
+        
+        textOutput("unitStatText"),
+        plotOutput("unitStatDisplay")
+      )
+      
     ),
     
-
-    tabItem("weightTab", 
+    
+    tabItem(
+      "riskTab",
+      
+      uiOutput("uiRiskLayerList"),
+      
+      box(
+        title = HTML(langBoxRiskRawMap[indLang]),
+        status = "primary",
+        width = 6,
+        solidHeader = TRUE,
+        
+        plotOutput("rawLayerDisplay")
+        
+      ),
+      
+      
+      box(
+        title = HTML(langBoxRiskStandRaster[indLang]),
+        status = "success",
+        width = 6,
+        solidHeader = TRUE,
+        
+        
+        plotOutput("standRasterDisplay")
+        
+      ),
+      
+      box(
+        status = "info",
+        width = 6,
+        solidHeader = FALSE,
+        
+        langHelpScale[indLang]
+        
+      ),
+      
+      
+      actionButton(
+        inputId = "abInvert",
+        label = langABRiskRasterInvert[indLang]
+      )
+    ),
+    
+    tabItem("weightTab",
             
             fluidRow(
+              box(
+                title = HTML(langBoxWeightMatrix[indLang]),
+                status = "primary",
+                width = 9,
+                solidHeader = TRUE,
+                
+                
+                rHandsontableOutput("rhWeightTable")#,
+                
+                # actionButton(inputId = "abWMatrixOK", label = "Valider"),
+                #
+                # textOutput("isMatrixOKText")
+                
+                
+              ),
               
-             
-            
-                box(title = HTML(langBoxWeightMatrix[indLang]), status = "primary", width = 12, solidHeader = TRUE,
-                    
-                    
-                    rHandsontableOutput("rhWeightTable")#,
-
-                    # actionButton(inputId = "abWMatrixOK", label = "Valider"),
-                    #   
-                    # textOutput("isMatrixOKText")
-                           
-                         
-                    )
-                    
+              box(
+                status = "info",
+                width = 3,
+                solidHeader = FALSE,
                 
-                
+                langHelpMatrix[indLang]
+              )
+              
             ),
             
             fluidRow(
+              box(
+                title = HTML(langBoxWeightBar[indLang]),
+                status = "success",
+                width = 12,
+                solidHeader = TRUE,
                 
-                box(title = HTML(langBoxWeightBar[indLang]), status = "success", width = 12, solidHeader = TRUE,
-                    
-                    plotOutput("weightBarDisplay")
-                    
-                )
+                plotOutput("weightBarDisplay")
+                
+              )
               
-            )
-            
-            
-    
-          ),
-            
+            )),
+
     tabItem("resultTab",
             
               box(title = HTML(langMenuResult[indLang]), status = "primary", width = 6, solidHeader = TRUE,

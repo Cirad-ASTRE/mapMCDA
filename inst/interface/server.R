@@ -377,6 +377,34 @@ server <- function(input, output, session) {
   })
   
   
+  ##### Summary statistics of epid. unit ####
+  
+  output$unitStatText <- renderText({
+    epidUnitLayer <- curEpidUnitLayer()
+    if(is.null(epidUnitLayer)) return(NULL)
+    if( !is.projected(epidUnitLayer[[indRawLay]])) {
+      warning("This map is not projected. This can lead to very
+              inaccurate computations of distances and areas, depending
+              on the location and size of the region of interest.
+              Proceed with caution.")
+    }
+    # htmlOutput(
+      paste("N. epidemiological units:", length(epidUnitLayer[[indRawLay]]))
+    # )
+  })
+  
+  output$unitStatDisplay <- renderPlot({
+    epidUnitLayer <- curEpidUnitLayer()
+    if(is.null(epidUnitLayer)) return(NULL)
+
+    hist(
+      rgeos::gArea(cmr$cmr_admin3, byid = TRUE),
+      main = "Distribution of unit-areas",
+      xlab = "Area (in map units, squared)"
+    )
+  })
+  
+  
   ##### Render for the list of layers in risk tab ####
   
   output$uiRiskLayerList <- renderUI({

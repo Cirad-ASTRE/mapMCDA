@@ -76,6 +76,27 @@ langFileList <- c("Names","Noms")
 
 langBoxLayer <- c("Layers", "Couches")
 
+langHelpFiles <- c(
+  "Import files, including a vector map with epidemiological units.",
+  "Importer fichiers, y-compris une carte vectorielle avec des unités épidémiologiques."
+)
+
+langHelpLayers <- c(
+  "Check the epidemiological units layer.",
+  "Signaler la couche d'unités épidémiologiques."
+)
+
+langHelpScale <- c(
+  "Harmonise the original scales into a common risk-scale. Use the button to reverse the relationship.",
+  "Harmoniser les échelles originales en une échelle de risque commune. Utiliser le bouton pour inverser la relation."
+)
+
+langHelpMatrix <- c(
+  "The factor in row i is x[i,j] times more important than the factor in column j.",
+  "Le facteur de la ligne i est x[i, j] fois plus important que le facteur de la colonne j."
+)
+
+
 # Epidemiological unit
 langMenuUnit <- c("Epidemiological units","Unit&#233;s &#233;pid&#233;miologiques")
 
@@ -87,12 +108,12 @@ langBoxUnitStat <- c("Statistics", "Statistiques")
 # Risk factors
 langMenuRisk <- c("Risk factors","Facteurs de risque")
 
-langBoxRiskRawMap <- c("Raw", "Brut")
+langBoxRiskRawMap <- c("Original scale", "Échelle originale")
 
-langBoxRiskStandRaster <- c("Standardized raster", "Raster standardis&#233;")
+langBoxRiskStandRaster <- c("Risk scale", "Échelle de risque")
 
-langRBRiskLayer <- c("Select layer to compute standardized raster:", 
-                     "S&#233;lectionnez la couche pour calculer le raster :")
+langRBRiskLayer <- c("Scale risk factors",
+                     "Mise en échelle des facteurs de risque")
 
 langABRiskRasterInvert <- c("Invert", "Inverser")
 
@@ -102,9 +123,9 @@ langABRiskRasterInvert <- c("Invert", "Inverser")
 # Weight
 langMenuWeight <- c("Weight","Poids")
 
-langBoxWeightMatrix <- c("Weight Matrix", "Matrice des poids")
+langBoxWeightMatrix <- c("Pairwise comparison Matrix", "Matrice de comparaison par paires")
 
-langBoxWeightBar <- c("Weight Histogram", "Histogramme des poids")
+langBoxWeightBar <- c("Weights histogram", "Histogramme des poids")
 
 # Results
 langMenuResult <- c("Results","R&#233;sultats")

@@ -3,13 +3,14 @@ Title: Produce an epidemiological risk map by weighting multiple risk factors
 Version: 0.3.4
 Date: 2018-06-27
 Authors@R: c(
+  person("Andrea", "Apolloni", email = "andrea.apolloni@cirad.fr", role = c("ctb"), comment = "Animal mobility algorithm"),
   person("Elena", "Arsevska", email = "elena.arsevska@cirad.fr", role = c("ctb")),
   person("Françoise", "Chirara", email = "francoise.chirara@cirad.fr", role = c("ctb"), comment = "Logo designer"),
-  person("Sylvain", "Falala", email = "sylvain.falala@cirad.fr", role = c("aut")),
+  person("Sylvain", "Falala", email = "sylvain.falala@cirad.fr", role = c("aut"), comment = "Shiny interface"),
   person("Jean Marc", "Feussom", email = "mfeussom@gmail.com", role = c("ctb")),
   person("Renaud", "Lancelot", email = "renaud.lancelot@cirad.fr", role = c("ctb")),
   person("Raphaëlle", "Metras", email = "raphaelle.metras@cirad.fr", role = c("ctb")),
-  person("Facundo", "Muñoz", email = "facundo.munoz@cirad.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-5061-4241"))
+  person("Facundo", "Muñoz", email = "facundo.munoz@cirad.fr", role = c("aut", "cre"), comment = c("Package developer", ORCID = "0000-0002-5061-4241"))
   )
 Description: Use a Shiny interface to help users import multiple layers of risk
   factors, scale and combine them using a Multi-Criteria Decision Analysis
@@ -47,6 +48,6 @@ Suggests:
     roxygen2,
     testthat
 RoxygenNote: 6.1.1
-URL: https://cirad-astre.github.io/mapMCDA/
+URL: https://github.com/Cirad-ASTRE/mapMCDA
 BugReports: https://github.com/Cirad-ASTRE/mapMCDA/issues
 VignetteBuilder: knitr

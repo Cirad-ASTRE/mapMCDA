@@ -1,4 +1,4 @@
-# mapMCDA 0.3.0.9000
+# mapMCDA 0.3.0
 
 * Plot geographic networks (#13)
 

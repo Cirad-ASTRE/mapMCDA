@@ -4,11 +4,12 @@ Version: 0.3.4
 Date: 2018-06-27
 Authors@R: c(
   person("Elena", "Arsevska", email = "elena.arsevska@cirad.fr", role = c("ctb")),
+  person("Françoise", "Chirara", email = "francoise.chirara@cirad.fr", role = c("ctb"), comment = "Logo designer"),
   person("Sylvain", "Falala", email = "sylvain.falala@cirad.fr", role = c("aut")),
   person("Jean Marc", "Feussom", email = "mfeussom@gmail.com", role = c("ctb")),
   person("Renaud", "Lancelot", email = "renaud.lancelot@cirad.fr", role = c("ctb")),
   person("Raphaëlle", "Metras", email = "raphaelle.metras@cirad.fr", role = c("ctb")),
-  person("Facundo", "Muñoz", email = "facundo.munoz@cirad.fr", role = c("aut", "cre"))
+  person("Facundo", "Muñoz", email = "facundo.munoz@cirad.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-5061-4241"))
   )
 Description: Use a Shiny interface to help users import multiple layers of risk
   factors, scale and combine them using a Multi-Criteria Decision Analysis

@@ -1,8 +1,8 @@
 
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/mapMCDA)](https://cran.r-project.org/package=mapMCDA) [![Travis Build Status](https://travis-ci.org/Cirad-ASTRE/mapMCDA.svg?branch=master)](https://travis-ci.org/Cirad-ASTRE/mapMCDA) [![Appveyor Build status](https://ci.appveyor.com/api/projects/status/nuo6t1hddibxxusd?svg=true)](https://ci.appveyor.com/project/famuvie/mapmcda)
 
-mapMCDA
-=======
+mapMCDA <img src="man/figures/logo.png" align="right" />
+========================================================
 
 ![](man/figures/mapMCDA_overview.png)
 

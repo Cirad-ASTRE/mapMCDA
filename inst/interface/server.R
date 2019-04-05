@@ -398,7 +398,7 @@ server <- function(input, output, session) {
     if(is.null(epidUnitLayer)) return(NULL)
 
     hist(
-      rgeos::gArea(cmr$cmr_admin3, byid = TRUE),
+      rgeos::gArea(epidUnitLayer[[indRawLay]], byid = TRUE),
       main = "Distribution of unit-areas",
       xlab = "Area (in map units, squared)"
     )

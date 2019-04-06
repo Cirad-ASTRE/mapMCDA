@@ -17,8 +17,10 @@ Read a csv file with a specific format (see Details) and intepret
 it as network directed data with possibly weighted edges.
 }
 \details{
-The file must be plain text with comma-separated columns and varaible
+The file must be plain text with comma-separated columns and variable
 names in the first line.
+Field separators other than comma are also supported. In particular,
+semi-colon field separators and comma decimal separator.
 There must be either 6 or 7 columns in the same order and of the
 same types as follows:
 \itemize{

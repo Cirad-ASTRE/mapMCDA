@@ -47,7 +47,34 @@ test_that("load_dir() skips unknnown file formats", {
 
 test_that("Interpret network data", {
   nf <- system.file("testdata", "mobility.csv", package = "mapMCDA")
-  expect_error(x <- read_network(nf), NA)
+  x <- expect_error(read_network(nf), NA)
   expect_s3_class(x, "igraph")
   
+  ## Test data with integer and double numeric columns
+  td <- data.frame(
+    from = LETTERS[1:3],
+    to = LETTERS[2:4],
+    fx = 1:3 + .1,   # double
+    fy = 1:3L,       # int
+    tx = 2:4 + .1,
+    ty = c(2:3, 1),
+    hc = 10 * (1:3)
+  )
+  tf <- tempfile()
+  write.csv(td, tf, row.names = FALSE)
+  
+  n1 <- expect_error(read_network(tf), NA)
+  expect_s3_class(n1, "igraph")
+
+  ## Test data with ";" field separator and "," decimal separator
+  tf2 <- tempfile()
+  writeLines(gsub(",", ";", readLines(tf)), file(tf2))
+  writeLines(gsub("\\.", ",", readLines(tf2)), file(tf2))
+  n2 <- expect_error(read_network(tf2), NA)
+  expect_s3_class(n2, "igraph")
+
+  # all.equal(n1, n2)
+
+  close(file(tf))
+  close(file(tf2))
 })

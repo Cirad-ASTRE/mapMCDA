@@ -3,8 +3,10 @@
 #' Read a csv file with a specific format (see Details) and intepret
 #' it as network directed data with possibly weighted edges.
 #' 
-#' The file must be plain text with comma-separated columns and varaible
+#' The file must be plain text with comma-separated columns and variable
 #' names in the first line.
+#' Field separators other than comma are also supported. In particular,
+#' semi-colon field separators and comma decimal separator.
 #' There must be either 6 or 7 columns in the same order and of the
 #' same types as follows:
 #' \itemize{
@@ -37,9 +39,6 @@
 #'   read_network(tf)
 read_network <- function(x) {
   
-  ## Read file
-  dat <- read.csv(x, stringsAsFactors = FALSE)
-  
   ## Message on input format
   input_format <- c(
     "Input data format:",
@@ -56,28 +55,65 @@ must be respected:",
     "lat_dest     numeric (decimal degrees, WGS84)",
     "volume       Optional. directed flux in some consistent unit."
   )
+  
+  ## Detect field separator
+  sep = csv_sep(x)
+
+  ## Number of fields
+  ## take from first line since csv_sep() checks consistency
+  nc <- count.fields(x, sep = sep)[1]
 
   ## Check number of columns
-  if (ncol(dat) < 6 | ncol(dat) > 7) {
+  if (nc < 6 | nc > 7) {
     stop("Expected 6 or 7 columns, observed ", ncol(dat),
          message(paste(input_format, collapse = "\n")))
     
   }
   
-  ## Check type of columns
-  ## transform any column of class 'integer' to 'numeric'
-  class(dat[vapply(dat, is.integer, T)]) <- "numeric"
-  col_classes <- sapply(dat, class)
-  exp_classes <- c(rep("character", 2), rep("numeric", length(col_classes)-2))
+  ## Expected column types
+  exp_classes <-
+    c(rep("character", 2), rep("numeric", nc - 2))
   
-  if( any(idx <- col_classes != exp_classes) ) {
-    nms.idx <- paste(names(dat)[idx], collapse = ", ")
+  ## Read file with either "." or "," decimal separator
+  dat <-
+    try(
+      read.csv(
+        x,
+        stringsAsFactors = FALSE,
+        colClasses = exp_classes,
+        sep = sep,
+        dec = "."
+      ),
+      silent = TRUE
+    )
+  if (inherits(dat, "try-error"))
+    dat <- try(
+      read.csv(
+        x,
+        stringsAsFactors = FALSE,
+        colClasses = exp_classes,
+        sep = sep,
+        dec = ","
+      ),
+      silent = TRUE
+    )
+
+  if (inherits(dat, "try-error"))  {
+    ## There has been an issue with some column type
+    ## Read without expectations to identify problematic columns
+    dat <- read.csv(x, stringsAsFactors = FALSE, sep = sep)
+    nms <- paste(
+      names(dat[-(1:2)])[sapply(dat[-(1:2)], is.character)],
+      collapse = ", "
+    )
+    if(length(nms)<1) stop("This should not happen")
+    
     stop(
-      "Unexpected type in column(s) ", nms.idx,
-      message(paste(input_format, collapse = "\n"))
+      "Unexpected type in column(s) ", nms, "\n",
+      paste(input_format, collapse = "\n")
     )
   }
-  
+    
   
   ## Check duplicated edges
   if ( any(idx <- duplicated(dat[, 1:2])) ) {

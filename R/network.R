@@ -27,6 +27,7 @@
 #'   edge.attributes edge.attributes<-
 #' @importFrom stats setNames
 #' @importFrom utils read.csv
+#' @import geonetwork
 #' @export
 #'
 #' @examples

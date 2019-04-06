@@ -25,9 +25,25 @@ test_that("risk re-scaling of a raster", {
 
 test_that("risk map from vector: compute distances", {
 
+  ## Polygons
   st <- c(0, 100)
+  dwb <- expect_error(
+    risk_layer(
+      cmr$water_bodies, boundaries = cmr$cmr_admin3, scale_target = st
+    ),
+    NA  # Expects no error
+  )
+  
+  ## Raster values must be between 0 and 100
+  expect_identical(range(values(dwb), na.rm = TRUE), c(0, 100))
+
+  ## Points
+  set.seed(20190405)
+  pts <- spsample(cmr$cmr_admin3, 10, type = "random")
   expect_error(
-    risk_layer(cmr$water_bodies, boundaries = cmr$cmr_admin3, scale_target = st),
+    risk_layer(
+      pts, boundaries = cmr$cmr_admin3, scale_target = rev(st)
+    ),
     NA  # Expects no error
   )
   

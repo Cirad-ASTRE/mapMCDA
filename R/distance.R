@@ -6,7 +6,7 @@
 #' 
 #'
 #' @param x Spatial* object with relevant spatial features.
-#' @param boundaries SpatialPolygon* object with administrative
+#' @param boundaries SpatialPolygons* object with administrative
 #'   borders, or Raster* object from where to pick the resoltion.
 #' @param res numeric. Resolution for the outcome distance map. The default divides
 #'   the smallest dimension into 100 cells.
@@ -21,9 +21,12 @@
 distance_map <- function(x, boundaries, res = resolution(boundaries, min_ncells = 100)) {
   
   if (inherits(boundaries, "Spatial")) {
+    max_res <- resolution(boundaries, min_ncells = 2)
+    stopifnot(res > 0, res < max_res)
     ext_grid <- raster::raster(raster::extent(boundaries), resolution = res)
     msk <- raster::rasterize(boundaries, ext_grid, field = 1, background = NA, fun = "mean")
   } else if (inherits(boundaries, "Raster")) {
+    ## Ignores res
     msk <- boundaries
   } else stop(paste(substitute(boundaries), "must be either a SpatialPolygon* or a Raster* object."))
   
@@ -43,7 +46,8 @@ distance_map <- function(x, boundaries, res = resolution(boundaries, min_ncells 
 #' @param x Spatial* object
 #' @param mask Raster* object
 #'
-#' @return Raster* object. Distance map in meters.
+#' @return Raster* object. Distance map in meters (even for unprojected maps in
+#'   geographical coordinates).
 #' 
 #' @import raster
 #' @export
@@ -54,7 +58,7 @@ distance_map <- function(x, boundaries, res = resolution(boundaries, min_ncells 
 #'   raster::plot(dist_wb)
 distance_to_vector <- function(x, mask) {
   
-  xr <- raster::rasterize(x, mask, field = 0, fun = "mean", background = NA)
-  dx <- raster::mask(raster::distance(xr), mask)
+  xr <- raster::rasterize(x, mask, field = 0, fun = "last", background = NA)
+  raster::mask(raster::distance(xr), mask)
   
 }

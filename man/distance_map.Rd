@@ -10,7 +10,7 @@ distance_map(x, boundaries, res = resolution(boundaries, min_ncells =
 \arguments{
 \item{x}{Spatial* object with relevant spatial features.}
 
-\item{boundaries}{SpatialPolygon* object with administrative
+\item{boundaries}{SpatialPolygons* object with administrative
 borders, or Raster* object from where to pick the resoltion.}
 
 \item{res}{numeric. Resolution for the outcome distance map. The default divides

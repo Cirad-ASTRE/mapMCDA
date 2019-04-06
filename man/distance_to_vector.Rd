@@ -12,7 +12,8 @@ distance_to_vector(x, mask)
 \item{mask}{Raster* object}
 }
 \value{
-Raster* object. Distance map in meters.
+Raster* object. Distance map in meters (even for unprojected maps in
+  geographical coordinates).
 }
 \description{
 Compute a raster file with the distances to the nearest vector feature,

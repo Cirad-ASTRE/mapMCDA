@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Changelog • mapMCDA</title>
+<title>Detection of separator in csv files — csv_sep • mapMCDA</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,7 +30,10 @@
 
 
 
-<meta property="og:title" content="Changelog" />
+<meta property="og:title" content="Detection of separator in csv files — csv_sep" />
+
+<meta property="og:description" content="Returns the separator that consistently separates the lines in the same
+number of fields, or fails." />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -50,7 +53,7 @@
   </head>
 
   <body>
-    <div class="container template-news">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -112,47 +115,58 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Changelog <small></small></h1>
-      
+    <h1>Detection of separator in csv files</h1>
+    
+    <div class="hidden name"><code>csv_sep.Rd</code></div>
     </div>
 
-    <div id="mapmcda-0-3-0" class="section level1">
-<h1 class="page-header">
-<a href="#mapmcda-0-3-0" class="anchor"></a>mapMCDA 0.3.0</h1>
-<ul>
-<li><p>Plot geographic networks (#13)</p></li>
-<li><p>Export CSV with units and risk categories (#10)</p></li>
-<li><p>Animal mobility data as a specific input type (#9)</p></li>
-</ul>
-</div>
-    <div id="mapmcda-0-2-0" class="section level1">
-<h1 class="page-header">
-<a href="#mapmcda-0-2-0" class="anchor"></a>mapMCDA 0.2.0</h1>
-<ul>
-<li>Fully working version</li>
-</ul>
-</div>
-    <div id="mapmcda-0-1-0" class="section level1">
-<h1 class="page-header">
-<a href="#mapmcda-0-1-0" class="anchor"></a>mapMCDA 0.1.0</h1>
-<ul>
-<li><p>First working prototype</p></li>
-<li><p>Added a <code>NEWS.md</code> file to track changes to the package.</p></li>
-</ul>
-</div>
-  </div>
+    <div class="ref-description">
+    
+    <p>Returns the separator that consistently separates the lines in the same
+number of fields, or fails.</p>
+    
+    </div>
 
+    <pre class="usage"><span class='fu'>csv_sep</span>(<span class='no'>x</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>character. File name.</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Character representation of the field separator.</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Tested separators are: ",", " ", "\t", "|", ";", ":"</p>
+    
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>  <span class='no'>tf</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/tempfile'>tempfile</a></span>()
+  <span class='no'>td</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='kw'>T</span> <span class='kw'>=</span> <span class='no'>LETTERS</span>[<span class='fl'>1</span>:<span class='fl'>10</span>], <span class='kw'>N</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>10</span>)
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/write.table'>write.csv</a></span>(<span class='no'>td</span>, <span class='no'>tf</span>, <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+  <span class='fu'>csv_sep</span>(<span class='no'>tf</span>)  <span class='co'># ","</span></div><div class='output co'>#&gt; [1] ","</div><div class='input'>  <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/write.table'>write.csv2</a></span>(<span class='no'>td</span>, <span class='no'>tf</span>, <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+  <span class='fu'>csv_sep</span>(<span class='no'>tf</span>)  <span class='co'># ";"</span></div><div class='output co'>#&gt; [1] ";"</div></pre>
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <div id="tocnav">
-      <h2>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-        <li><a href="#mapmcda-0-3-0">0.3.0</a></li>
-        <li><a href="#mapmcda-0-2-0">0.2.0</a></li>
-        <li><a href="#mapmcda-0-1-0">0.1.0</a></li>
-      </ul>
-    </div>
-  </div>
+    <h2>Contents</h2>
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#value">Value</a></li>
 
+      <li><a href="#details">Details</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
+
+  </div>
 </div>
 
       <footer>

@@ -66,7 +66,7 @@ it as network directed data with possibly weighted edges." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mapMCDA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.8</span>
       </span>
     </div>
 
@@ -144,8 +144,10 @@ it as network directed data with possibly weighted edges.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The file must be plain text with comma-separated columns and varaible
+    <p>The file must be plain text with comma-separated columns and variable
 names in the first line.
+Field separators other than comma are also supported. In particular,
+semi-colon field separators and comma decimal separator.
 There must be either 6 or 7 columns in the same order and of the
 same types as follows:</p><ul>
 <li><p>origin       character</p></li>
@@ -164,9 +166,9 @@ be quoted.</p>
     <pre class="examples"><div class='input'>  <span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='kw'>from</span> <span class='kw'>=</span> <span class='st'>"A"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"B"</span>, <span class='kw'>fx</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>fy</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>tx</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>ty</span> <span class='kw'>=</span> <span class='fl'>1</span>)
   <span class='no'>tf</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/tempfile'>tempfile</a></span>()
   <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/write.table'>write.csv</a></span>(<span class='no'>d</span>, <span class='no'>tf</span>, <span class='kw'>row.names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-  <span class='fu'>read_network</span>(<span class='no'>tf</span>)</div><div class='output co'>#&gt; IGRAPH 958a110 DN-- 2 1 -- 
+  <span class='fu'>read_network</span>(<span class='no'>tf</span>)</div><div class='output co'>#&gt; IGRAPH ec8067b DN-- 2 1 -- 
 #&gt; + attr: name (v/c)
-#&gt; + edge from 958a110 (vertex names):
+#&gt; + edge from ec8067b (vertex names):
 #&gt; [1] A-&gt;B</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

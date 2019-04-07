@@ -37,6 +37,12 @@ risk_layer <- function(x, boundaries, scale_target = c(0, 100)) {
   
   scale_source <- range(raster::values(r), na.rm = TRUE)
   
+  if (isTRUE(all.equal(diff(scale_source), 0))) {
+    stop("Risk factor ", substitute(x),
+         " has a constant value and cannot be used as it is.\n",
+         "Please correct or remove.")
+  }
+    
   ## Linear function
   lin_fun <- function(r) {
     slope <- diff(scale_target)/diff(scale_source)

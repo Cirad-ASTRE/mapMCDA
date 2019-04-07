@@ -210,8 +210,16 @@ setMethod(
       
       sna <- attr(epiR0, "sna")
 
+      if (isTRUE(all.equal(unname(epiR0["R0"]), 0))) {
+        ## In this case, all individual contributions are equally 0
+        stopifnot(all(vapply(sna$R0k, all.equal, TRUE, 0)))
+        relative_contributions <- rep(1/length(sna$R0k), length(sna$R0k))
+      } else {
+        relative_contributions <- sna$R0k / epiR0["R0"]
+      }
+      
       node_importance <- setNames(
-        data.frame(sna[, 1], 100 * sna$R0k / epiR0["R0"]),
+        data.frame(sna[, 1], 100 * relative_contributions),
         c("name", "importance")
       )
       

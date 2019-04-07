@@ -49,6 +49,15 @@ test_that("risk map from vector: compute distances", {
   
 })
 
+test_that("risk map from constant raster: error", {
+  r <- raster(nrow = 10, ncol = 10, xmn = 0, xmx = 10, ymn = 0, ymx = 10, vals = 1)
+  bnd <- as(extent(r), "SpatialPolygons")
+  # plot(bnd)
+  # plot(r, add = T)
+  
+  expect_error(risk_layer(r, bnd), "constant value")
+})
+
 test_that("risk map from larger raster: crop and mask to boundaries", {
   
   ## create a raster filling beyond the full extent of the boundaries

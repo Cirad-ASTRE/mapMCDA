@@ -135,8 +135,7 @@ server <- function(input, output, session) {
     
     # Load layers
     layerFiles$name <- as.character(layerFiles$name)
-    
-    
+
     nbFiles <- nrow(layerFiles)
     
     layerFiles$isNull <- rep(FALSE, nbFiles)
@@ -163,12 +162,20 @@ server <- function(input, output, session) {
 
     }
     
+
+    
+    if(all(layerFiles$isNull==TRUE)) {
+      print("Selected files are no layers")
+      return()
+      }
+    
+    acceptedFiles <- layerFiles
+    
     indRem <- which(layerFiles$isNull==TRUE)
     
-    acceptedFiles <- layerFiles[-indRem,]
+    if(!is.na(indRem[1])) acceptedFiles <- layerFiles[-indRem,]
     
     nbLayer <- nrow(acceptedFiles)
-    
     
     # Update dataframe with info on layers
     
@@ -176,6 +183,7 @@ server <- function(input, output, session) {
     
     # Retrieve class of layer
     layerInfo$layerType <- as.character(sapply(tempLayer, class))
+    
     
     # Rename class name
     layerInfo$layerType <- gsub("SpatialPolygonsDataFrame", lVect[indLang], layerInfo$layerType, fixed = TRUE)

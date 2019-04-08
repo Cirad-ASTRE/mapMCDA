@@ -49,16 +49,8 @@ langDF <- data.frame(
   "BoxUnitStat" = c("Statistics", "Statistiques"), 
   
   # Risk factors box
-<<<<<<< HEAD
   "BoxRiskRawMap" = c("Original scale", "Échelle originale"),
   "BoxRiskStandRaster" = c("Risk scale", "Échelle de risque"),
-||||||| merged common ancestors
-  "BoxRiskRawMap" = c("Raw", "Brut"),
-  "BoxRiskStandRaster" = c("Standardized raster", "Raster standardisé"),
-=======
-  "BoxRiskRawMap" = c("Original scale", "Echelle originale"),
-  "BoxRiskStandRaster" = c("Risk scale", "Echelle de risque"),
->>>>>>> 6c334642e14d50f808958cbec9df7c5bd190a662
   "ABRiskRasterInvert" = c("Invert", "Inverser"),
   "RBRiskLayer" = c("Scale risk factors",
                      "Mise en échelle des facteurs de risque"),

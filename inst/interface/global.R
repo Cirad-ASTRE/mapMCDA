@@ -49,8 +49,8 @@ langDF <- data.frame(
   "BoxUnitStat" = c("Statistics", "Statistiques"), 
   
   # Risk factors box
-  "BoxRiskRawMap" = c("Raw", "Brut"),
-  "BoxRiskStandRaster" = c("Standardized raster", "Raster standardisé"),
+  "BoxRiskRawMap" = c("Original scale", "Echelle originale"),
+  "BoxRiskStandRaster" = c("Risk scale", "Echelle de risque"),
   "ABRiskRasterInvert" = c("Invert", "Inverser"),
   "RBRiskLayer" = c("Select layer to compute standardized raster:", 
                        "Sélectionnez la couche pour calculer le raster :"),

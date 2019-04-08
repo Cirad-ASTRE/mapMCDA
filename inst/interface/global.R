@@ -49,20 +49,20 @@ langDF <- data.frame(
   "BoxUnitStat" = c("Statistics", "Statistiques"), 
   
   # Risk factors box
-  "BoxRiskRawMap" = c("Raw", "Brut"),
-  "BoxRiskStandRaster" = c("Standardized raster", "Raster standardisé"),
+  "BoxRiskRawMap" = c("Original scale", "Échelle originale"),
+  "BoxRiskStandRaster" = c("Risk scale", "Échelle de risque"),
   "ABRiskRasterInvert" = c("Invert", "Inverser"),
-  "RBRiskLayer" = c("Select layer to compute standardized raster:", 
-                       "Sélectionnez la couche pour calculer le raster :"),
+  "RBRiskLayer" = c("Scale risk factors",
+                     "Mise en échelle des facteurs de risque"),
   
   # Weights box
-  "BoxWeightMatrix" = c("Weight Matrix", "Matrice des poids"),
-  "BoxWeightBar" = c("Weight Histogram", "Histogramme des poids"),
+  "BoxWeightMatrix" = c("Pairwise comparison Matrix", "Matrice de comparaison par paires"),
+  "BoxWeightBar" = c("Weights Histogram", "Histogramme des poids"),
   
   # Results box
-  "BoxResult" = c("Results", "Résultats"),
-  "BoxResultPerUnit" = c("Per unit", "Par unité"),
-  "SIRiskLevel" = c("Risk level", "Niveau de risque"),
+  "BoxResult" = c("Combined risk", "Risque combiné"),
+  "BoxResultPerUnit" = c("Per Epidemiological unit","Par unité épidémiologique"),
+  "SIRiskLevel" = c("# Risk categories", "# Catégories de risque"),
   "DownButton" = c("Export", "Exporter"),
 
 stringsAsFactors = FALSE)

@@ -135,29 +135,37 @@ server <- function(input, output, session) {
     
     # Load layers
     layerFiles$name <- as.character(layerFiles$name)
+    
+    
     nbFiles <- nrow(layerFiles)
-    tempLayer <- vector("list", nbFiles) # pre-allocate
+    
+    layerFiles$isNull <- rep(FALSE, nbFiles)
+    
+    tempLayer <- list()
+    
+    indList <- 0
     
     for(k in 1:nbFiles){
       
-      tempLayer[[k]] <- load_layer(layerFiles[k, "datapath"])
+      myLayer <- load_layer(layerFiles[k, "datapath"])
+      
+      if(is.null(myLayer)){
+        
+        layerFiles[k, "isNull"] <- TRUE
+        
+      } else {
+      
+        indList <- indList + 1
+        
+        tempLayer[[indList]] <- myLayer
+        
+      }
 
     }
     
-    # Remove NULL layers
-    indRem <- which(sapply(tempLayer, is.null))
+    indRem <- which(layerFiles$isNull==TRUE)
     
-    if(!is.na(indRem[1])){
-      
-      tempLayer <- tempLayer[-indRem]
-    
-      acceptedFiles <- layerFiles[-indRem,]
-    
-      } else {
-      
-        acceptedFiles <- layerFiles
-      
-    }
+    acceptedFiles <- layerFiles[-indRem,]
     
     nbLayer <- nrow(acceptedFiles)
     

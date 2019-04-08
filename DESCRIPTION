@@ -38,6 +38,7 @@ Imports:
   rhandsontable,
   shiny,
   shinydashboard,
+  shinyFiles,
   sp,
   stringr,
   utils

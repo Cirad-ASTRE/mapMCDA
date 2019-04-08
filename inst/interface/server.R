@@ -648,16 +648,25 @@ server <- function(input, output, session) {
     
     weightMat <- as.matrix(hot_to_r(input$rhWeightTable))
     
-    weightMat[indCol,indRow] <- 1.0/weightMat[indRow,indCol]
+    tempMatrix <- rv$weightMatrix
     
-    rv$weightMatrix <- weightMat
+    tempMatrix[indRow,indCol] <- weightMat[indRow,indCol]
+    
+    tempMatrix[indCol,indRow] <- 1.0/tempMatrix[indRow,indCol]
+    
+    #print(tempMatrix)
+    
+    rv$weightMatrix <- tempMatrix
     
     
-    resmat <- try(compute_weights(weightMat))
+    resmat <- try(compute_weights(rv$weightMatrix))
     
     if (!inherits(resmat, 'try-error')) {
       
-      rv$weightVect <- resmat}
+      rv$weightVect <- resmat
+      #print(cat("Weight vector: ", rv$weightVect))
+      
+      }
     
   })
   

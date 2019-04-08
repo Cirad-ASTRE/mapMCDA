@@ -38,8 +38,7 @@ risk_layer <- function(x, boundaries, scale_target = c(0, 100)) {
   scale_source <- range(raster::values(r), na.rm = TRUE)
   
   if (isTRUE(all.equal(diff(scale_source), 0))) {
-    stop("Risk factor ", substitute(x),
-         " has a constant value and cannot be used as it is.\n",
+    stop("This risk factor has a constant value and cannot be rescaled.\n",
          "Please correct or remove.")
   }
     

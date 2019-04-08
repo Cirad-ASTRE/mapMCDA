@@ -1,3 +1,10 @@
+# mapMCDA 0.4
+
+* shiny interface v2 with several improvements (#8)
+
+* several bugfixes
+
+
 # mapMCDA 0.3.0
 
 * Plot geographic networks (#13)

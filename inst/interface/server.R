@@ -466,7 +466,7 @@ server <- function(input, output, session) {
     # Retrieve short name of data frame of layers
     if(!("shortName" %in% colnames(curLayerInfoDF))) return(NULL)
     
-    shortNames <- sort(unique(curLayerInfoDF$shortName))
+    shortNames <- curLayerInfoDF$shortName
     
     # Remove epid. unit
     euNum <- isolate(epidUnitNum())

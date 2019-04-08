@@ -546,9 +546,15 @@ server <- function(input, output, session) {
       
       #print(scaleTarget)
       
-      standRaster <- risk_layer(myLayer[[indRawLay]], epidUnitLayer[[indRawLay]], scaleTarget)
+      if (inherits(myLayer[[indStandLay]], c("Spatial", "RasterLayer", "igraph"))) {
+        ## Already computed
+        myLayer[[indStandLay]] <- 100 - myLayer[[indStandLay]]
+      } else {
+        ## First time: compute risk scale
+        myLayer[[indStandLay]] <-
+          risk_layer(myLayer[[indRawLay]], epidUnitLayer[[indRawLay]], scaleTarget)
+      }
       myLayer[[indScale]] <- scaleTarget
-      myLayer[[indStandLay]] <- standRaster
       
       curLayerName <- paste("layer_", isolate(input$rbRiskLayer), sep = "")
       
@@ -562,7 +568,7 @@ server <- function(input, output, session) {
     
     rv$invert <- FALSE
     
-    standRaster
+    myLayer[[indStandLay]]
     
     
   })

@@ -182,14 +182,19 @@ server <- function(input, output, session) {
     layerInfo <- subset(acceptedFiles, select = name)
     
     # Retrieve class of layer
-    layerInfo$layerType <- as.character(sapply(tempLayer, class))
+    if(nbLayer>1){
+      layerInfo$layerType <- as.character(sapply(tempLayer, class))
+    } else {
+      layerInfo$layerType <- paste(class(tempLayer[[1]]), collapse = "_")
+      
+    }
     
     
     # Rename class name
     layerInfo$layerType <- gsub("SpatialPolygonsDataFrame", lVect[indLang], layerInfo$layerType, fixed = TRUE)
     layerInfo$layerType <- gsub("RasterLayer", lRast[indLang], layerInfo$layerType, fixed = TRUE)
     layerInfo$layerType <- gsub("c(\"geonetwork\", \"igraph\")", lMob[indLang], layerInfo$layerType, fixed = TRUE)
-    
+    layerInfo$layerType <- gsub("geonetwork_igraph", lMob[indLang], layerInfo$layerType, fixed = TRUE)
     
     # Create short name for the layers (based on the file name)
     layerInfo$shortName <- rmext(layerInfo$name)

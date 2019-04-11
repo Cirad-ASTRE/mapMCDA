@@ -22,6 +22,28 @@
 #'   sp::spplot(cmr$cmr_admin3[, "rv"], cuts = 3)
 risk_unit <- function(r, eu, fun = mean) {
   rgrid <- methods::as(r, "SpatialGridDataFrame")  # needed for overlay methods
+  
+  ## Possible differences in CRS
+  if (!identicalCRS(r, eu)) {
+    ## r should have some CRS defined at this point
+    stopifnot(!is.na(proj4string(r)))
+    
+    ## If the epidemiological units don't have CRS, assume geographical
+    ## whenever possible and reproject to match r's CRS
+    if (is.na(proj4string(eu))) {
+      if (couldBeLonLat(eu)) {
+        proj4string(eu) <- CRS("+proj=longlat +datum=WGS84")
+      } else {
+        stop(
+          "Missing Coordinate Reference System (CRS) in the layer of epidemiological units.\n",
+          "Please load a layer with the CRS information."
+        )
+      }
+    }
+    
+    eu <- spTransform(eu, CRS(proj4string(r)))
+  }
+  
   funrisk_poly <- over(eu, rgrid, fn = fun)[[1]]
   
   ## Small-polygon correction

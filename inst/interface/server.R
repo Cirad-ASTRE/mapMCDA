@@ -435,7 +435,7 @@ server <- function(input, output, session) {
     
     if(is.null(epidUnitLayer)) return(NULL)
     
-    if( !is.projected(epidUnitLayer)) {
+    if( !isTRUE(is.projected(epidUnitLayer))) {
       warning("This map is not projected. This can lead to very
               inaccurate computations of distances and areas, depending
               on the location and size of the region of interest.

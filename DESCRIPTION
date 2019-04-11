@@ -1,54 +1,36 @@
 Package: mapMCDA
-Title: Produce an epidemiological risk map by weighting multiple risk factors
-Version: 0.4.2
-Date: 2019-04-06
-Authors@R: c(
-  person("Andrea", "Apolloni", email = "andrea.apolloni@cirad.fr", role = c("ctb"), comment = "Animal mobility algorithm"),
-  person("Elena", "Arsevska", email = "elena.arsevska@cirad.fr", role = c("ctb")),
-  person("Françoise", "Chirara", email = "francoise.chirara@cirad.fr", role = c("ctb"), comment = "Logo designer"),
-  person("Sylvain", "Falala", email = "sylvain.falala@cirad.fr", role = c("aut"), comment = "Shiny interface"),
-  person("Jean Marc", "Feussom", email = "mfeussom@gmail.com", role = c("ctb")),
-  person("Renaud", "Lancelot", email = "renaud.lancelot@cirad.fr", role = c("ctb")),
-  person("Raphaëlle", "Metras", email = "raphaelle.metras@cirad.fr", role = c("ctb")),
-  person("Facundo", "Muñoz", email = "facundo.munoz@cirad.fr", role = c("aut", "cre"), comment = c("Package developer", ORCID = "0000-0002-5061-4241"))
-  )
-Description: Use a Shiny interface to help users import multiple layers of risk
-  factors, scale and combine them using a Multi-Criteria Decision Analysis
-  approach to produce a risk map as an outcome.
+Title: Produce an epidemiological risk map by weighting multiple risk
+        factors
+Version: 0.4.3
+Date: 2019-04-11
+Authors@R: c( person("Andrea", "Apolloni", email =
+        "andrea.apolloni@cirad.fr", role = c("ctb"), comment = "Animal
+        mobility algorithm"), person("Elena", "Arsevska", email =
+        "elena.arsevska@cirad.fr", role = c("ctb")),
+        person("Françoise", "Chirara", email =
+        "francoise.chirara@cirad.fr", role = c("ctb"), comment = "Logo
+        designer"), person("Sylvain", "Falala", email =
+        "sylvain.falala@cirad.fr", role = c("aut"), comment = "Shiny
+        interface"), person("Jean Marc", "Feussom", email =
+        "mfeussom@gmail.com", role = c("ctb")), person("Renaud",
+        "Lancelot", email = "renaud.lancelot@cirad.fr", role =
+        c("ctb")), person("Raphaëlle", "Metras", email =
+        "raphaelle.metras@cirad.fr", role = c("ctb")),
+        person("Facundo", "Muñoz", email = "facundo.munoz@cirad.fr",
+        role = c("aut", "cre"), comment = c("Package developer", ORCID
+        = "0000-0002-5061-4241")) )
+Description: Use a Shiny interface to help users import multiple layers
+        of risk factors, scale and combine them using a Multi-Criteria
+        Decision Analysis approach to produce a risk map as an outcome.
 Depends: R (>= 3.2)
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports:
-  classInt,
-  deldir,
-  geojsonio,
-  geojsonlint,
-  geonetwork,
-  igraph,
-  methods,
-  maps,
-  maptools,
-  plyr,
-  raster,
-  rasterVis,
-  RColorBrewer,
-  rgdal,
-  rgeos,
-  rhandsontable,
-  shiny,
-  shinydashboard,
-  shinyFiles,
-  sp,
-  stringr,
-  utils
-Suggests:
-    devtools,
-    knitr,
-    mapview,
-    rmarkdown,
-    roxygen2,
-    testthat
+Imports: classInt, deldir, geojsonio, geojsonlint, geonetwork, igraph,
+        methods, maps, maptools, plyr, raster, rasterVis, RColorBrewer,
+        rgdal, rgeos, rhandsontable, shiny, shinydashboard, shinyFiles,
+        sp, stringr, utils
+Suggests: devtools, knitr, mapview, rmarkdown, roxygen2, testthat
 RoxygenNote: 6.1.1
 URL: https://Cirad-ASTRE.github.io/mapMCDA
 BugReports: https://github.com/Cirad-ASTRE/mapMCDA/issues

@@ -688,7 +688,7 @@ server <- function(input, output, session) {
     
     })
     
-    plot_weights(rv$weightVect, riskFactors)
+    mapMCDA:::plot_weights(rv$weightVect, riskFactors)
     
     
   })
@@ -701,7 +701,7 @@ server <- function(input, output, session) {
     
     curWeightVect <- rv$weightVect
     
-    cat("Weight vector: ", curWeightVect)
+    # cat("Weight vector: ", curWeightVect)
     
     if(is.null(curWeightVect)) return(NULL)
     

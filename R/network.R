@@ -146,8 +146,9 @@ must be respected:",
   
   ## Check consistency of coordinates
   if (any((idx <- tapply(v_coord$Node, v_coord$Node, length)) > 1)) {
-    idx.nodes <- names(idx)[idx > 1]
-    stop("Node(s) ", idx.nodes, " have inconsistent coordinates in the dataset.")
+    idx.nodes <- paste(names(idx)[idx > 1], collapse = ", ")
+    stop("Inconsistent coordinates.\n",
+         "The file specifies different coordinates in different lines for node(s): ", idx.nodes)
   }
   
   ans <- geonetwork::geonetwork(e_list, v_coord, directed = TRUE)

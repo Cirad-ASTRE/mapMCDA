@@ -53,7 +53,7 @@ risk_unit <- function(r, eu, fun = mean) {
   ## For that cases, we overlay the polygon centers with the raster.
   if (any(idx <- is.na(funrisk_poly))) {
     centroids <- SpatialPoints(
-      coords = coordinates(eu)[idx, ],
+      coords = coordinates(eu)[idx, , drop = FALSE],
       proj4string = CRS(proj4string(eu))
     )
     funrisk_poly[idx] <- over(centroids, rgrid)[[1]]

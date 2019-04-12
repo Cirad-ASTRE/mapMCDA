@@ -9,6 +9,9 @@ r0 <- r
 res(r0) <- 2*res(r)
 epiunits <- as(r0, "SpatialPolygons")
 
+# plot(r)
+# plot(epiunits, add = T)
+
 test_that("risk_unit returns a vector of length n_polygons", {
 
   riskvalues <- risk_unit(r, epiunits)  
@@ -70,5 +73,21 @@ test_that("Missing CRS in epidemiological units", {
   proj4string(eu_pr) <- CRS()
   
   expect_error(risk_unit(rt, eu_pr), "Missing Coordinate Reference System")
+})
+
+
+test_that("Polygons not covering any raster-cell center", {
+  epi_ext <- raster::bind(raster::shift(epiunits[1], x = -5), epiunits)
+  # plot(r)
+  # plot(epi_ext, add = TRUE)
+  
+  res <- expect_error(risk_unit(r, epi_ext), NA)
+
+  # the first unit is NA (does not cover any cell center)
+  expect_true(is.na(res[1]))
+  
+  # none of the remaining units is NA (they all cover one cell center)
+  expect_true(!any(is.na(res[-1])))
+  
 })
 

@@ -84,9 +84,13 @@ risk_unit <- function(r, eu, fun = mean) {
 risk_plot <- function(x, v, n) {
   x$risk <- v
   
+  if (all(is.na(v))) {
+    stop("Risk values at epidemiological units are all missing.")
+  }
+  
   ## Compute risk categories manually, as the default cuts
   ## in spplot extend beyond the range too much
-  rv <- range(v)
+  rv <- range(v, na.rm = TRUE)
   ## extend the range 0.1 % each side (same as "cut")
   rv <- (rv - mean(rv)) * 1.002 + mean(rv)
   breaks <- seq(from = rv[1], to = rv[2], length = n + 1)

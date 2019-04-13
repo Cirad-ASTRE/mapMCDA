@@ -39,7 +39,6 @@ Installing the package
 if (!require("remotes")) {
   install.packages("remotes")
 }
-remotes::install_github("Cirad-ASTRE/geonetwork")
 remotes::install_github("Cirad-ASTRE/mapMCDA")
 ```
 
@@ -54,6 +53,8 @@ Getting help online
 -------------------
 
 Bug reports and feature requests should be posted on *github* using the [*issue*](http://github.com/Cirad-ASTRE/mapMCDA/issues) system.
+
+For support, reach out in the [mapMCDA mailing list](https://listes.cirad.fr/sympa/info/mapmcda). Archives are of public access.
 
 Contributions are welcome via **pull requests**.
 

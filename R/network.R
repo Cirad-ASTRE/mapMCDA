@@ -274,15 +274,15 @@ setMethod(
 #' network. It is computed as the inverse of the \emph{Potential for
 #' transmission} of the network: a measure of the expected number of
 #' nodes affected by an infectious node, which is a generalisation of
-#' the Basic Reproduction Number \eqn{R_0}{R₀} of an epidemy to the
+#' the Basic Reproduction Number \eqn{R_0} of an epidemy to the
 #' context of a network. It thus quantifies the potential for
 #' transmission of an infection throughout the contact network. It is
 #' computed in terms of the incoming-outgoing rates from the network's
 #' nodes: \deqn{R_0 = \beta \frac{\hat{k_\mathrm{in}
-#' k_\mathrm{out}}}{\hat{k_\mathrm{in}}},}{R₀ = \beta〈k_in*k_out〉/〈k_in〉,}
+#' k_\mathrm{out}}}{\hat{k_\mathrm{in}}},}{R_0 = \beta <k_in*k_out>/<k_in>,}
 #' where \eqn{\beta} is the transmission coefficient among animals,
 #' \eqn{k_\mathrm{in/out}}{k_in/out} are the in/out-degrees of a node
-#' and the \eqn{\hat{\cdot}}{〈·〉} symbol represents the average value
+#' and the \eqn{<·>} symbol represents the average value
 #' across all nodes in the graph.
 #'
 #' The unweighted value computed above is most appropriate for a
@@ -303,7 +303,7 @@ setMethod(
 #' @param beta numeric, between 0 and 1. Probability of transmission.
 #'
 #' @return a list the weighted and unweighted Potential for
-#'   Transmission \eqn{R_0}{R₀} and its inverse, the Epidemic
+#'   Transmission \eqn{R_0} and its inverse, the Epidemic
 #'   Threshold \eqn{q}. As an attribute named "sna", a data.frame with
 #'   the in/out-degrees of each node and their individual contribution
 #'   to R0.

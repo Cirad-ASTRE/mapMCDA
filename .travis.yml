@@ -15,12 +15,18 @@ matrix:
 #      osx_image: xcode8.3
 
 r_binary_packages: 
+  - igraph
+  - maps
+  - maptools
   - MASS
+  - plyr
+  - RColorBrewer
+  - sp
+  - stringr
   - testthat
 
 r_github_packages:
   - jimhester/covr
-  - Cirad-ASTRE/geonetwork
 
 warnings_are_errors: true
 sudo: required

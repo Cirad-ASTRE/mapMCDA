@@ -1,8 +1,8 @@
 Package: mapMCDA
 Title: Produce an epidemiological risk map by weighting multiple risk
         factors
-Version: 0.4.10
-Date: 2019-04-24
+Version: 0.4.11
+Date: 2019-06-05
 Authors@R: c( person("Andrea", "Apolloni", email =
         "andrea.apolloni@cirad.fr", role = c("ctb"), comment = "Animal
         mobility algorithm"), person("Elena", "Arsevska", email =

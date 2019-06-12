@@ -33,11 +33,11 @@ the Basic Reproduction Number \eqn{R_0} of an epidemy to the
 context of a network. It thus quantifies the potential for
 transmission of an infection throughout the contact network. It is
 computed in terms of the incoming-outgoing rates from the network's
-nodes: \deqn{R_0 = \beta \frac{\hat{k_\mathrm{in}
-k_\mathrm{out}}}{\hat{k_\mathrm{in}}},}{R_0 = \beta <k_in*k_out>/<k_in>,}
+nodes: \deqn{R_0 = \beta \frac{\overline{k_\mathrm{in}\cdot
+k_\mathrm{out}}}{\overline{k_\mathrm{in}}},}{R_0 = \beta <k_in*k_out>/<k_in>,}
 where \eqn{\beta} is the transmission coefficient among animals,
 \eqn{k_\mathrm{in/out}}{k_in/out} are the in/out-degrees of a node
-and the \eqn{<·>} symbol represents the average value
+and the \eqn{\overline{\cdot}}{<·>} symbol represents the average value
 across all nodes in the graph.
 
 The unweighted value computed above is most appropriate for a
@@ -51,7 +51,7 @@ transmission probability is assumed proportional to the number of
 contacts.
 
 The default value of 1 for the probability of transmission
-\code{beta} implies that every infectious contact leads to
+\eqn{\beta} implies that every infectious contact leads to
 transmission.
 }
 \examples{

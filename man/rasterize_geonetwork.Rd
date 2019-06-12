@@ -41,4 +41,8 @@ in the WGS84 reference system.
 If the graph is weighted, the weighted importance will be computed.
 If you want the unweighted importance, remove the weight attribute
 from the graph with \code{igraph::delete_edge_attr(x, "weight")}.
+
+The importance of each node is computed as the relative
+contribution to the Potential for Transmision \eqn{R_0} of the
+graph. I.e., \eqn{R_{0k}/R_0}. See \code{\link{epidemic_threshold}}.
 }

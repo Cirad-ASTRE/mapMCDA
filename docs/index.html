@@ -35,7 +35,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">mapMCDA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.10</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.13</span>
       </span>
     </div>
 
@@ -89,22 +89,16 @@
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#mapmcda" class="anchor"></a>mapMCDA <img src="reference/figures/logo.png" align="right">
 </h1></div>
-<div class="figure">
-<img src="reference/figures/mapMCDA_overview.png">
-</div>
+<p><img src="reference/figures/mapMCDA_overview.png"></p>
 <p><code>mapMCDA</code> helps producing <strong>risk maps</strong> by weighting <strong>risk factors</strong> using <strong>expert knowledge</strong>.</p>
 <p>The typical use case is the lack of (reliable) data about the epidemics of a disease, but available information about well known <strong>risk factors</strong> (e.g. animal density, proximity to border, proximity to water courses, etc.).</p>
 <p>In order to design a <strong>stratified sampling</strong> or a <strong>surveillance campaign</strong>, a preliminar risk map based on expert judgement is required.</p>
 <p>This package (and method) provides a systematic and guided approach to build such maps.</p>
-<div class="figure">
-<img src="reference/figures/plot-risk-unit-1.png">
-</div>
+<p><img src="reference/figures/plot-risk-unit-1.png"></p>
 <p>The package include a Graphical User Interface (Shiny) that helps in processing and weighting risk factors.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(mapMCDA)
-<span class="kw"><a href="reference/mapMCDA_app.html">mapMCDA_app</a></span>()</code></pre></div>
-<div class="figure">
-<img src="reference/figures/interface.png">
-</div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(mapMCDA)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="reference/mapMCDA_app.html">mapMCDA_app</a></span>()</a></code></pre></div>
+<p><img src="reference/figures/interface.png"></p>
 <div id="installing-the-package" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installing-the-package" class="anchor"></a>Installing the package</h2>
@@ -114,10 +108,10 @@
 <!-- install.packages("mapMCDA") -->
 <!-- ``` -->
 <!-- To benefit from the latest features and bug fixes, install the development, *github* version of the package using: -->
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (<span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">require</a></span>(<span class="st">"remotes"</span>)) {
-  <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"remotes"</span>)
-}
-remotes<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/remotes/topics/install_github">install_github</a></span>(<span class="st">"Cirad-ASTRE/mapMCDA"</span>)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="cf">if</span> (<span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">require</a></span>(<span class="st">"remotes"</span>)) {</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">  <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"remotes"</span>)</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">}</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">remotes<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/remotes/topics/install_github">install_github</a></span>(<span class="st">"Cirad-ASTRE/mapMCDA"</span>)</a></code></pre></div>
 <!-- # Resources -->
 <!-- ## Vignettes -->
 <!-- An overview and examples of *mapMCDA* are provided in the vignettes: -->

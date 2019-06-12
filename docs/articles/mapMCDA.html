@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mapMCDA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.13</span>
       </span>
     </div>
 
@@ -79,7 +79,7 @@
     <div class="page-header toc-ignore">
       <h1>mapMCDA: aperçu du package</h1>
             
-            <h4 class="date">2019-04-13</h4>
+            <h4 class="date">2019-06-12</h4>
       
       
       <div class="hidden name"><code>mapMCDA.Rmd</code></div>
@@ -88,16 +88,16 @@
 
     
     
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">require</a></span>(sp)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">require</a></span>(sp)</a></code></pre></div>
 <pre><code>## Loading required package: sp</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">require</a></span>(raster)</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">require</a></span>(raster)</a></code></pre></div>
 <pre><code>## Loading required package: raster</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">require</a></span>(rasterVis)</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">require</a></span>(rasterVis)</a></code></pre></div>
 <pre><code>## Loading required package: rasterVis</code></pre>
 <pre><code>## Loading required package: lattice</code></pre>
 <pre><code>## Loading required package: latticeExtra</code></pre>
 <pre><code>## Loading required package: RColorBrewer</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">require</a></span>(mapMCDA)</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">require</a></span>(mapMCDA)</a></code></pre></div>
 <pre><code>## Loading required package: mapMCDA</code></pre>
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
@@ -118,18 +118,18 @@
 <p>L’objet <code>cmr</code> est une simple liste de cartes : objets de type <code>Spatial*</code> pour les cartes vectoriels et de type <code>RasterLayer</code> pour les cartes raster.</p>
 <p>Pour utiliser d’autre cartographie, utiliser les fonctions <code><a href="https://www.rdocumentation.org/packages/rgdal/topics/readOGR">rgdal::readOGR()</a></code> et <code><a href="https://www.rdocumentation.org/packages/raster/topics/raster">raster::raster()</a></code> respectivement pour des cartes vectoriels ou raster.</p>
 <p>On peut aussi bénéficier de la fonction <code><a href="../reference/layer_type.html">layer_type()</a></code> pour charger tout type des cartes automatiquement, comme démontré dans le code commenté.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cmr &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mapMCDA_datasets.html">mapMCDA_datasets</a></span>()
-
-<span class="co"># layers &lt;- list.files(</span>
-<span class="co">#   system.file("cartography/CMR", package = "mapMCDA"),</span>
-<span class="co">#   full.names = TRUE</span>
-<span class="co"># )</span>
-<span class="co"># cmr &lt;- lapply(layers, load_layer)</span>
-<span class="co"># names(cmr) &lt;- rmext(basename(layers)))</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">cmr &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mapMCDA_datasets.html">mapMCDA_datasets</a></span>()</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="co"># layers &lt;- list.files(</span></a>
+<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="co">#   system.file("cartography/CMR", package = "mapMCDA"),</span></a>
+<a class="sourceLine" id="cb12-5" data-line-number="5"><span class="co">#   full.names = TRUE</span></a>
+<a class="sourceLine" id="cb12-6" data-line-number="6"><span class="co"># )</span></a>
+<a class="sourceLine" id="cb12-7" data-line-number="7"><span class="co"># cmr &lt;- lapply(layers, load_layer)</span></a>
+<a class="sourceLine" id="cb12-8" data-line-number="8"><span class="co"># names(cmr) &lt;- rmext(basename(layers)))</span></a></code></pre></div>
 <p>L’une de ces cartes est celle des unités épidémiologiques, utilisée pour établir le cadre de travail.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">unites_epi &lt;-<span class="st"> </span>cmr<span class="op">$</span>cmr_admin3
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/par">par</a></span>(<span class="dt">mar =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>))
-<span class="kw"><a href="https://www.rdocumentation.org/packages/raster/topics/plot">plot</a></span>(unites_epi)</code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">unites_epi &lt;-<span class="st"> </span>cmr<span class="op">$</span>cmr_admin3</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/par">par</a></span>(<span class="dt">mar =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>))</a>
+<a class="sourceLine" id="cb13-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/raster/topics/plot">plot</a></span>(unites_epi)</a></code></pre></div>
 <div class="figure">
 <img src="mapMCDA_files/figure-html/unite-epidemiologique-1.png" alt="Unités épidémiologiques d'exemple pour le Cameroun." width="700"><p class="caption">
 Unités épidémiologiques d’exemple pour le Cameroun.
@@ -142,17 +142,17 @@ Unités épidémiologiques d’exemple pour le Cameroun.
 <p>Chaque facteur de risque varie dans une échelle qui lui est propre. La densité animale, par exemple, varie entre 0 et presque 5500 têtes par <span class="math inline">\(km^2\)</span>.</p>
 <p>Pour les cartes <em>vectorielles</em>, qui representent la localisation des entités spatiales telles que lacs ou forêts, on considère la <strong>distance</strong> à dites entités.</p>
 <p>Ce package utilise pour l’instant une fonction linèaire pour la mise en échelle. Cependant, la rélation peut être directe ou inverse.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/raster/topics/plot">plot</a></span>(
-  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">x =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="dv">100</span>), <span class="dt">y =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="dv">100</span>)),
-  <span class="dt">type =</span> <span class="st">'l'</span>,
-  <span class="dt">xaxs =</span> <span class="st">"i"</span>,
-  <span class="dt">yaxs =</span> <span class="st">"i"</span>,
-  <span class="dt">xaxt =</span> <span class="st">"n"</span>,
-  <span class="dt">lab =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">7</span>),
-  <span class="dt">xlab =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Échelle originale"</span>),
-  <span class="dt">ylab =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Échelle de risque"</span>)
-)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dv">100</span>, <span class="op">-</span><span class="dv">1</span>)</code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/raster/topics/plot">plot</a></span>(</a>
+<a class="sourceLine" id="cb14-2" data-line-number="2">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">x =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="dv">100</span>), <span class="dt">y =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="dv">100</span>)),</a>
+<a class="sourceLine" id="cb14-3" data-line-number="3">  <span class="dt">type =</span> <span class="st">'l'</span>,</a>
+<a class="sourceLine" id="cb14-4" data-line-number="4">  <span class="dt">xaxs =</span> <span class="st">"i"</span>,</a>
+<a class="sourceLine" id="cb14-5" data-line-number="5">  <span class="dt">yaxs =</span> <span class="st">"i"</span>,</a>
+<a class="sourceLine" id="cb14-6" data-line-number="6">  <span class="dt">xaxt =</span> <span class="st">"n"</span>,</a>
+<a class="sourceLine" id="cb14-7" data-line-number="7">  <span class="dt">lab =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">7</span>),</a>
+<a class="sourceLine" id="cb14-8" data-line-number="8">  <span class="dt">xlab =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Échelle originale"</span>),</a>
+<a class="sourceLine" id="cb14-9" data-line-number="9">  <span class="dt">ylab =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Échelle de risque"</span>)</a>
+<a class="sourceLine" id="cb14-10" data-line-number="10">)</a>
+<a class="sourceLine" id="cb14-11" data-line-number="11"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dv">100</span>, <span class="dv">-1</span>)</a></code></pre></div>
 <div class="figure">
 <img src="mapMCDA_files/figure-html/mise-echelle-1.png" alt="Mis en échelle directe ou inverse." width="384"><p class="caption">
 Mis en échelle directe ou inverse.
@@ -160,27 +160,27 @@ Mis en échelle directe ou inverse.
 </div>
 <p>La fonction <code><a href="../reference/risk_layer.html">risk_layer()</a></code> calcule la carte de risque associé à un facteur concret dans une échelle donnée. Par défault c’est entre 0 et 100. Pour inverser la rélation il suffit de passer les limits dans l’ordre inverse, e.g. <code><a href="https://www.rdocumentation.org/packages/base/topics/c">c(100, 0)</a></code>.</p>
 <p>D’ailleurs, elle utilise la carte d’unités épidémiologiques pour établir les limits de calcul de risque.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">risques &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(
-  <span class="dt">dens_animale =</span> <span class="kw"><a href="../reference/risk_layer.html">risk_layer</a></span>(
-    cmr<span class="op">$</span>animal.density,
-    <span class="dt">boundaries =</span> unites_epi
-    <span class="co"># , scale_target = c(0, 100)  # échelle directe par défault</span>
-  ),
-  <span class="dt">points_eau =</span> <span class="kw"><a href="../reference/risk_layer.html">risk_layer</a></span>(
-    cmr<span class="op">$</span>water_bodies,
-    <span class="dt">boundaries =</span> unites_epi,
-    <span class="dt">scale_target =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">100</span>, <span class="dv">0</span>)  <span class="co"># échelle renversée</span>
-  ),
-  <span class="dt">parcs =</span> <span class="kw"><a href="../reference/risk_layer.html">risk_layer</a></span>(
-    cmr<span class="op">$</span>national_parks,
-    <span class="dt">boundaries =</span> unites_epi,
-    <span class="dt">scale_target =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">100</span>, <span class="dv">0</span>)  <span class="co"># échelle renversée</span>
-  )
-)</code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">risques &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(</a>
+<a class="sourceLine" id="cb15-2" data-line-number="2">  <span class="dt">dens_animale =</span> <span class="kw"><a href="../reference/risk_layer.html">risk_layer</a></span>(</a>
+<a class="sourceLine" id="cb15-3" data-line-number="3">    cmr<span class="op">$</span>animal.density,</a>
+<a class="sourceLine" id="cb15-4" data-line-number="4">    <span class="dt">boundaries =</span> unites_epi</a>
+<a class="sourceLine" id="cb15-5" data-line-number="5">    <span class="co"># , scale_target = c(0, 100)  # échelle directe par défault</span></a>
+<a class="sourceLine" id="cb15-6" data-line-number="6">  ),</a>
+<a class="sourceLine" id="cb15-7" data-line-number="7">  <span class="dt">points_eau =</span> <span class="kw"><a href="../reference/risk_layer.html">risk_layer</a></span>(</a>
+<a class="sourceLine" id="cb15-8" data-line-number="8">    cmr<span class="op">$</span>water_bodies,</a>
+<a class="sourceLine" id="cb15-9" data-line-number="9">    <span class="dt">boundaries =</span> unites_epi,</a>
+<a class="sourceLine" id="cb15-10" data-line-number="10">    <span class="dt">scale_target =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">100</span>, <span class="dv">0</span>)  <span class="co"># échelle renversée</span></a>
+<a class="sourceLine" id="cb15-11" data-line-number="11">  ),</a>
+<a class="sourceLine" id="cb15-12" data-line-number="12">  <span class="dt">parcs =</span> <span class="kw"><a href="../reference/risk_layer.html">risk_layer</a></span>(</a>
+<a class="sourceLine" id="cb15-13" data-line-number="13">    cmr<span class="op">$</span>national_parks,</a>
+<a class="sourceLine" id="cb15-14" data-line-number="14">    <span class="dt">boundaries =</span> unites_epi,</a>
+<a class="sourceLine" id="cb15-15" data-line-number="15">    <span class="dt">scale_target =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">100</span>, <span class="dv">0</span>)  <span class="co"># échelle renversée</span></a>
+<a class="sourceLine" id="cb15-16" data-line-number="16">  )</a>
+<a class="sourceLine" id="cb15-17" data-line-number="17">)</a></code></pre></div>
 <p>On voudrait examiner les cartes de risque ainsi calculées. Mais pour cela, il faut qu’elles soient <em>alignées</em>. C’est à dire, qu’elles aient les mêmes <em>extents</em>, <em>résolutions</em> et <em>projections</em>.</p>
 <p>On peut se servir de la fonction <code><a href="../reference/align_layers.html">align_layers()</a></code> qui arrange tout ça pour nous. Noter que ce pas n’est pas nécessaire pour continuer, car cette fonction est automatiquement executée si besoin.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">risques_alignes &lt;-<span class="st"> </span><span class="kw"><a href="../reference/align_layers.html">align_layers</a></span>(risques)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/rasterVis/topics/levelplot-methods">levelplot</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/raster/topics/stack">stack</a></span>(risques_alignes))</code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">risques_alignes &lt;-<span class="st"> </span><span class="kw"><a href="../reference/align_layers.html">align_layers</a></span>(risques)</a>
+<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/rasterVis/topics/levelplot-methods">levelplot</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/raster/topics/stack">stack</a></span>(risques_alignes))</a></code></pre></div>
 <div class="figure">
 <img src="mapMCDA_files/figure-html/align-layers-1.png" alt="Niveaux de risque associé à chaque facteur." width="576"><p class="caption">
 Niveaux de risque associé à chaque facteur.
@@ -192,13 +192,13 @@ Niveaux de risque associé à chaque facteur.
 <a href="#ponderation-des-facteurs-de-risque" class="anchor"></a>3. Pondération des facteurs de risque</h1>
 <p>Il y a 3 facteurs à considérer. Il faut comparer 2-à-2 leurs importances relatives en une échelle de 1 à 9 et representer ces rélations en une matrice qui doit avoir des 1 dans son diagonale.</p>
 <p>Noter que les élements symmetriques doivent être réciproques.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">M &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(
-  <span class="dv">1</span>,     <span class="dv">6</span>, <span class="dv">4</span>,
-  <span class="dv">1</span><span class="op">/</span><span class="dv">6</span>,   <span class="dv">1</span>, <span class="dv">3</span>,
-  <span class="dv">1</span><span class="op">/</span><span class="dv">4</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="dv">1</span>
-), <span class="dt">byrow =</span> <span class="ot">TRUE</span>, <span class="dv">3</span>, <span class="dv">3</span>)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(M) &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">rownames</a></span>(M) &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/raster/topics/names">names</a></span>(risques)
-knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/knitr/topics/kable">kable</a></span>(M, <span class="dt">digits =</span> <span class="dv">2</span>)</code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">M &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(</a>
+<a class="sourceLine" id="cb17-2" data-line-number="2">  <span class="dv">1</span>,     <span class="dv">6</span>, <span class="dv">4</span>,</a>
+<a class="sourceLine" id="cb17-3" data-line-number="3">  <span class="dv">1</span><span class="op">/</span><span class="dv">6</span>,   <span class="dv">1</span>, <span class="dv">3</span>,</a>
+<a class="sourceLine" id="cb17-4" data-line-number="4">  <span class="dv">1</span><span class="op">/</span><span class="dv">4</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="dv">1</span></a>
+<a class="sourceLine" id="cb17-5" data-line-number="5">), <span class="dt">byrow =</span> <span class="ot">TRUE</span>, <span class="dv">3</span>, <span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb17-6" data-line-number="6"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(M) &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">rownames</a></span>(M) &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/raster/topics/names">names</a></span>(risques)</a>
+<a class="sourceLine" id="cb17-7" data-line-number="7">knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/knitr/topics/kable">kable</a></span>(M, <span class="dt">digits =</span> <span class="dv">2</span>)</a></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th></th>
@@ -229,7 +229,7 @@ knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentat
 </table>
 <p>Dans cette exemple, on considère que la densité animale est 6 fois plus importante que la distance aux points d’eau, et 4 fois plus importante que la distance aux parcs. Au même temps, que la distance aux points d’eau est 3 fois plus importante que celle aux parcs.</p>
 <p>Le système calcule les coefficients de pondération les plus consistents avec ces valorations par paires, avec la fonction <code><a href="../reference/compute_weights.html">compute_weights()</a></code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">w &lt;-<span class="st"> </span><span class="kw"><a href="../reference/compute_weights.html">compute_weights</a></span>(M)</code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">w &lt;-<span class="st"> </span><span class="kw"><a href="../reference/compute_weights.html">compute_weights</a></span>(M)</a></code></pre></div>
 <div class="figure">
 <img src="mapMCDA_files/figure-html/compute-weights-1.png" alt="Pondération des facteurs de risque." width="384"><p class="caption">
 Pondération des facteurs de risque.
@@ -240,15 +240,15 @@ Pondération des facteurs de risque.
 <h1 class="hasAnchor">
 <a href="#calcul-de-la-carte-de-risque" class="anchor"></a>4. Calcul de la carte de risque</h1>
 <p>La fonction <code><a href="../reference/wlc.html">wlc()</a></code> (pour weighted linear combination) combine tous les facteurs de risque en utilisant les poids calculés précedament, et produise une carte de risque qui couvre toute la région.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">risque_combine &lt;-<span class="st"> </span><span class="kw"><a href="../reference/wlc.html">wlc</a></span>(risques, w)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/rasterVis/topics/levelplot-methods">levelplot</a></span>(risque_combine)</code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">risque_combine &lt;-<span class="st"> </span><span class="kw"><a href="../reference/wlc.html">wlc</a></span>(risques, w)</a>
+<a class="sourceLine" id="cb19-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/rasterVis/topics/levelplot-methods">levelplot</a></span>(risque_combine)</a></code></pre></div>
 <div class="figure">
 <img src="mapMCDA_files/figure-html/wlc-1.png" alt="Carte de risque combiné." width="576"><p class="caption">
 Carte de risque combiné.
 </p>
 </div>
 <p>Enfin, on peut produîre una carte par unité épidémiologique et dans une échelle de quelques niveaux de risque.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/risk_plot.html">risk_plot</a></span>(unites_epi, <span class="kw"><a href="../reference/risk_unit.html">risk_unit</a></span>(risque_combine, unites_epi), <span class="dt">n =</span> <span class="dv">5</span>)</code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw"><a href="../reference/risk_plot.html">risk_plot</a></span>(unites_epi, <span class="kw"><a href="../reference/risk_unit.html">risk_unit</a></span>(risque_combine, unites_epi), <span class="dt">n =</span> <span class="dv">5</span>)</a></code></pre></div>
 <div class="figure">
 <img src="mapMCDA_files/figure-html/risk-plot-1.png" alt="Carte de niveaux de risque par unité épidémiologique." width="576"><p class="caption">
 Carte de niveaux de risque par unité épidémiologique.

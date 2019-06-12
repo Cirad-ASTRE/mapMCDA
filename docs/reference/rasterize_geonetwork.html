@@ -65,7 +65,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mapMCDA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.13</span>
       </span>
     </div>
 
@@ -172,6 +172,9 @@ in the WGS84 reference system.</p>
 <p>If the graph is weighted, the weighted importance will be computed.
 If you want the unweighted importance, remove the weight attribute
 from the graph with <code><a href='https://www.rdocumentation.org/packages/igraph/topics/delete_edge_attr'>igraph::delete_edge_attr(x, "weight")</a></code>.</p>
+<p>The importance of each node is computed as the relative
+contribution to the Potential for Transmision \(R_0\) of the
+graph. I.e., \(R_{0k}/R_0\). See <code><a href='epidemic_threshold.html'>epidemic_threshold</a></code>.</p>
     
 
   </div>

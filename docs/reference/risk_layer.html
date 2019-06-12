@@ -32,7 +32,8 @@
 
 <meta property="og:title" content="Compute risk layer — risk_layer" />
 
-<meta property="og:description" content="Rescale a raster with a linear relationship." />
+<meta property="og:description" content="Compute a raster map from the input layer and rescale with a linear
+relationship." />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -65,7 +66,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mapMCDA</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.13</span>
       </span>
     </div>
 
@@ -121,7 +122,8 @@
 
     <div class="ref-description">
     
-    <p>Rescale a raster with a linear relationship.</p>
+    <p>Compute a raster map from the input layer and rescale with a linear
+relationship.</p>
     
     </div>
 
@@ -132,7 +134,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>a RasterLayer object</p></td>
+      <td><p>a Spatial*, RasterLayer or igraph object</p></td>
     </tr>
     <tr>
       <th>boundaries</th>
@@ -151,7 +153,14 @@ computed risk layer.</p></td>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>If you need an inverse relationship, just reverse the target scale.</p>
+    <p>For Spatial* objects (geometries such as point, lines or polygons),
+compute the <code><a href='distance_map.html'>distance_map()</a></code>, which gives a RasterLayer. For
+<code>igraph</code> objects (from network data), compute a RasterLayer 
+with the relative importance of the nearest node. For a RasterLayer
+mask, extend or crop to the <code>boundaries</code> as needed.</p>
+<p>Finally, scale the RasterLayer outcome of any of the three input
+types. If you need an inverse relationship, just reverse the target
+scale.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

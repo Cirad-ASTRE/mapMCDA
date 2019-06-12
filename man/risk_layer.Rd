@@ -7,7 +7,7 @@
 risk_layer(x, boundaries, scale_target = c(0, 100))
 }
 \arguments{
-\item{x}{a RasterLayer object}
+\item{x}{a Spatial*, RasterLayer or igraph object}
 
 \item{boundaries}{a Spatial* object, used to determine the boundaries of the
 computed risk layer.}
@@ -18,10 +18,19 @@ computed risk layer.}
 A RasterLayer object in the new scale.
 }
 \description{
-Rescale a raster with a linear relationship.
+Compute a raster map from the input layer and rescale with a linear
+relationship.
 }
 \details{
-If you need an inverse relationship, just reverse the target scale.
+For Spatial* objects (geometries such as point, lines or polygons),
+compute the \code{distance_map()}, which gives a RasterLayer. For
+\code{igraph} objects (from network data), compute a RasterLayer 
+with the relative importance of the nearest node. For a RasterLayer
+mask, extend or crop to the \code{boundaries} as needed.
+
+Finally, scale the RasterLayer outcome of any of the three input
+types. If you need an inverse relationship, just reverse the target
+scale.
 }
 \examples{
   ad <- mapMCDA_datasets()$animal.density

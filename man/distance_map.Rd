@@ -4,7 +4,7 @@
 \alias{distance_map}
 \title{Compute a distance map to spatial features}
 \usage{
-distance_map(x, boundaries, res = resolution(boundaries, min_ncells =
+distance_map(x, boundaries, res = resolution(boundaries, max_ncells =
   100))
 }
 \arguments{

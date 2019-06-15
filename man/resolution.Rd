@@ -4,12 +4,12 @@
 \alias{resolution}
 \title{Compute a suitable resolution for a map}
 \usage{
-resolution(x, min_ncells = 100)
+resolution(x, max_ncells = 100)
 }
 \arguments{
 \item{x}{a Raster* or Spatial* object}
 
-\item{min_ncells}{Number of cells for the smallest dimension}
+\item{max_ncells}{Number of cells for the largest dimension}
 }
 \value{
 A number. The resolution that respects the desired number of cells.
@@ -20,5 +20,5 @@ criteria.
 }
 \examples{
   r <- raster::raster(nrows = 5, ncols = 11, xmn = 0, xmx = 11, ymn = 0, ymx = 5)
-  resolution(r, min_ncells = 10)
+  resolution(r, max_ncells = 10)
 }

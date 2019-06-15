@@ -10,7 +10,7 @@
 \S4method{rasterize}{geonetwork,Raster}(x, y, field = "importance", ...)
 
 \S4method{rasterize}{geonetwork,SpatialPolygons}(x, y,
-  res = resolution(y, min_ncells = 100), ...)
+  res = resolution(y, max_ncells = 100), ...)
 }
 \arguments{
 \item{x}{a geographic network (a geonetwork object with node attributes

@@ -260,7 +260,7 @@ setMethod(
 setMethod(
   rasterize, c("geonetwork", "SpatialPolygons"),
   {
-    function (x, y, res = resolution(y, min_ncells = 100), ...) {
+    function (x, y, res = resolution(y, max_ncells = 100), ...) {
       
       ext_grid <- raster::raster(raster::extent(y), resolution = res)
       msk <- raster::rasterize(y, ext_grid, field = 1, background = NA, fun = "mean")

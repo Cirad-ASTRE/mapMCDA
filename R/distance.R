@@ -18,10 +18,10 @@
 #' @examples
 #'   cmr <- mapMCDA_datasets()
 #'   raster::plot(distance_map(cmr$water_bodies, boundaries = cmr$cmr_admin3))
-distance_map <- function(x, boundaries, res = resolution(boundaries, min_ncells = 100)) {
+distance_map <- function(x, boundaries, res = resolution(boundaries, max_ncells = 100)) {
   
   if (inherits(boundaries, "Spatial")) {
-    max_res <- resolution(boundaries, min_ncells = 2)
+    max_res <- resolution(boundaries, max_ncells = 2)
     stopifnot(res > 0, res < max_res)
     ext_grid <- raster::raster(raster::extent(boundaries), resolution = res)
     msk <- raster::rasterize(boundaries, ext_grid, field = 1, background = NA, fun = "mean")

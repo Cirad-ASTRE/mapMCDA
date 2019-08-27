@@ -4,6 +4,8 @@
 mapMCDA <img src="man/figures/logo.png" align="right" />
 ========================================================
 
+## This project moved to https://forgemia.inra.fr/umr-astre/<projectname>/
+
 ![](man/figures/mapMCDA_overview.png)
 
 `mapMCDA` helps producing **risk maps** by weighting **risk factors** using **expert knowledge**.
